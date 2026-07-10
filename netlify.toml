@@ -1,15 +1,14 @@
 [build]
   command = "npm run build --prefix frontend"
   publish = "frontend/dist"
-  functions = "netlify/functions"
 
-[functions]
-  node_bundler = "esbuild"
-
+# Redirect API calls to the Render Backend
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/api/api/:splat"
+  # TODO: Replace this URL with your actual Render URL after deploying the backend
+  to = "https://hc-group-backend.onrender.com/api/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"

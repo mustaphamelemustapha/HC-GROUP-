@@ -7,10 +7,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const DB_DIR = path.join(__dirname, '../database');
-const DB_PATH = path.join(DB_DIR, 'market.db');
+const DB_PATH = process.env.DB_PATH || path.join(DB_DIR, 'market.db');
+const DB_STORAGE_DIR = path.dirname(DB_PATH);
 
-if (!fs.existsSync(DB_DIR)) {
-  fs.mkdirSync(DB_DIR, { recursive: true });
+if (!fs.existsSync(DB_STORAGE_DIR)) {
+  fs.mkdirSync(DB_STORAGE_DIR, { recursive: true });
 }
 
 const db = new sqlite3.Database(DB_PATH, (err) => {
