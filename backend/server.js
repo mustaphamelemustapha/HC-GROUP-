@@ -403,10 +403,8 @@ app.delete('/api/v1/projects/:id', async (req, res) => {
   }
 });
 
-if (process.env.NODE_ENV !== 'production' && !process.env.NETLIFY) {
-  app.listen(PORT, () => {
-    console.log(`HC Group API running on http://localhost:${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`HC Group API running on http://localhost:${PORT}`);
+});
 
 export default app;
