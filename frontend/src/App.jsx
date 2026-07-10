@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import Header from './components/Header.jsx';
+import Footer from './components/Footer.jsx';
+import Home from './pages/Home.jsx';
 import Catalog from './pages/Catalog.jsx';
 import ShopTheLook from './pages/ShopTheLook.jsx';
 import Cart from './pages/Cart.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
-import { ShoppingBag, Layout, Compass, Settings } from 'lucide-react';
+import PlaceholderPage from './pages/PlaceholderPage.jsx';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('catalog');
+  const [activeTab, setActiveTab] = useState('home');
   const [cart, setCart] = useState([]);
 
   const handleAddToCart = (variantId, name, sku, price) => {
@@ -21,7 +24,6 @@ export default function App() {
       }
       return [...prevCart, { variantId, name, sku, price, quantity: 1 }];
     });
-    // Trigger feedback or redirect
     alert(`Added "${name}" (SKU: ${sku}) to your order.`);
   };
 
@@ -48,60 +50,69 @@ export default function App() {
   const totalCartItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <div>
-      <header>
-        <div className="header-container">
-          <a href="#" className="logo" onClick={() => setActiveTab('catalog')} style={{ display: 'flex', alignItems: 'center' }}>
-            <img src="/assets/logo.jpg" alt="HC Group" style={{ height: '45px', marginRight: '12px', borderRadius: '4px', border: '1px solid var(--color-gold-muted)' }} />
-            HC <span>GROUP</span>
-          </a>
-          <nav>
-            <span 
-              className={`nav-link ${activeTab === 'catalog' ? 'active' : ''}`}
-              onClick={() => setActiveTab('catalog')}
-            >
-              <Layout size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
-              Catalog
-            </span>
-            <span 
-              className={`nav-link ${activeTab === 'shop-look' ? 'active' : ''}`}
-              onClick={() => setActiveTab('shop-look')}
-            >
-              <Compass size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
-              Shop the Look
-            </span>
-            <span 
-              className={`nav-link cart-badge-container ${activeTab === 'cart' ? 'active' : ''}`}
-              onClick={() => setActiveTab('cart')}
-            >
-              <ShoppingBag size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
-              Order Bag
-              {totalCartItems > 0 && <span className="cart-count">{totalCartItems}</span>}
-            </span>
-            <span 
-              className={`nav-link ${activeTab === 'admin' ? 'active' : ''}`}
-              onClick={() => setActiveTab('admin')}
-            >
-              <Settings size={16} style={{ verticalAlign: 'middle', marginRight: '6px' }} />
-              Admin
-            </span>
-          </nav>
-        </div>
-      </header>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} totalCartItems={totalCartItems} />
 
-      <main>
-        {activeTab === 'catalog' && <Catalog onAddToCart={handleAddToCart} />}
-        {activeTab === 'shop-look' && <ShopTheLook onAddToCart={handleAddToCart} />}
+      <main style={{ flex: 1, padding: 0, margin: 0, maxWidth: '100%' }}>
+        {activeTab === 'home' && <Home setActiveTab={setActiveTab} />}
+        {activeTab === 'catalog' && (
+          <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
+            <Catalog onAddToCart={handleAddToCart} />
+          </div>
+        )}
+        {activeTab === 'shop-look' && (
+          <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
+            <ShopTheLook onAddToCart={handleAddToCart} />
+          </div>
+        )}
         {activeTab === 'cart' && (
-          <Cart 
-            cartItems={cart} 
-            onUpdateQty={handleUpdateQty} 
-            onRemove={handleRemove} 
-            onClearCart={handleClearCart}
+          <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
+            <Cart 
+              cartItems={cart} 
+              onUpdateQty={handleUpdateQty} 
+              onRemove={handleRemove} 
+              onClearCart={handleClearCart}
+            />
+          </div>
+        )}
+        {activeTab === 'admin' && (
+          <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
+            <AdminDashboard />
+          </div>
+        )}
+        
+        {/* Placeholders */}
+        {activeTab === 'about' && (
+          <PlaceholderPage 
+            title="About HC Group" 
+            description="Discover our heritage of delivering premium building materials and bespoke interior design solutions to the world's most luxurious projects." 
+            setActiveTab={setActiveTab} 
           />
         )}
-        {activeTab === 'admin' && <AdminDashboard />}
+        {activeTab === 'services' && (
+          <PlaceholderPage 
+            title="One-Stop Services" 
+            description="From initial architectural concepts to final installation and warranty, our turnkey solutions ensure perfection at every stage." 
+            setActiveTab={setActiveTab} 
+          />
+        )}
+        {activeTab === 'projects' && (
+          <PlaceholderPage 
+            title="Global Projects" 
+            description="Explore our portfolio of completed luxury villas, high-end commercial spaces, and premium hospitality venues." 
+            setActiveTab={setActiveTab} 
+          />
+        )}
+        {activeTab === 'contact' && (
+          <PlaceholderPage 
+            title="Contact Us" 
+            description="Get in touch with our global team of design and material experts to discuss your next visionary project." 
+            setActiveTab={setActiveTab} 
+          />
+        )}
       </main>
+
+      <Footer />
     </div>
   );
 }
