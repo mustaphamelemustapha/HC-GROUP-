@@ -6,12 +6,27 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DB_DIR = path.join(__dirname, '../database');
+const localDbDir = path.join(__dirname, 'database');
+const parentDbDir = path.join(__dirname, '../database');
+const defaultDbDir = fs.existsSync(localDbDir) ? localDbDir : parentDbDir;
+const DB_DIR = process.env.DB_INIT_DIR || defaultDbDir;
 const DB_PATH = process.env.DB_PATH || path.join(DB_DIR, 'market.db');
 const DB_STORAGE_DIR = path.dirname(DB_PATH);
 
 if (!fs.existsSync(DB_STORAGE_DIR)) {
   fs.mkdirSync(DB_STORAGE_DIR, { recursive: true });
+}
+
+// If DB_PATH points to a persistent volume (e.g. in Coolify / Docker) and does not exist yet,
+// automatically copy the pre-seeded bundled database so existing products/categories are preserved.
+const bundledDbPath = path.join(DB_DIR, 'market.db');
+if (!fs.existsSync(DB_PATH) && fs.existsSync(bundledDbPath) && DB_PATH !== bundledDbPath) {
+  try {
+    fs.copyFileSync(bundledDbPath, DB_PATH);
+    console.log(`Pre-seeded database successfully copied to persistent volume: ${DB_PATH}`);
+  } catch (copyErr) {
+    console.warn(`Could not copy bundled DB to ${DB_PATH}:`, copyErr.message);
+  }
 }
 
 const db = new sqlite3.Database(DB_PATH, (err) => {

@@ -78,3 +78,18 @@ CREATE TABLE IF NOT EXISTS project_board_items (
     FOREIGN KEY(project_board_id) REFERENCES project_boards(id) ON DELETE CASCADE,
     FOREIGN KEY(variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS inquiries (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    company TEXT,
+    project_type TEXT,
+    scope TEXT,
+    budget TEXT,
+    location TEXT,
+    message TEXT,
+    status TEXT DEFAULT 'pending', -- 'pending', 'contacted', 'quoted', 'closed'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

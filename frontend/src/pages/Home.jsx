@@ -50,7 +50,12 @@ export default function Home({ setActiveTab }) {
         </div>
         <div className="services-grid">
           {services.map(service => (
-            <div key={service.id} className="service-card">
+            <div 
+              key={service.id} 
+              className="service-card"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setActiveTab('services')}
+            >
               <div className="service-icon">{service.icon}</div>
               <h3 className="service-title">{service.title}</h3>
               <p className="service-desc">{service.desc}</p>
@@ -85,7 +90,12 @@ export default function Home({ setActiveTab }) {
         </div>
         <div className="projects-grid">
           {projects.map(project => (
-            <div key={project.id} className="project-card">
+            <div 
+              key={project.id} 
+              className="project-card"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setActiveTab('projects')}
+            >
               <img src={project.image} alt={project.title} className="project-image" />
               <div className="project-info">
                 <h3 className="project-title">{project.title}</h3>
@@ -95,7 +105,12 @@ export default function Home({ setActiveTab }) {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-          <a href="#" className="hero-cta" style={{ background: 'transparent', border: '2px solid var(--color-bg-navy)', color: 'var(--color-bg-navy)' }}>
+          <a 
+            href="#" 
+            className="hero-cta" 
+            style={{ background: 'transparent', border: '2px solid var(--color-bg-navy)', color: 'var(--color-bg-navy)' }}
+            onClick={(e) => { e.preventDefault(); setActiveTab('projects'); }}
+          >
             View All Projects <ArrowRight size={18} style={{ verticalAlign: 'middle', marginLeft: '8px' }} />
           </a>
         </div>

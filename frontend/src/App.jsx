@@ -6,7 +6,10 @@ import Catalog from './pages/Catalog.jsx';
 import ShopTheLook from './pages/ShopTheLook.jsx';
 import Cart from './pages/Cart.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
-import PlaceholderPage from './pages/PlaceholderPage.jsx';
+import About from './pages/About.jsx';
+import Services from './pages/Services.jsx';
+import Projects from './pages/Projects.jsx';
+import Contact from './pages/Contact.jsx';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -55,16 +58,19 @@ export default function App() {
 
       <main style={{ flex: 1, padding: 0, margin: 0, maxWidth: '100%' }}>
         {activeTab === 'home' && <Home setActiveTab={setActiveTab} />}
+        
         {activeTab === 'catalog' && (
           <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
             <Catalog onAddToCart={handleAddToCart} />
           </div>
         )}
+        
         {activeTab === 'shop-look' && (
           <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
             <ShopTheLook onAddToCart={handleAddToCart} />
           </div>
         )}
+        
         {activeTab === 'cart' && (
           <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
             <Cart 
@@ -75,40 +81,27 @@ export default function App() {
             />
           </div>
         )}
+        
         {activeTab === 'admin' && (
           <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
             <AdminDashboard />
           </div>
         )}
         
-        {/* Placeholders */}
         {activeTab === 'about' && (
-          <PlaceholderPage 
-            title="About HC Group" 
-            description="Discover our heritage of delivering premium building materials and bespoke interior design solutions to the world's most luxurious projects." 
-            setActiveTab={setActiveTab} 
-          />
+          <About setActiveTab={setActiveTab} />
         )}
+        
         {activeTab === 'services' && (
-          <PlaceholderPage 
-            title="One-Stop Services" 
-            description="From initial architectural concepts to final installation and warranty, our turnkey solutions ensure perfection at every stage." 
-            setActiveTab={setActiveTab} 
-          />
+          <Services setActiveTab={setActiveTab} />
         )}
+        
         {activeTab === 'projects' && (
-          <PlaceholderPage 
-            title="Global Projects" 
-            description="Explore our portfolio of completed luxury villas, high-end commercial spaces, and premium hospitality venues." 
-            setActiveTab={setActiveTab} 
-          />
+          <Projects setActiveTab={setActiveTab} />
         )}
+        
         {activeTab === 'contact' && (
-          <PlaceholderPage 
-            title="Contact Us" 
-            description="Get in touch with our global team of design and material experts to discuss your next visionary project." 
-            setActiveTab={setActiveTab} 
-          />
+          <Contact setActiveTab={setActiveTab} />
         )}
       </main>
 

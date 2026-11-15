@@ -403,6 +403,61 @@ app.delete('/api/v1/projects/:id', async (req, res) => {
   }
 });
 
+// POST submit client RFQ / Consultation inquiry
+app.post('/api/v1/inquiries', async (req, res) => {
+  try {
+    const { name, email, phone, company, project_type, scope, budget, location, message } = req.body;
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Name and email are required fields' });
+    }
+
+    const inquiryId = 'inq_' + Math.random().toString(36).substr(2, 9);
+    const scopeStr = Array.isArray(scope) ? scope.join(', ') : (scope || '');
+
+    db.run(
+      `INSERT INTO inquiries (id, name, email, phone, company, project_type, scope, budget, location, message, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
+      [inquiryId, name, email, phone || '', company || '', project_type || 'General Inquiry', scopeStr, budget || '', location || '', message || ''],
+      function (err) {
+        if (err) {
+          console.error('Inquiry submission error:', err);
+          return res.status(500).json({ error: 'Failed to record inquiry' });
+        }
+        res.status(201).json({ success: true, inquiryId, message: 'Inquiry received successfully' });
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error processing inquiry' });
+  }
+});
+
+// GET all client inquiries (for Admin portal)
+app.get('/api/v1/inquiries', async (req, res) => {
+  try {
+    const rows = await query(`SELECT * FROM inquiries ORDER BY created_at DESC`);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load inquiries' });
+  }
+});
+
+// PATCH update inquiry status
+app.patch('/api/v1/inquiries/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    db.run(`UPDATE inquiries SET status = ? WHERE id = ?`, [status, id], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ success: true, updated: this.changes });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update inquiry status' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`HC Group API running on http://localhost:${PORT}`);
 });
