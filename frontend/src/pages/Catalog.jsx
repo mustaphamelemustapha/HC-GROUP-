@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Layers, Sparkles, Award, Plus, FileText, ShoppingBag, MessageCircle, Check, ArrowRight } from 'lucide-react';
+import { 
+  Layers, Sparkles, Award, Plus, FileText, ShoppingBag, 
+  MessageCircle, Check, ArrowRight, X, Search, RotateCcw, ShieldCheck 
+} from 'lucide-react';
 
 export default function Catalog({ onAddToCart }) {
   const [products, setProducts] = useState([]);
@@ -226,17 +229,59 @@ export default function Catalog({ onAddToCart }) {
       <div className="catalog-layout">
         {/* Sidebar Filters */}
         <aside className="filter-sidebar">
-          <h3 className="filter-title">Search & Categories</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <h3 className="filter-title" style={{ margin: 0 }}>Filter Portfolio</h3>
+            {(search || category) && (
+              <button 
+                onClick={() => { setSearch(''); setCategory(''); }}
+                style={{ 
+                  background: 'none', 
+                  border: 'none', 
+                  color: 'var(--color-gold-muted)', 
+                  fontSize: '0.75rem', 
+                  fontWeight: '600', 
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem'
+                }}
+              >
+                <RotateCcw size={12} /> Reset
+              </button>
+            )}
+          </div>
           
           <div className="filter-group">
             <label>Keyword Search</label>
-            <input 
-              type="text" 
-              className="filter-input" 
-              placeholder="e.g. Pivot Door, Marble, Bathtub..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <div style={{ position: 'relative' }}>
+              <input 
+                type="text" 
+                className="filter-input" 
+                placeholder="e.g. Pivot Door, Marble, Bathtub..." 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                style={{ paddingRight: search ? '2.5rem' : '1rem' }}
+              />
+              {search && (
+                <button 
+                  onClick={() => setSearch('')}
+                  style={{ 
+                    position: 'absolute', 
+                    right: '10px', 
+                    top: '50%', 
+                    transform: 'translateY(-50%)', 
+                    background: 'none', 
+                    border: 'none', 
+                    color: '#94a3b8', 
+                    cursor: 'pointer',
+                    padding: '2px'
+                  }}
+                  aria-label="Clear search"
+                >
+                  <X size={15} />
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="filter-group">
@@ -274,8 +319,60 @@ export default function Catalog({ onAddToCart }) {
           </div>
         </aside>
 
-        {/* Product Grid */}
-        <div className="products-grid">
+        {/* Main Content Area */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1 }}>
+          
+          {/* Quick-Filter Horizontal Category Pills */}
+          <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}>
+            {[
+              { id: '', label: 'All Collections' },
+              { id: 'cat_doors', label: 'Luxury Doors' },
+              { id: 'cat_whole_house', label: 'Whole-House Joinery' },
+              { id: 'cat_flooring', label: 'Marble & Stone' },
+              { id: 'cat_sanitary', label: 'Sanitary Ware' }
+            ].map(cat => {
+              const isSelected = category === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setCategory(cat.id)}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    padding: '0.5rem 1.1rem',
+                    borderRadius: '20px',
+                    fontSize: '0.85rem',
+                    fontWeight: isSelected ? '700' : '500',
+                    border: isSelected ? '1px solid var(--color-gold)' : '1px solid var(--color-border-light)',
+                    backgroundColor: isSelected ? 'var(--color-bg-navy)' : '#ffffff',
+                    color: isSelected ? 'var(--color-gold)' : '#475569',
+                    cursor: 'pointer',
+                    transition: 'var(--transition-smooth)',
+                    boxShadow: isSelected ? 'var(--shadow-gold-sm)' : 'var(--shadow-sm)'
+                  }}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Product Grid */}
+          {filteredProducts.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '4rem 2rem', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid var(--color-border-light)' }}>
+              <Layers size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)', marginBottom: '0.5rem' }}>No Materials Found</h3>
+              <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
+                No materials matched your filter query "{search}". Try searching for another item or reset filters.
+              </p>
+              <button 
+                className="btn-gold"
+                onClick={() => { setSearch(''); setCategory(''); }}
+              >
+                Reset Filters
+              </button>
+            </div>
+          ) : (
+            <div className="products-grid">
           {filteredProducts.map((product) => {
             const currentVariant = selectedVariants[product.id] || (product.variants && product.variants[0]);
             const currentTab = activeCardTabs[product.id] || 'overview';
@@ -286,6 +383,27 @@ export default function Catalog({ onAddToCart }) {
                 {/* Visual Header */}
                 <div className="product-image-container">
                   <span className="product-category-tag">{product.category_name}</span>
+                  <span style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    background: 'rgba(12, 22, 48, 0.88)',
+                    backdropFilter: 'blur(6px)',
+                    WebkitBackdropFilter: 'blur(6px)',
+                    border: '1px solid rgba(16, 185, 129, 0.4)',
+                    color: '#34d399',
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    padding: '0.25rem 0.65rem',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    zIndex: 2
+                  }}>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981' }} />
+                    Direct Supply
+                  </span>
                   {product.image_url ? (
                     <img 
                       src={product.image_url} 
@@ -487,6 +605,8 @@ export default function Catalog({ onAddToCart }) {
               </article>
             );
           })}
+            </div>
+          )}
         </div>
       </div>
     </div>
