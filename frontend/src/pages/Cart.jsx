@@ -470,7 +470,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                       <label>Delivery Site Location</label>
                       <input 
                         type="text" 
-                        placeholder="e.g. Lekki Phase 1, Lagos / Maitama, Abuja" 
+                        placeholder="e.g. GRA, Maiduguri / Sir Kashim Ibrahim Way / Abuja" 
                         value={rfqLocation}
                         onChange={e => setRfqLocation(e.target.value)}
                       />
@@ -713,8 +713,8 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                     </div>
                   </div>
                   <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: '1.5' }}>
-                    <p>Admiralty Way, Lekki Phase 1, Lagos &bull; Maitama District, Abuja, Nigeria</p>
-                    <p>Plant: HC Industrial Technology Park, Foshan, Guangdong</p>
+                    <p>Headquarters: GRA / Sir Kashim Ibrahim Way, Maiduguri, Borno State, Nigeria</p>
+                    <p>Liaison: Maitama, Abuja &bull; Admiralty Way, Lekki Phase 1, Lagos</p>
                     <p>Direct Hotline / WhatsApp: <strong>{directPhone}</strong> &bull; info@hcgroup-trade.com</p>
                   </div>
                 </div>
@@ -747,7 +747,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                 </div>
                 <div className="summary-field">
                   <span>Site Delivery Destination:</span>
-                  <strong>{selectedZone.city ? `${selectedZone.city}, ${selectedZone.state}` : 'Lekki Phase 1, Lagos, Nigeria'}</strong>
+                  <strong>{selectedZone.city ? `${selectedZone.city}, ${selectedZone.state}` : 'Maiduguri (GRA), Borno State, Nigeria'}</strong>
                 </div>
                 <div className="summary-field">
                   <span>Quality Standard:</span>

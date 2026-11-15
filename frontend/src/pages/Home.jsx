@@ -24,7 +24,7 @@ export default function Home({ setActiveTab }) {
   ];
 
   const projects = [
-    { id: 1, title: 'The Royal Villa', location: 'Dubai, UAE', image: '/assets/products/interior_1.jpeg' },
+    { id: 1, title: 'The Al-Barka Executive Estate', location: 'Maiduguri, Borno State', image: '/assets/products/interior_1.jpeg' },
     { id: 2, title: 'Azure Hotel Resort', location: 'Maldives', image: '/assets/products/interior_2.jpeg' },
     { id: 3, title: 'Skyline Penthouse', location: 'New York, USA', image: '/assets/products/interior_3.jpeg' },
     { id: 4, title: 'Grand Medical Center', location: 'London, UK', image: '/assets/products/interior_4.jpeg' },

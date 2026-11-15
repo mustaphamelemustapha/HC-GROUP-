@@ -10,20 +10,20 @@ export default function Projects({ setActiveTab }) {
   const projects = [
     {
       id: 1,
-      title: 'The Royal Palm Villa',
+      title: 'The Al-Barka Executive Estate',
       category: 'Private Villas',
-      location: 'Palm Jumeirah, Dubai, UAE',
+      location: 'GRA, Maiduguri, Borno State',
       year: '2025',
-      area: '2,400 m²',
+      area: '2,800 m²',
       image: '/assets/products/interior_1.jpeg',
-      description: 'An ultra-luxurious private beachfront estate requiring floor-to-ceiling custom walnut joinery, monolithic bathroom stones, and bespoke 3.4m copper-clad pivot entrance doors.',
+      description: 'An executive private estate featuring custom 3.2m motorized copper pivot doors, book-matched Italian Carrara marble floorings, and bespoke walk-in walnut dressing suites.',
       materials: [
-        'Minimalist Floor-to-Ceiling Wardrobes',
-        'Grande Copper-Clad Pivot Entrance Doors',
+        'Grande Copper-Clad Architectural Pivot Doors',
         'Book-matched Italian Carrara Marble Slabs',
-        'Acoustic Walnut Living Room Cladding'
+        'Minimalist Floor-to-Ceiling Walnut Wardrobes',
+        'Acoustic Timber Cladding & Security Glazing'
       ],
-      freightMode: 'Ocean Container + Crane-Lift On-Site'
+      freightMode: 'Dedicated Hydraulic Flatbed Direct to Maiduguri Site'
     },
     {
       id: 2,

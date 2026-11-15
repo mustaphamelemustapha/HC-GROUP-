@@ -217,7 +217,7 @@ export default function AdminDashboard() {
                               </span>
                             </td>
                             <td style={{ padding: '1rem', fontWeight: '600', color: 'var(--color-bg-navy)' }}>
-                              ${v.price_markup.toFixed(2)}
+                              ₦{v.price_markup.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                             </td>
                             <td style={{ padding: '1rem' }}>
                               <span style={{ 

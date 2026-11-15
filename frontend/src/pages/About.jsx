@@ -81,7 +81,8 @@ export default function About({ setActiveTab }) {
             </h2>
             <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.8', marginBottom: '1.5rem' }}>
               At <strong>HC Group (H-C COMPANY LTD)</strong>, we reject standard mass production in favor of bespoke architectural integrity. 
-              Our company was founded with a singular ambition: to provide developers, architects, and private estate owners 
+              Headquartered in Maiduguri, Borno State, with liaison offices in Abuja and Lagos and manufacturing facilities in Foshan, 
+              our company was founded with a singular ambition: to provide developers, architects, and private estate owners 
               with a single, accountable source for their complete interior envelope.
             </p>
             <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.8', marginBottom: '2rem' }}>

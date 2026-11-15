@@ -29,32 +29,32 @@ INSERT INTO attributes (id, name, display_name, data_type) VALUES
 ('attr_finish', 'finish', 'Surface Finish', 'string'),
 ('attr_flammability', 'flammability', 'Fire Safety Grade', 'string');
 
--- 4. Product Variants
+-- 4. Product Variants (Realistic Nigerian Luxury Sourcing Prices in ₦)
 -- Wardrobe Variants
 INSERT INTO product_variants (id, product_id, sku, price_markup, stock_quantity, weight_kg, volume_m3) VALUES
-('var_wardrobe_walnut', 'prod_wardrobe', 'WH-WARD-WLN', 4200.00, 20, 240.0, 4.8),
-('var_wardrobe_oak', 'prod_wardrobe', 'WH-WARD-OAK', 3800.00, 15, 220.0, 4.5);
+('var_wardrobe_walnut', 'prod_wardrobe', 'WH-WARD-WLN', 4200000.00, 20, 240.0, 4.8),
+('var_wardrobe_oak', 'prod_wardrobe', 'WH-WARD-OAK', 3800000.00, 15, 220.0, 4.5);
 
 -- Bathtub Variants
 INSERT INTO product_variants (id, product_id, sku, price_markup, stock_quantity, weight_kg, volume_m3) VALUES
-('var_bathtub_std', 'prod_bathtub', 'SW-BATHT-STD', 1850.00, 8, 140.0, 1.2);
+('var_bathtub_std', 'prod_bathtub', 'SW-BATHT-STD', 1850000.00, 8, 140.0, 1.2);
 
--- Marble Flooring Slabs
+-- Marble Flooring Slabs (per m² or batch)
 INSERT INTO product_variants (id, product_id, sku, price_markup, stock_quantity, weight_kg, volume_m3) VALUES
-('var_marble_slab_60', 'prod_marble_floor', 'FS-MARB-SLB60', 110.00, 800, 30.0, 0.08);
+('var_marble_slab_60', 'prod_marble_floor', 'FS-MARB-SLB60', 110000.00, 800, 30.0, 0.08);
 
--- Wood Wall Panels
+-- Wood Wall Panels (per acoustic slat panel)
 INSERT INTO product_variants (id, product_id, sku, price_markup, stock_quantity, weight_kg, volume_m3) VALUES
-('var_panel_walnut', 'prod_lounge_panel', 'WH-WOOD-WAL', 65.00, 1200, 12.0, 0.04);
+('var_panel_walnut', 'prod_lounge_panel', 'WH-WOOD-WAL', 65000.00, 1200, 12.0, 0.04);
 
 -- Door Variants
 INSERT INTO product_variants (id, product_id, sku, price_markup, stock_quantity, weight_kg, volume_m3) VALUES
-('var_door_pivot_std', 'prod_door_pivot', 'DR-PVT-STD', 3200.00, 10, 180.0, 1.5),
-('var_door_french_std', 'prod_door_french', 'DR-FRN-STD', 2450.00, 12, 110.0, 0.9),
-('var_door_sliding_std', 'prod_door_sliding', 'DR-SLD-STD', 1800.00, 14, 95.0, 0.7),
-('var_door_classic_std', 'prod_door_classic', 'DR-OAK-STD', 2850.00, 8, 130.0, 1.1),
-('var_door_flush_std', 'prod_door_flush', 'DR-FLS-STD', 950.00, 25, 45.0, 0.3),
-('var_door_glass_std', 'prod_door_glass', 'DR-GLS-STD', 1150.00, 18, 60.0, 0.4);
+('var_door_pivot_std', 'prod_door_pivot', 'DR-PVT-STD', 3200000.00, 10, 180.0, 1.5),
+('var_door_french_std', 'prod_door_french', 'DR-FRN-STD', 2450000.00, 12, 110.0, 0.9),
+('var_door_sliding_std', 'prod_door_sliding', 'DR-SLD-STD', 1800000.00, 14, 95.0, 0.7),
+('var_door_classic_std', 'prod_door_classic', 'DR-OAK-STD', 2850000.00, 8, 130.0, 1.1),
+('var_door_flush_std', 'prod_door_flush', 'DR-FLS-STD', 950000.00, 25, 45.0, 0.3),
+('var_door_glass_std', 'prod_door_glass', 'DR-GLS-STD', 1150000.00, 18, 60.0, 0.4);
 
 -- 5. Product Variant Attributes (Technical Specifications / Blueprint Data EAV Mapping)
 INSERT INTO product_attributes (variant_id, attribute_id, value) VALUES
@@ -121,16 +121,29 @@ INSERT INTO product_attributes (variant_id, attribute_id, value) VALUES
 ('var_door_glass_std', 'attr_dimensions', '2100mm (H) x 800mm (W) x 10mm (D)'),
 ('var_door_glass_std', 'attr_finish', 'Translucent Frosted Satin');
 
--- 6. Bulk pricing for materials (e.g. marble slabs buy > 100, price drops to 95)
+-- 6. Bulk pricing for materials (in ₦)
 INSERT INTO bulk_pricing_rules (id, variant_id, min_quantity, unit_price) VALUES
-('bulk_marble_100', 'var_marble_slab_60', 100, 95.00),
-('bulk_marble_300', 'var_marble_slab_60', 300, 85.00),
-('bulk_panel_200', 'var_panel_walnut', 200, 58.00),
-('bulk_door_flush_10', 'var_door_flush_std', 10, 850.00),
-('bulk_door_glass_10', 'var_door_glass_std', 10, 1020.00);
+('bulk_marble_100', 'var_marble_slab_60', 100, 95000.00),
+('bulk_marble_300', 'var_marble_slab_60', 300, 85000.00),
+('bulk_panel_200', 'var_panel_walnut', 200, 58000.00),
+('bulk_door_flush_10', 'var_door_flush_std', 10, 850000.00),
+('bulk_door_glass_10', 'var_door_glass_std', 10, 1020000.00);
 
--- 7. Shipping Rates
+-- 7. Shipping Rates (Maiduguri, Borno State as Primary Headquarters)
 INSERT INTO shipping_zones (id, state, city, base_rate, per_kg_rate, transport_type) VALUES
+-- Borno Hubs (Primary Headquarters & Regional Operations)
+('sz_borno_gra_p', 'Borno', 'Maiduguri (GRA)', 12000.00, 120.00, 'parcel'),
+('sz_borno_gra_f', 'Borno', 'Maiduguri (GRA)', 80000.00, 300.00, 'flatbed'),
+('sz_borno_gra_c', 'Borno', 'Maiduguri (GRA)', 220000.00, 550.00, 'crane_lift'),
+
+('sz_borno_central_p', 'Borno', 'Maiduguri Central (Sir Kashim Ibrahim Way)', 12000.00, 120.00, 'parcel'),
+('sz_borno_central_f', 'Borno', 'Maiduguri Central (Sir Kashim Ibrahim Way)', 80000.00, 300.00, 'flatbed'),
+('sz_borno_central_c', 'Borno', 'Maiduguri Central (Sir Kashim Ibrahim Way)', 220000.00, 550.00, 'crane_lift'),
+
+('sz_borno_unimaid_p', 'Borno', 'Maiduguri (Bama Road / University)', 15000.00, 140.00, 'parcel'),
+('sz_borno_unimaid_f', 'Borno', 'Maiduguri (Bama Road / University)', 85000.00, 320.00, 'flatbed'),
+('sz_borno_unimaid_c', 'Borno', 'Maiduguri (Bama Road / University)', 230000.00, 580.00, 'crane_lift'),
+
 -- Lagos Hubs
 ('sz_lagos_lekki_p', 'Lagos', 'Lekki Phase 1', 15000.00, 150.00, 'parcel'),
 ('sz_lagos_lekki_f', 'Lagos', 'Lekki Phase 1', 95000.00, 350.00, 'flatbed'),

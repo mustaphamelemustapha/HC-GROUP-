@@ -22,7 +22,7 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
       <div className="top-concierge-bar">
         <div className="top-concierge-inner">
           <div className="top-tagline">
-            <span>HC GROUP</span> • Bespoke Whole-House Customization & Architectural Sourcing
+            <span>HC GROUP</span> • Headquarters: Maiduguri, Borno State • Architectural Materials & Fit-Out
           </div>
           <div className="top-contacts">
             <a href="tel:+2349068875555" className="top-contact-link">

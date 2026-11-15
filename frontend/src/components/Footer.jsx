@@ -100,9 +100,12 @@ export default function Footer({ setActiveTab }) {
             <li>
               <MapPin size={18} color="var(--color-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
-                <strong style={{ color: '#ffffff' }}>Nigeria Operations:</strong>
+                <strong style={{ color: '#ffffff' }}>Corporate Headquarters:</strong>
                 <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-                  Admiralty Way, Lekki Phase 1, Lagos & Maitama, Abuja
+                  HC Group House, Sir Kashim Ibrahim Way / GRA, Maiduguri, Borno State, Nigeria
+                </span>
+                <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold-muted)', marginTop: '2px' }}>
+                  Liaison Desks: Maitama, Abuja & Lekki Phase 1, Lagos
                 </span>
               </div>
             </li>

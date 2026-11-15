@@ -17,7 +17,7 @@ export default function Contact({ setActiveTab }) {
     company: '',
     project_type: 'Private Villa',
     scope: ['Doors & Windows'],
-    budget: '₦50M - ₦150M ($50,000 - $150,000)',
+    budget: '₦50,000,000 - ₦150,000,000 (Luxury Residence)',
     location: '',
     message: ''
   });
@@ -82,7 +82,7 @@ export default function Contact({ setActiveTab }) {
   const faqs = [
     {
       q: 'How quickly can your team deploy for on-site measurement in Nigeria or internationally?',
-      a: 'For projects in Lagos, Abuja, and surrounding regions, our technical surveying team can deploy within 24 to 48 hours with 3D LiDAR laser scanners. For international projects, we schedule spatial audits aligned with your contractor’s construction milestones.'
+      a: 'For projects in Maiduguri, Borno State, Abuja, Lagos, and across Nigeria, our technical surveying team can deploy within 24 to 48 hours with 3D LiDAR laser scanners. For international projects, we schedule spatial audits aligned with your contractor’s construction milestones.'
     },
     {
       q: 'Can I discuss my project directly over phone or WhatsApp right now?',
@@ -90,7 +90,7 @@ export default function Contact({ setActiveTab }) {
     },
     {
       q: 'What is the standard procurement and production lead time?',
-      a: 'Bespoke custom items such as architectural pivot doors, laser-cut marble slabs, and custom modular joinery typically require 25 to 45 business days for factory fabrication. Freight logistics range from 5 days (air cargo) to 20-35 days (ocean container freight directly cleared into Lagos port or international destinations).'
+      a: 'Bespoke custom items such as architectural pivot doors, laser-cut marble slabs, and custom modular joinery typically require 25 to 45 business days for factory fabrication. Freight logistics range from 5 days (air cargo) to 20-35 days (ocean container freight directly cleared into Nigerian ports and transported safely to your site in Borno or nationwide).'
     },
     {
       q: 'Do you deliver physical material sample kits?',
@@ -159,7 +159,7 @@ export default function Contact({ setActiveTab }) {
                         company: '',
                         project_type: 'Private Villa',
                         scope: ['Doors & Windows'],
-                        budget: '₦50M - ₦150M ($50,000 - $150,000)',
+                        budget: '₦50,000,000 - ₦150,000,000 (Luxury Residence)',
                         location: '',
                         message: ''
                       });
@@ -251,10 +251,10 @@ export default function Contact({ setActiveTab }) {
                       value={formData.budget}
                       onChange={e => setFormData({ ...formData, budget: e.target.value })}
                     >
-                      <option value="₦25M - ₦50M ($25,000 - $50,000)">₦25M - ₦50M ($25,000 - $50,000)</option>
-                      <option value="₦50M - ₦150M ($50,000 - $150,000)">₦50M - ₦150M ($50,000 - $150,000)</option>
-                      <option value="₦150M - ₦500M ($150,000 - $500,000)">₦150M - ₦500M ($150,000 - $500,000)</option>
-                      <option value="₦500M+ ($500,000+ Whole-Estate Development)">₦500M+ ($500,000+ Whole-Estate)</option>
+                      <option value="₦25,000,000 - ₦50,000,000 (Medium Scale)">₦25,000,000 - ₦50,000,000 (Medium Scale)</option>
+                      <option value="₦50,000,000 - ₦150,000,000 (Luxury Residence)">₦50,000,000 - ₦150,000,000 (Luxury Residence)</option>
+                      <option value="₦150,000,000 - ₦500,000,000 (Commercial / Estate)">₦150,000,000 - ₦500,000,000 (Commercial / Estate)</option>
+                      <option value="₦500,000,000+ (Turnkey Mega Project)">₦500,000,000+ (Turnkey Mega Project)</option>
                     </select>
                   </div>
                 </div>
@@ -263,7 +263,7 @@ export default function Contact({ setActiveTab }) {
                   <label>Project Location (City, State / Country)</label>
                   <input 
                     type="text" 
-                    placeholder="e.g. Lekki Phase 1, Lagos / Maitama, Abuja / Dubai, UAE" 
+                    placeholder="e.g. GRA, Maiduguri / Sir Kashim Ibrahim Way / Maitama, Abuja" 
                     value={formData.location}
                     onChange={e => setFormData({ ...formData, location: e.target.value })}
                   />
@@ -345,9 +345,18 @@ export default function Contact({ setActiveTab }) {
               <div className="info-item">
                 <MapPin size={22} color="var(--color-gold)" className="info-icon" />
                 <div>
-                  <strong>Nigeria Operations & Project Sourcing</strong>
-                  <p>Admiralty Way, Lekki Phase 1, Lagos &bull; Maitama District, Abuja</p>
-                  <span className="info-sub">Direct Line: +234 9068875555 &bull; In-Person Consultation</span>
+                  <strong>Headquarters & Borno Operations</strong>
+                  <p>Sir Kashim Ibrahim Way / GRA, Maiduguri, Borno State, Nigeria</p>
+                  <span className="info-sub">Direct Line: +234 9068875555 &bull; Executive Consultation</span>
+                </div>
+              </div>
+
+              <div className="info-item">
+                <MapPin size={22} color="var(--color-gold)" className="info-icon" />
+                <div>
+                  <strong>Liaison Offices (Abuja & Lagos)</strong>
+                  <p>Maitama District, Abuja &bull; Admiralty Way, Lekki Phase 1, Lagos</p>
+                  <span className="info-sub">Project Coordination &bull; In-Person Consultation</span>
                 </div>
               </div>
 

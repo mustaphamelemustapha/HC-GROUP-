@@ -87,10 +87,13 @@ function initializeDatabase() {
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )`);
 
-        // Check if expanded Nigerian zones are present
-        db.get("SELECT count(*) as count FROM shipping_zones WHERE city = 'Lekki Phase 1'", (err, row) => {
+        // Auto-migrate prices to full realistic luxury Naira scale if previously seeded with unscaled values
+        db.run(`UPDATE product_variants SET price_markup = price_markup * 1000 WHERE price_markup < 10000 AND id IN ('var_wardrobe_walnut', 'var_wardrobe_oak', 'var_bathtub_std', 'var_marble_slab_60', 'var_panel_walnut', 'var_door_pivot_std', 'var_door_french_std', 'var_door_sliding_std', 'var_door_classic_std', 'var_door_flush_std', 'var_door_glass_std')`);
+
+        // Check if Maiduguri Borno zones are present
+        db.get("SELECT count(*) as count FROM shipping_zones WHERE city = 'Maiduguri (GRA)'", (err, row) => {
           if (!row || row.count === 0) {
-            console.log('Seeding expanded Nigerian shipping zones (Lekki, VI, Maitama, etc.)...');
+            console.log('Seeding Maiduguri, Borno and Nigerian shipping zones...');
             try {
               const seedSql = fs.readFileSync(path.join(DB_DIR, 'seed.sql'), 'utf8');
               const zonesInsertIdx = seedSql.indexOf('INSERT INTO shipping_zones');
@@ -99,7 +102,7 @@ function initializeDatabase() {
                 db.run("DELETE FROM shipping_zones", () => {
                   db.exec(zonesSql, (err) => {
                     if (err) console.error('Zone update error:', err);
-                    else console.log('Nigerian shipping zones loaded successfully.');
+                    else console.log('Maiduguri & Nigerian shipping zones loaded successfully.');
                   });
                 });
               }
