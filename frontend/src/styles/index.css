@@ -3195,7 +3195,18 @@ nav.main-nav {
 /* ==========================================================================
    Print-Specific Styles (Triggers on window.print())
    ========================================================================== */
+@page {
+  size: A4;
+  margin: 1cm;
+}
+
 @media print {
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   body * {
     visibility: hidden;
   }
@@ -3222,7 +3233,20 @@ nav.main-nav {
     left: 0 !important;
     top: 0 !important;
     width: 100% !important;
-    padding: 0.5cm !important;
+    padding: 0 !important;
     box-shadow: none !important;
+  }
+  .client-editable-field {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    color: #0c1630 !important;
+    font-weight: 700 !important;
+  }
+  .quote-table tr {
+    page-break-inside: avoid !important;
+  }
+  .quote-totals-grid, .quote-signatures-row {
+    page-break-inside: avoid !important;
   }
 }

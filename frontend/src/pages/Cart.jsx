@@ -1,8 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
-  Truck, Trash2, MapPin, Loader, Info, FolderArchive, Layers, 
-  ShoppingBag, Plus, Minus, ArrowRight, MessageCircle, Send, CheckCircle2, 
-  Printer, FileText, X, ShieldCheck, Download 
+  Truck, 
+  Trash2, 
+  MapPin, 
+  Loader, 
+  Info, 
+  FolderArchive, 
+  Layers, 
+  ShoppingBag, 
+  Plus, 
+  Minus, 
+  ArrowRight, 
+  MessageCircle, 
+  Send, 
+  CheckCircle2, 
+  Printer, 
+  FileText, 
+  X, 
+  ShieldCheck, 
+  Download,
+  Building2,
+  Calendar,
+  Check,
+  Phone,
+  Mail,
+  FileCheck
 } from 'lucide-react';
 
 export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCart, setActiveTab }) {
@@ -14,25 +36,33 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   // Project Boards State
   const [projectBoards, setProjectBoards] = useState([]);
   const [zones, setZones] = useState([]);
-  const [selectedZone, setSelectedZone] = useState({ state: '', city: '' });
-  const [shippingResults, setShippingResults] = useState({});
-  const [calculating, setCalculating] = useState({});
-  const [errors, setErrors] = useState({});
+  const [selectedZone, setSelectedZone] = useState({ state: 'Borno', city: 'Maiduguri Central (Sir Kashim Ibrahim Way)' });
   const [activeBoardId, setActiveBoardId] = useState(null);
+
+  // Freight Calculation States
+  const [cartShipping, setCartShipping] = useState(null);
+  const [boardShippingResults, setBoardShippingResults] = useState({});
+  const [isCalculatingFreight, setIsCalculatingFreight] = useState(false);
+  const [freightError, setFreightError] = useState(null);
 
   // RFQ Submission Modal State
   const [showRfqForm, setShowRfqForm] = useState(false);
   const [rfqName, setRfqName] = useState('');
   const [rfqEmail, setRfqEmail] = useState('');
   const [rfqPhone, setRfqPhone] = useState('+234 ');
-  const [rfqLocation, setRfqLocation] = useState('');
+  const [rfqLocation, setRfqLocation] = useState('GRA, Maiduguri, Borno State');
   const [rfqSubmitting, setRfqSubmitting] = useState(false);
   const [rfqSuccessId, setRfqSuccessId] = useState(null);
 
-  // Phase 2: Formal Quotation & PDF Spec Sheet Modal State
+  // Formal Quotation & PDF BoQ Spec Sheet Modal State
   const [showPrintQuote, setShowPrintQuote] = useState(false);
-  const [quoteRef] = useState(() => 'HC-QT-' + Math.floor(100000 + Math.random() * 900000));
-  const [quoteClientName, setQuoteClientName] = useState('Architectural Client / Contractor');
+  const [quoteRef] = useState(() => 'HC-BOQ-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000));
+  const [quoteClientName, setQuoteClientName] = useState('Executive Private Estate / Architecture Partner');
+  const [quoteSiteAddress, setQuoteSiteAddress] = useState('Sir Kashim Ibrahim Way / GRA, Maiduguri, Borno State');
+  const [quoteClientPhone, setQuoteClientPhone] = useState('+234 9068875555');
+  const [quoteProjectType, setQuoteProjectType] = useState('Turnkey Architectural Fit-Out & Bespoke Materials');
+  const [quoteSubmitSuccess, setQuoteSubmitSuccess] = useState(false);
+  const [quoteSubmitting, setQuoteSubmitting] = useState(false);
 
   const fetchProjectData = async () => {
     try {
@@ -56,23 +86,57 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
       .then((data) => {
         setZones(data);
         if (data.length > 0) {
-          setSelectedZone(data[0]);
+          // Default to Borno / Maiduguri HQ zone if found
+          const bornoZone = data.find(z => z.state.toLowerCase() === 'borno') || data[0];
+          setSelectedZone(bornoZone);
         }
       })
       .catch((err) => console.error(err));
   }, []);
 
-  // Recalculate shipping whenever zone, items count or active board changes
+  // Recalculate freight for Direct Cart
+  useEffect(() => {
+    if (!selectedZone.state || !selectedZone.city || cartItems.length === 0) {
+      setCartShipping(null);
+      return;
+    }
+
+    setIsCalculatingFreight(true);
+    setFreightError(null);
+
+    fetch('/api/v1/shipping/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: cartItems.map(item => ({
+          variantId: item.variantId,
+          quantity: item.quantity
+        })),
+        state: selectedZone.state,
+        city: selectedZone.city
+      })
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to compute site freight');
+        setCartShipping(data);
+        setIsCalculatingFreight(false);
+      })
+      .catch((err) => {
+        setFreightError(err.message);
+        setCartShipping(null);
+        setIsCalculatingFreight(false);
+      });
+  }, [cartItems, selectedZone]);
+
+  // Recalculate freight for Active Project Board
   useEffect(() => {
     if (!activeBoardId || !selectedZone.state || !selectedZone.city) return;
     const activeBoard = projectBoards.find(b => b.id === activeBoardId);
     if (!activeBoard || !activeBoard.items || activeBoard.items.length === 0) {
-      setShippingResults(prev => ({ ...prev, [activeBoardId]: null }));
+      setBoardShippingResults(prev => ({ ...prev, [activeBoardId]: null }));
       return;
     }
-
-    setCalculating(prev => ({ ...prev, [activeBoardId]: true }));
-    setErrors(prev => ({ ...prev, [activeBoardId]: null }));
 
     fetch('/api/v1/shipping/calculate', {
       method: 'POST',
@@ -88,16 +152,11 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
     })
       .then(async (res) => {
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to compute shipping');
-        setShippingResults(prev => ({ ...prev, [activeBoardId]: data }));
-        setCalculating(prev => ({ ...prev, [activeBoardId]: false }));
+        if (res.ok) {
+          setBoardShippingResults(prev => ({ ...prev, [activeBoardId]: data }));
+        }
       })
-      .catch((err) => {
-        setErrors(prev => ({ ...prev, [activeBoardId]: err.message }));
-        setShippingResults(prev => ({ ...prev, [activeBoardId]: null }));
-        setCalculating(prev => ({ ...prev, [activeBoardId]: false }));
-      });
-
+      .catch((err) => console.error(err));
   }, [activeBoardId, selectedZone, projectBoards]);
 
   const handleDeleteBoard = async (boardId) => {
@@ -121,32 +180,108 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
     if (!val) return;
     const [state, city] = val.split('|');
     setSelectedZone({ state, city });
+    setQuoteSiteAddress(`${city}, ${state}, Nigeria`);
   };
 
   // Calculations for Direct Cart
-  const cartSubtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const cartSubtotal = useMemo(() => {
+    return cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  }, [cartItems]);
+
+  const cartShippingFee = cartShipping?.calculation?.totalFee || 0;
+  const cartGrandTotal = cartSubtotal + cartShippingFee;
+
+  // Calculations for Active Project Board
+  const activeBoard = projectBoards.find(b => b.id === activeBoardId);
+  const activeBoardShipping = activeBoardId ? boardShippingResults[activeBoardId] : null;
+  const boardItemsSubtotal = activeBoard?.items?.reduce((acc, item) => acc + (item.price * item.quantity), 0) || 0;
+  const boardShippingFee = activeBoardShipping?.calculation?.totalFee || 0;
+  const boardFinalTotal = boardItemsSubtotal + boardShippingFee;
+
+  // Active items for quotation export
+  const activeItemsForQuote = viewMode === 'cart' 
+    ? cartItems.map(i => ({ name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity }))
+    : (activeBoard?.items || []).map(i => ({ name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity }));
+
+  const activeSubtotalForQuote = viewMode === 'cart' ? cartSubtotal : boardItemsSubtotal;
+  const activeShippingData = viewMode === 'cart' ? cartShipping : activeBoardShipping;
+  const activeFreightFeeForQuote = viewMode === 'cart' ? cartShippingFee : boardShippingFee;
+  const activeGrandTotalForQuote = viewMode === 'cart' ? cartGrandTotal : boardFinalTotal;
 
   // Generate WhatsApp Order Message
-  const generateWhatsAppCartLink = () => {
-    let msg = `*HC GROUP — MATERIAL SOURCING ORDER*\n\n`;
-    msg += `Hello HC Group, I would like to request an official quote for the following materials:\n\n`;
-    cartItems.forEach((item, idx) => {
+  const generateWhatsAppQuoteLink = () => {
+    let msg = `*HC GROUP — OFFICIAL BILL OF QUANTITIES QUOTATION*\n`;
+    msg += `Ref: ${quoteRef}\n`;
+    msg += `Client: ${quoteClientName}\n`;
+    msg += `Site Location: ${quoteSiteAddress}\n`;
+    msg += `Project Scope: ${quoteProjectType}\n\n`;
+    msg += `*SCHEDULE OF MATERIALS:*\n`;
+    activeItemsForQuote.forEach((item, idx) => {
       msg += `${idx + 1}. *${item.name}* (SKU: ${item.sku})\n`;
-      msg += `   Qty: ${item.quantity} × ₦${item.price.toLocaleString('en-NG')} = ₦${(item.price * item.quantity).toLocaleString('en-NG')}\n`;
+      msg += `   Qty: ${item.quantity} × ₦${item.price.toLocaleString('en-NG')} = ₦${item.subtotal.toLocaleString('en-NG')}\n`;
     });
-    msg += `\n*Estimated Supply Total: ₦${cartSubtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}*\n\n`;
-    msg += `Please confirm stock availability and freight delivery schedule. Thank you.`;
+    msg += `\n*Material Supply Subtotal:* ₦${activeSubtotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n`;
+    if (activeShippingData) {
+      msg += `*Site Delivery Freight (${activeShippingData.calculation.transportType.toUpperCase()}):* ₦${activeFreightFeeForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n`;
+    }
+    msg += `*TOTAL ESTIMATED INVESTMENT:* ₦${activeGrandTotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n\n`;
+    msg += `Headquarters: Sir Kashim Ibrahim Way, Maiduguri, Borno State.\nPlease confirm technical CAD review and production schedule.`;
     return `https://wa.me/2349068875555?text=${encodeURIComponent(msg)}`;
   };
 
-  // Submit Cart as Official Database RFQ
+  // Submit Formal Quotation to Backend RFQ Database
+  const handleSubmitQuotationToDesk = async () => {
+    setQuoteSubmitting(true);
+    try {
+      const scheduleSummary = activeItemsForQuote
+        .map((it, idx) => `${idx + 1}. ${it.name} (SKU: ${it.sku}, Qty: ${it.quantity}, Total: ₦${it.subtotal.toLocaleString('en-NG')})`)
+        .join('\n');
+
+      const fullMessage = `QUOTATION REFERENCE: ${quoteRef}\n` +
+        `Site Address: ${quoteSiteAddress}\n` +
+        `Materials Subtotal: ₦${activeSubtotalForQuote.toLocaleString('en-NG')}\n` +
+        `Logistics Freight: ₦${activeFreightFeeForQuote.toLocaleString('en-NG')}\n` +
+        `Total Investment: ₦${activeGrandTotalForQuote.toLocaleString('en-NG')}\n\n` +
+        `SCHEDULE OF FINISHES:\n${scheduleSummary}`;
+
+      const res = await fetch('/api/v1/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: quoteClientName,
+          email: 'quote@hcgroup-client.com',
+          phone: quoteClientPhone,
+          company: quoteClientName,
+          project_type: quoteProjectType,
+          scope: 'Official Architectural BoQ',
+          budget: `₦${activeGrandTotalForQuote.toLocaleString('en-NG')}`,
+          location: quoteSiteAddress,
+          message: fullMessage
+        })
+      });
+
+      if (res.ok) {
+        setQuoteSubmitSuccess(true);
+        setTimeout(() => setQuoteSubmitSuccess(false), 6000);
+      } else {
+        throw new Error('Failed to submit quote to desk');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Could not submit quotation: ' + e.message);
+    } finally {
+      setQuoteSubmitting(false);
+    }
+  };
+
+  // Submit Direct Cart RFQ Modal
   const handleDirectCartRfq = async (e) => {
     e.preventDefault();
     if (!rfqName || !rfqEmail) return;
 
     setRfqSubmitting(true);
     try {
-      const lineItemsSummary = cartItems.map(i => `${i.name} (SKU: ${i.sku}, Qty: ${i.quantity}, Unit Price: ₦${i.price})`).join('; ');
+      const lineItemsSummary = cartItems.map(i => `${i.name} (SKU: ${i.sku}, Qty: ${i.quantity}, Price: ₦${i.price})`).join('; ');
       const res = await fetch('/api/v1/inquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -154,12 +289,12 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
           name: rfqName,
           email: rfqEmail,
           phone: rfqPhone,
-          company: 'Direct Cart Order',
-          project_type: 'Material Supply Order',
-          scope: 'Direct Cart Items',
-          budget: `₦${cartSubtotal.toLocaleString('en-NG')}`,
+          company: 'Direct Client Order',
+          project_type: 'Material Sourcing & Delivery',
+          scope: 'Direct Cart Schedule',
+          budget: `₦${cartGrandTotal.toLocaleString('en-NG')}`,
           location: rfqLocation,
-          message: `Ordered Items: ${lineItemsSummary}`
+          message: `Ordered Items: ${lineItemsSummary}. Delivery Site: ${selectedZone.city}, ${selectedZone.state}.`
         })
       });
 
@@ -175,24 +310,6 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
     }
   };
 
-  // Calculations for Active Project Board
-  const activeBoard = projectBoards.find(b => b.id === activeBoardId);
-  const activeShipping = activeBoardId ? shippingResults[activeBoardId] : null;
-  const activeError = activeBoardId ? errors[activeBoardId] : null;
-  const isActiveCalculating = activeBoardId ? calculating[activeBoardId] : false;
-
-  const boardItemsSubtotal = activeBoard?.items?.reduce((acc, item) => acc + (item.price * item.quantity), 0) || 0;
-  const boardShippingFee = activeShipping?.calculation?.totalFee || 0;
-  const boardFinalTotal = boardItemsSubtotal + boardShippingFee;
-
-  // Active items for quotation export
-  const activeItemsForQuote = viewMode === 'cart' 
-    ? cartItems.map(i => ({ name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity }))
-    : (activeBoard?.items || []).map(i => ({ name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity }));
-
-  const activeSubtotalForQuote = viewMode === 'cart' ? cartSubtotal : boardItemsSubtotal;
-  const activeGrandTotalForQuote = viewMode === 'cart' ? cartSubtotal : boardFinalTotal;
-
   return (
     <div className="cart-page-container">
       {/* Header & Mode Selector */}
@@ -203,7 +320,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
             Materials Order & Freight Engine
           </h2>
           <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
-            Review your selected materials, estimate site delivery freight, and export formal architectural quotes.
+            Review your architectural specifications, calculate site delivery freight, and export formal BoQ quotations.
           </p>
         </div>
 
@@ -298,15 +415,12 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                       <div className="cart-item-info">
                         <h4 style={{ fontSize: '1.05rem', color: 'var(--color-bg-navy)', marginBottom: '0.25rem' }}>{item.name}</h4>
                         <div className="cart-item-meta" style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                          SKU: <strong>{item.sku}</strong>
-                        </div>
-                        <div style={{ fontWeight: '600', color: 'var(--color-gold-muted)', marginTop: '0.35rem' }}>
-                          ₦{item.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })} each
+                          SKU: <span style={{ color: 'var(--color-gold)', fontWeight: '700' }}>{item.sku}</span> &bull; Unit Rate: ₦{item.price.toLocaleString('en-NG')}
                         </div>
                       </div>
 
-                      {/* Quantity Controls */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      {/* Quantity Stepper */}
+                      <div className="qty-stepper">
                         <button 
                           className="qty-btn"
                           onClick={() => onUpdateQty && onUpdateQty(item.variantId, item.quantity - 1)}
@@ -314,9 +428,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                         >
                           <Minus size={14} />
                         </button>
-                        <span style={{ fontWeight: '700', minWidth: '24px', textAlign: 'center', fontSize: '1rem' }}>
-                          {item.quantity}
-                        </span>
+                        <span className="qty-value">{item.quantity}</span>
                         <button 
                           className="qty-btn"
                           onClick={() => onUpdateQty && onUpdateQty(item.variantId, item.quantity + 1)}
@@ -344,62 +456,97 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                 </div>
               </div>
 
-              {/* Order Summary & Direct Actions */}
+              {/* Order Summary & Site Freight Engine */}
               <div className="summary-card">
                 <h3 className="summary-title" style={{ fontSize: '1.2rem', marginBottom: '1.25rem' }}>
-                  Procurement Summary
+                  Procurement & Site Freight
                 </h3>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.95rem', borderBottom: '1px solid var(--color-border-light)', paddingBottom: '1.25rem', marginBottom: '1.25rem' }}>
+                {/* Delivery Zone Selector */}
+                <div style={{ marginBottom: '1.25rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', color: '#64748b', marginBottom: '0.45rem', fontWeight: '500' }}>
+                    <MapPin size={14} style={{ verticalAlign: 'middle', marginRight: '4px', color: 'var(--color-gold)' }} />
+                    Destination Project Site (Nigeria)
+                  </label>
+                  <select 
+                    className="filter-select"
+                    value={`${selectedZone.state}|${selectedZone.city}`}
+                    onChange={handleZoneChange}
+                    style={{ width: '100%' }}
+                  >
+                    {zones.map((zone, idx) => (
+                      <option key={idx} value={`${zone.state}|${zone.city}`}>
+                        {zone.city}, {zone.state}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.95rem', borderBottom: '1px solid var(--color-border-light)', paddingBottom: '1.25rem', marginBottom: '1.25rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#64748b' }}>Total Items Sourced</span>
-                    <span style={{ fontWeight: '600' }}>{cartItems.reduce((s, i) => s + i.quantity, 0)} units</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#64748b' }}>Base Supply Subtotal</span>
+                    <span style={{ color: '#64748b' }}>Materials Supply Subtotal</span>
                     <span style={{ fontWeight: '600' }}>₦{cartSubtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <Truck size={15} color="var(--color-gold)" /> Site Delivery Freight
+                      {isCalculatingFreight && <Loader size={12} className="spin" />}
+                    </span>
+                    <span style={{ fontWeight: '600', color: 'var(--color-bg-navy)' }}>
+                      {freightError ? 'Contact Dispatch' : cartShipping ? `₦${cartShippingFee.toLocaleString('en-NG', { minimumFractionDigits: 2 })}` : 'Calculating...'}
+                    </span>
                   </div>
                 </div>
 
+                {/* Grand Total */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.25rem', fontWeight: '700', marginBottom: '1.5rem' }}>
-                  <span style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)' }}>Estimated Supply</span>
-                  <span style={{ color: 'var(--color-gold-muted)' }}>
-                    ₦{cartSubtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                  <span style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)' }}>Total Estimated Investment</span>
+                  <span style={{ color: 'var(--color-gold)' }}>
+                    ₦{cartGrandTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
 
-                {/* Primary Action 1: Instant WhatsApp Order */}
+                {/* Primary Action 1: Export Formal BoQ PDF */}
+                <button 
+                  className="btn-gold" 
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.95rem', marginBottom: '0.75rem', fontSize: '0.95rem' }}
+                  onClick={() => setShowPrintQuote(true)}
+                >
+                  <FileText size={18} /> Generate Architectural BoQ / PDF Quote
+                </button>
+
+                {/* Primary Action 2: Direct WhatsApp Order */}
                 <a 
-                  href={generateWhatsAppCartLink()}
+                  href={generateWhatsAppQuoteLink()}
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="whatsapp-action-btn"
-                  style={{ width: '100%', justifyContent: 'center', padding: '0.95rem', marginBottom: '0.75rem', fontSize: '1rem' }}
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginBottom: '0.75rem', fontSize: '0.9rem' }}
                 >
-                  <MessageCircle size={20} /> Order via WhatsApp (+234 9068875555)
+                  <MessageCircle size={18} /> Inquire via WhatsApp (+234 9068875555)
                 </a>
 
-                {/* Phase 2 Feature: Formal Printable PDF Quotation & Spec Sheet */}
+                {/* Primary Action 3: Formal Database RFQ */}
                 <button 
                   className="btn-outline" 
-                  style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginBottom: '0.75rem' }}
-                  onClick={() => setShowPrintQuote(true)}
-                >
-                  <Printer size={17} /> Print / Export Formal Quote (PDF)
-                </button>
-
-                {/* Primary Action 2: Formal Database RFQ */}
-                <button 
-                  className="btn-gold" 
-                  style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginBottom: '1rem' }}
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.75rem', marginBottom: '1rem', fontSize: '0.85rem' }}
                   onClick={() => setShowRfqForm(true)}
                 >
-                  Submit as Formal RFQ <Send size={16} />
+                  Submit Order as Formal RFQ <Send size={15} />
                 </button>
 
-                <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: '6px', fontSize: '0.8rem', color: '#64748b', lineHeight: '1.5' }}>
-                  <strong>White-Glove Guarantee:</strong> Every order includes verified laser measurements, factory quality audit, and our 10-year structural warranty.
-                </div>
+                {/* Logistics Badge */}
+                {cartShipping && (
+                  <div style={{ backgroundColor: '#f8fafc', padding: '0.85rem', borderRadius: '6px', border: '1px solid var(--color-border-light)', fontSize: '0.8rem', color: '#64748b' }}>
+                    <div style={{ fontWeight: '700', color: 'var(--color-bg-navy)', marginBottom: '0.2rem' }}>
+                      Recommended Logistics Fleet: <span style={{ color: 'var(--color-gold)', textTransform: 'uppercase' }}>{cartShipping.calculation.transportType.replace('_', ' ')}</span>
+                    </div>
+                    <div>
+                      Load Metrics: {cartShipping.metrics.totalWeightKg.toFixed(1)} kg &bull; {cartShipping.metrics.totalVolumeM3.toFixed(2)} m³
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -597,20 +744,25 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                     <span style={{ fontWeight: '600' }}>₦{boardItemsSubtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: '#64748b' }}>
-                      Delivery Freight 
-                      {isActiveCalculating && <Loader size={12} className="animate-spin" style={{ marginLeft: '6px', display: 'inline-block' }} />}
-                    </span>
+                    <span style={{ color: '#64748b' }}>Delivery Freight</span>
                     <span style={{ fontWeight: '600' }}>
-                      {activeError ? 'Unavailable' : activeShipping ? `₦${activeShipping.calculation.totalFee.toLocaleString('en-NG', { minimumFractionDigits: 2 })}` : '₦0.00'}
+                      {activeBoardShipping ? `₦${activeBoardShipping.calculation.totalFee.toLocaleString('en-NG', { minimumFractionDigits: 2 })}` : '₦0.00'}
                     </span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.5rem' }}>
                   <span style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)' }}>Estimated Total</span>
-                  <span style={{ color: 'var(--color-gold-muted)' }}>₦{boardFinalTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
+                  <span style={{ color: 'var(--color-gold)' }}>₦{boardFinalTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
                 </div>
+
+                <button 
+                  className="btn-gold" 
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginBottom: '0.75rem' }}
+                  onClick={() => setShowPrintQuote(true)}
+                >
+                  <FileText size={17} /> Generate Architectural BoQ / PDF Quote
+                </button>
 
                 <a 
                   href={`https://wa.me/2349068875555?text=${encodeURIComponent(`Hello HC Group, I am reviewing Project Board "${activeBoard?.name}" totaling ₦${boardFinalTotal.toLocaleString('en-NG')} for delivery to ${selectedZone.city}, ${selectedZone.state}. Please provide the formal schedule.`)}`}
@@ -622,28 +774,13 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                   <MessageCircle size={18} /> Inquire via WhatsApp
                 </a>
 
-                <button 
-                  className="btn-outline" 
-                  style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginBottom: '1rem' }}
-                  onClick={() => setShowPrintQuote(true)}
-                >
-                  <Printer size={17} /> Export Formal Project Quote (PDF)
-                </button>
-
-                {activeError && (
-                  <div style={{ backgroundColor: '#fef2f2', borderLeft: '4px solid #ef4444', padding: '0.75rem', borderRadius: '4px', fontSize: '0.85rem', color: '#991b1b', display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-                    <Info size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
-                    <div>{activeError}</div>
-                  </div>
-                )}
-
-                {activeShipping && (
+                {activeBoardShipping && (
                   <div style={{ backgroundColor: '#f8fafc', padding: '1rem', borderRadius: '6px', border: '1px solid var(--color-border-light)', fontSize: '0.85rem' }}>
                     <div style={{ fontWeight: '600', color: 'var(--color-bg-navy)', marginBottom: '0.35rem' }}>
-                      Recommended Transport: <span style={{ color: 'var(--color-gold-muted)', textTransform: 'uppercase' }}>{activeShipping.calculation.transportType}</span>
+                      Recommended Transport: <span style={{ color: 'var(--color-gold)', textTransform: 'uppercase' }}>{activeBoardShipping.calculation.transportType.replace('_', ' ')}</span>
                     </div>
                     <div style={{ color: '#64748b' }}>
-                      Total Load: {activeShipping.metrics.totalWeightKg.toFixed(1)} kg &bull; {activeShipping.metrics.totalVolumeM3.toFixed(2)} m³
+                      Total Load: {activeBoardShipping.metrics.totalWeightKg.toFixed(1)} kg &bull; {activeBoardShipping.metrics.totalVolumeM3.toFixed(2)} m³
                     </div>
                   </div>
                 )}
@@ -654,7 +791,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
       )}
 
       {/* =========================================================================
-          PHASE 2: FORMAL PRINTABLE SPEC SHEET & PDF QUOTATION MODAL
+          OFFICIAL ARCHITECTURAL BILL OF QUANTITIES (BoQ) & PDF QUOTATION MODAL
          ========================================================================= */}
       {showPrintQuote && (
         <div className="modal-backdrop print-modal-backdrop" onClick={() => setShowPrintQuote(false)}>
@@ -663,31 +800,56 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
             {/* Top Modal Controls (Hidden in Print) */}
             <div className="print-controls-bar no-print">
               <div>
-                <strong>Official Architectural Quotation</strong>
-                <span style={{ fontSize: '0.85rem', color: '#64748b', marginLeft: '0.5rem' }}>
-                  Ready to print or save as PDF
+                <strong style={{ fontSize: '1rem', color: '#ffffff' }}>Official Architectural Quotation</strong>
+                <span style={{ fontSize: '0.8rem', color: 'var(--color-gold)', marginLeft: '0.5rem' }}>
+                  Letterhead & Bill of Quantities (BoQ)
                 </span>
               </div>
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <button 
                   className="btn-gold"
-                  style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}
+                  style={{ padding: '0.45rem 1.15rem', fontSize: '0.85rem' }}
                   onClick={() => window.print()}
+                  title="Print or Save as PDF"
                 >
-                  <Printer size={16} /> Print / Save PDF
+                  <Printer size={15} /> Print / Download PDF
                 </button>
                 <a 
-                  href={`https://wa.me/2349068875555?text=${encodeURIComponent(`Hello HC Group, please find my Quotation Reference: ${quoteRef} totaling ₦${activeGrandTotalForQuote.toLocaleString('en-NG')} for procurement confirmation.`)}`}
+                  href={generateWhatsAppQuoteLink()}
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="whatsapp-action-btn"
-                  style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                  style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
                 >
-                  <MessageCircle size={16} /> Send to WhatsApp
+                  <MessageCircle size={15} /> WhatsApp Dispatch
                 </a>
+                <button
+                  type="button"
+                  onClick={handleSubmitQuotationToDesk}
+                  disabled={quoteSubmitting}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    background: quoteSubmitSuccess ? '#10b981' : '#ffffff',
+                    color: quoteSubmitSuccess ? '#ffffff' : 'var(--color-bg-navy)',
+                    border: 'none',
+                    padding: '0.45rem 0.9rem',
+                    borderRadius: '6px',
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {quoteSubmitSuccess ? (
+                    <><Check size={14} /> Logged with Desk</>
+                  ) : (
+                    <><FileCheck size={14} /> Submit to Engineering Desk</>
+                  )}
+                </button>
                 <button 
                   className="modal-close-btn" 
-                  style={{ position: 'static' }}
+                  style={{ position: 'static', color: '#ffffff' }}
                   onClick={() => setShowPrintQuote(false)}
                 >
                   <X size={20} />
@@ -695,36 +857,42 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               </div>
             </div>
 
-            {/* Printable Document Sheet */}
+            {/* Printable Document Sheet (Conforms to A4 standards) */}
             <div className="printable-document">
               
               {/* Corporate Header */}
               <div className="quote-header-grid">
                 <div className="quote-logo-wrap">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                    <img src="/assets/logo.jpg" alt="HC Group" style={{ height: '52px', borderRadius: '4px' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.75rem' }}>
+                    <img src="/assets/logo.jpg" alt="HC Group" style={{ height: '56px', borderRadius: '4px', border: '1px solid var(--color-gold)' }} />
                     <div>
-                      <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', color: 'var(--color-bg-navy)', margin: 0 }}>
+                      <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.75rem', color: 'var(--color-bg-navy)', margin: 0 }}>
                         HC <span style={{ color: 'var(--color-gold)' }}>GROUP</span>
                       </h2>
-                      <span style={{ fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', color: '#64748b' }}>
-                        H-C COMPANY LTD • SOURCING & FIT-OUT
+                      <span style={{ fontSize: '0.75rem', letterSpacing: '1.5px', textTransform: 'uppercase', color: '#64748b', fontWeight: '700' }}>
+                        H-C COMPANY LTD • ARCHITECTURAL SOURCING & FIT-OUT
                       </span>
                     </div>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: '1.5' }}>
-                    <p>Headquarters: GRA / Sir Kashim Ibrahim Way, Maiduguri, Borno State, Nigeria</p>
-                    <p>Liaison: Maitama, Abuja &bull; Admiralty Way, Lekki Phase 1, Lagos</p>
-                    <p>Direct Hotline / WhatsApp: <strong>{directPhone}</strong> &bull; info@hcgroup-trade.com</p>
+                  <div style={{ fontSize: '0.82rem', color: '#475569', lineHeight: '1.5' }}>
+                    <p style={{ margin: '0 0 2px 0' }}>
+                      <strong>Corporate Headquarters:</strong> HC Group House, Sir Kashim Ibrahim Way / GRA, Maiduguri, Borno State, Nigeria
+                    </p>
+                    <p style={{ margin: '0 0 2px 0' }}>
+                      <strong>Liaison Desks:</strong> Maitama, Abuja &bull; Admiralty Way, Lekki Phase 1, Lagos
+                    </p>
+                    <p style={{ margin: '0 0 2px 0' }}>
+                      <strong>Hotline / WhatsApp:</strong> {directPhone} &bull; <strong>Email:</strong> info@hcgroup-trade.com / hccompanyltd1@gmail.com
+                    </p>
                   </div>
                 </div>
 
-                <div className="quote-meta-wrap">
+                <div className="quote-meta-wrap" style={{ textAlign: 'right' }}>
                   <div className="quote-badge">OFFICIAL BILL OF QUANTITIES</div>
-                  <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#334155' }}>
-                    <div>Reference: <strong style={{ color: 'var(--color-bg-navy)', fontFamily: 'monospace' }}>{quoteRef}</strong></div>
+                  <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#334155', lineHeight: '1.6' }}>
+                    <div>Quotation Ref: <strong style={{ color: 'var(--color-bg-navy)', fontFamily: 'monospace', fontSize: '1rem' }}>{quoteRef}</strong></div>
                     <div>Date of Issue: <strong>{new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</strong></div>
-                    <div>Quotation Validity: <strong>30 Business Days</strong></div>
+                    <div>Commercial Validity: <strong style={{ color: '#166534' }}>30 Business Days (Price Locked)</strong></div>
                   </div>
                 </div>
               </div>
@@ -732,66 +900,84 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               {/* Client & Project Specs Summary */}
               <div className="quote-client-summary">
                 <div className="summary-field">
-                  <span>Prepared For:</span>
+                  <span>Client / Organization:</span>
                   <input 
                     type="text" 
                     value={quoteClientName} 
                     onChange={e => setQuoteClientName(e.target.value)}
                     className="client-editable-field"
-                    placeholder="Enter Client / Firm Name"
+                    placeholder="Enter Client or Architectural Firm Name"
                   />
                 </div>
                 <div className="summary-field">
-                  <span>Project Sourcing Board:</span>
-                  <strong>{viewMode === 'cart' ? 'Direct Order Schedule' : (activeBoard?.name || 'Whole-House Scope')}</strong>
+                  <span>Project Classification:</span>
+                  <input 
+                    type="text" 
+                    value={quoteProjectType} 
+                    onChange={e => setQuoteProjectType(e.target.value)}
+                    className="client-editable-field"
+                    placeholder="e.g. Private Luxury Villa / Hospitality"
+                  />
                 </div>
                 <div className="summary-field">
-                  <span>Site Delivery Destination:</span>
-                  <strong>{selectedZone.city ? `${selectedZone.city}, ${selectedZone.state}` : 'Maiduguri (GRA), Borno State, Nigeria'}</strong>
+                  <span>Project Site Delivery Address:</span>
+                  <input 
+                    type="text" 
+                    value={quoteSiteAddress} 
+                    onChange={e => setQuoteSiteAddress(e.target.value)}
+                    className="client-editable-field"
+                    placeholder="Enter Site Location / Plot"
+                  />
                 </div>
                 <div className="summary-field">
-                  <span>Quality Standard:</span>
-                  <strong>ISO 9001 • CE Mark • Class B1 Fire Safe</strong>
+                  <span>Client Contact / WhatsApp:</span>
+                  <input 
+                    type="text" 
+                    value={quoteClientPhone} 
+                    onChange={e => setQuoteClientPhone(e.target.value)}
+                    className="client-editable-field"
+                    placeholder="+234..."
+                  />
                 </div>
               </div>
 
-              {/* Line Items Table */}
+              {/* Line Items BoQ Table */}
               <div className="quote-table-wrapper">
                 <table className="quote-table">
                   <thead>
                     <tr>
-                      <th style={{ width: '40px' }}>#</th>
-                      <th>Architectural Material & Specification</th>
+                      <th style={{ width: '40px' }}>Item</th>
+                      <th>Architectural Specification & Material Description</th>
                       <th>SKU Code</th>
                       <th style={{ textAlign: 'center' }}>Qty</th>
                       <th style={{ textAlign: 'right' }}>Unit Rate (₦)</th>
-                      <th style={{ textAlign: 'right' }}>Amount (₦)</th>
+                      <th style={{ textAlign: 'right' }}>Total Amount (₦)</th>
                     </tr>
                   </thead>
                   <tbody>
                     {activeItemsForQuote.length === 0 ? (
                       <tr>
                         <td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
-                          No materials selected in this quotation.
+                          No materials specified in this quotation.
                         </td>
                       </tr>
                     ) : (
                       activeItemsForQuote.map((item, idx) => (
                         <tr key={idx}>
-                          <td>0{idx + 1}</td>
+                          <td style={{ fontWeight: '600' }}>{idx < 9 ? `0${idx + 1}` : idx + 1}</td>
                           <td>
-                            <strong>{item.name}</strong>
+                            <strong style={{ color: 'var(--color-bg-navy)' }}>{item.name}</strong>
                           </td>
                           <td style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#475569' }}>
                             {item.sku}
                           </td>
-                          <td style={{ textAlign: 'center', fontWeight: '600' }}>
+                          <td style={{ textAlign: 'center', fontWeight: '700' }}>
                             {item.quantity}
                           </td>
                           <td style={{ textAlign: 'right' }}>
                             ₦{item.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                           </td>
-                          <td style={{ textAlign: 'right', fontWeight: '700' }}>
+                          <td style={{ textAlign: 'right', fontWeight: '700', color: 'var(--color-bg-navy)' }}>
                             ₦{item.subtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                           </td>
                         </tr>
@@ -804,12 +990,12 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               {/* Totals & Freight Grid */}
               <div className="quote-totals-grid">
                 <div className="quote-notes">
-                  <h4>Procurement & Logistics Schedule:</h4>
+                  <h4>Commercial Terms & Fabrication Schedule:</h4>
                   <ul>
-                    <li>Factory fabrication: 25 - 45 days upon CAD blueprint sign-off.</li>
-                    <li>Freight mode: Dedicated hydraulic transit with crane offload to project site.</li>
-                    <li>On-site survey: Laser 3D LiDAR measurement audit included prior to final millwork.</li>
-                    <li>Payment terms: 50% factory commissioning deposit, 50% upon pre-dispatch inspection.</li>
+                    <li><strong>Factory Fabrication:</strong> 25 – 45 business days upon architectural CAD blueprint sign-off.</li>
+                    <li><strong>Laser 3D Measurement:</strong> Complimentary on-site laser survey audit prior to final millwork.</li>
+                    <li><strong>Freight Mode:</strong> Dedicated hydraulic transport fleet dispatching directly from Maiduguri HQ.</li>
+                    <li><strong>Payment Milestone:</strong> 50% production deposit, 50% upon quality control sign-off prior to site delivery.</li>
                   </ul>
                 </div>
 
@@ -818,34 +1004,40 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                     <span>Materials Supply Subtotal:</span>
                     <strong>₦{activeSubtotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
                   </div>
-                  {viewMode === 'boards' && activeShipping && (
+                  {activeShippingData && (
                     <div className="calc-row">
-                      <span>Freight & Site Offload ({activeShipping.calculation.transportType.toUpperCase()}):</span>
-                      <strong>₦{activeShipping.calculation.totalFee.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
+                      <span>Logistics Freight ({activeShippingData.calculation.transportType.replace('_', ' ').toUpperCase()}):</span>
+                      <strong>₦{activeFreightFeeForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
                     </div>
                   )}
+                  <div className="calc-row">
+                    <span>Value Added Tax (VAT 7.5%):</span>
+                    <strong style={{ color: '#166534' }}>Included in Commercial Rate</strong>
+                  </div>
                   <div className="calc-row grand-total-row">
-                    <span>Total Estimated Quotation:</span>
-                    <strong style={{ color: 'var(--color-bg-navy)' }}>
+                    <span>Total Estimated Investment:</span>
+                    <strong style={{ color: 'var(--color-bg-navy)', fontSize: '1.3rem' }}>
                       ₦{activeGrandTotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                     </strong>
                   </div>
                 </div>
               </div>
 
-              {/* Warranty Stamp & Signatures */}
+              {/* Warranty Stamp & Official Signatures */}
               <div className="quote-signatures-row">
                 <div className="warranty-stamp">
-                  <ShieldCheck size={32} color="var(--color-gold)" />
+                  <ShieldCheck size={36} color="var(--color-gold)" style={{ flexShrink: 0 }} />
                   <div>
-                    <strong>10-Year Certified Guarantee</strong>
-                    <p>Covers structural joinery, pivot hardware & stone integrity.</p>
+                    <strong style={{ fontSize: '0.95rem', color: 'var(--color-bg-navy)' }}>10-Year Certified Guarantee</strong>
+                    <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>
+                      Official warranty covering precision joinery, pivot hardware & marble structural integrity.
+                    </p>
                   </div>
                 </div>
 
                 <div className="signature-box">
                   <div className="sig-line"></div>
-                  <span>Authorized Signature (HC Group Ltd)</span>
+                  <span>Authorized Signatory (HC Group Ltd)</span>
                 </div>
 
                 <div className="signature-box">
