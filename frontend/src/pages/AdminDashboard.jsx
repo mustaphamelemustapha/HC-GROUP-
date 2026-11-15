@@ -20,10 +20,12 @@ import {
   Package,
   Layers,
   ExternalLink,
-  AlertTriangle
+  AlertTriangle,
+  LogOut,
+  ShieldCheck
 } from 'lucide-react';
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ adminUser, onLogout }) {
   const [activeAdminTab, setActiveAdminTab] = useState('inventory'); // 'inventory' | 'inquiries' | 'logistics'
   const [products, setProducts] = useState([]);
   const [inquiries, setInquiries] = useState([]);
@@ -295,13 +297,51 @@ export default function AdminDashboard() {
           <h1 className="section-title" style={{ textAlign: 'left', marginBottom: '0.25rem', fontSize: '2rem' }}>
             Executive Control Center
           </h1>
-          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
+          <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '0.5rem' }}>
             Central administration for catalog inventory, pricing thresholds, client RFQs, and Maiduguri logistics freight matrix.
           </p>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            backgroundColor: '#f0fdf4',
+            border: '1px solid #bbf7d0',
+            color: '#166534',
+            padding: '0.2rem 0.65rem',
+            borderRadius: '6px',
+            fontSize: '0.8rem',
+            fontWeight: '600'
+          }}>
+            <ShieldCheck size={14} color="#166534" />
+            <span>Authenticated Executive: <strong>{adminUser?.email || 'hccompanyltd1@gmail.com'}</strong></span>
+          </div>
         </div>
 
         {/* Global Controls & Tab Switcher */}
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              title="Lock Terminal & Sign Out"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                padding: '0.6rem 0.9rem',
+                borderRadius: '8px',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                fontWeight: '600',
+                color: '#dc2626'
+              }}
+            >
+              <LogOut size={15} />
+              <span>Lock Terminal</span>
+            </button>
+          )}
+
           <button
             onClick={() => {
               fetchInventory();

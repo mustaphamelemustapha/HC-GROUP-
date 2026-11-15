@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ShoppingBag, ChevronDown, Settings, Menu, X, ArrowRight, Phone, MessageCircle } from 'lucide-react';
+import { ShoppingBag, ChevronDown, Settings, Menu, X, ArrowRight, Phone, MessageCircle, LogOut, ShieldCheck } from 'lucide-react';
 
-export default function Header({ activeTab, setActiveTab, totalCartItems }) {
+export default function Header({ activeTab, setActiveTab, totalCartItems, adminUser, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
@@ -139,14 +139,49 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
             <span>+234 9068875555</span>
           </a>
 
-          <span 
-            className="cart-icon"
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: activeTab === 'admin' ? 'var(--color-gold)' : '' }}
-            onClick={() => handleNavClick('admin')}
-            title="Admin Dashboard"
-          >
-            <Settings size={22} />
-          </span>
+          {/* Admin Executive Controls - ONLY visible when authenticated */}
+          {adminUser && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <button
+                onClick={() => handleNavClick('admin')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  backgroundColor: activeTab === 'admin' ? 'var(--color-bg-navy)' : 'rgba(212, 175, 55, 0.1)',
+                  border: '1px solid var(--color-gold)',
+                  color: activeTab === 'admin' ? 'var(--color-gold)' : 'var(--color-bg-navy)',
+                  padding: '0.35rem 0.65rem',
+                  borderRadius: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: '700',
+                  cursor: 'pointer'
+                }}
+                title={`Executive Portal: ${adminUser.email}`}
+              >
+                <Settings size={15} color="var(--color-gold)" />
+                <span>Admin</span>
+              </button>
+              <button
+                onClick={onLogout}
+                title="Lock Terminal / Sign Out"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  background: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  color: '#dc2626',
+                  padding: '0.35rem 0.5rem',
+                  borderRadius: '6px',
+                  fontSize: '0.72rem',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                <LogOut size={12} style={{ marginRight: '2px' }} /> Out
+              </button>
+            </div>
+          )}
 
           <span 
             className="cart-icon"
@@ -255,12 +290,31 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
                 CONTACT & RFQ
               </div>
 
-              <div 
-                className={`mobile-nav-item ${activeTab === 'admin' ? 'active' : ''}`}
-                onClick={() => handleNavClick('admin')}
-              >
-                ADMIN CONTROL CENTER
-              </div>
+              {/* Admin Menu Item - ONLY visible when authenticated */}
+              {adminUser && (
+                <>
+                  <div 
+                    className={`mobile-nav-item ${activeTab === 'admin' ? 'active' : ''}`}
+                    onClick={() => handleNavClick('admin')}
+                    style={{ color: 'var(--color-gold)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
+                    <span>ADMIN CONTROL CENTER</span>
+                    <span style={{ fontSize: '0.68rem', backgroundColor: 'var(--color-gold)', color: 'var(--color-bg-navy)', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: '700' }}>
+                      AUTHENTICATED
+                    </span>
+                  </div>
+                  <div
+                    className="mobile-nav-item"
+                    onClick={() => {
+                      onLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    style={{ color: '#ef4444', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                  >
+                    <LogOut size={16} /> Sign Out (Admin)
+                  </div>
+                </>
+              )}
             </nav>
 
             <div className="mobile-drawer-footer">

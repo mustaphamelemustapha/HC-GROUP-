@@ -124,7 +124,26 @@ export default function Footer({ setActiveTab }) {
       
       <div className="footer-bottom">
         <p>&copy; {new Date().getFullYear()} HC Group (H-C COMPANY LTD). All rights reserved.</p>
-        <p>Bespoke Whole-House Customization • International Logistics • Precision Engineering</p>
+        <p style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <span>Bespoke Whole-House Customization • International Logistics • Precision Engineering</span>
+          <span style={{ color: 'var(--color-border-light)' }}>•</span>
+          <a
+            href="#admin"
+            onClick={(e) => handleNav('admin', e)}
+            style={{
+              color: 'rgba(255, 255, 255, 0.35)',
+              fontSize: '0.75rem',
+              textDecoration: 'none',
+              transition: 'color 0.2s',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => { e.target.style.color = 'var(--color-gold)'; }}
+            onMouseLeave={(e) => { e.target.style.color = 'rgba(255, 255, 255, 0.35)'; }}
+            title="Authorized Executive Access Only"
+          >
+            Executive Terminal
+          </a>
+        </p>
       </div>
     </footer>
   );

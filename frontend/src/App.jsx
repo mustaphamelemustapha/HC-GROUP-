@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import WhatsAppWidget from './components/WhatsAppWidget.jsx';
@@ -7,16 +7,86 @@ import Catalog from './pages/Catalog.jsx';
 import ShopTheLook from './pages/ShopTheLook.jsx';
 import Cart from './pages/Cart.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
+import AdminLogin from './components/AdminLogin.jsx';
 import About from './pages/About.jsx';
 import Services from './pages/Services.jsx';
 import Projects from './pages/Projects.jsx';
 import Contact from './pages/Contact.jsx';
 import { CheckCircle2, ShoppingBag, MessageCircle, X, ArrowRight } from 'lucide-react';
 
+const VALID_TABS = ['home', 'catalog', 'shop-look', 'cart', 'admin', 'about', 'services', 'projects', 'contact'];
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState('home');
+  // Sync initial tab from URL hash if provided
+  const getInitialTab = () => {
+    const hash = window.location.hash.replace('#', '').trim();
+    if (VALID_TABS.includes(hash)) {
+      return hash;
+    }
+    return 'home';
+  };
+
+  const [activeTab, setActiveTabState] = useState(getInitialTab);
   const [cart, setCart] = useState([]);
   const [cartToast, setCartToast] = useState(null);
+
+  // Executive Admin authentication session
+  const [adminUser, setAdminUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hc_admin_session');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // Wrapped tab setter that keeps URL hash in sync
+  const setActiveTab = (tab) => {
+    setActiveTabState(tab);
+    if (tab === 'home') {
+      if (window.location.hash) {
+        window.history.pushState(null, '', window.location.pathname);
+      }
+    } else {
+      window.location.hash = `#${tab}`;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Listen to browser hash changes (e.g. forward/back button, direct link to #admin)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (VALID_TABS.includes(hash)) {
+        setActiveTabState(hash);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Admin login handler
+  const handleAdminLoginSuccess = (sessionData) => {
+    setAdminUser(sessionData);
+    try {
+      localStorage.setItem('hc_admin_session', JSON.stringify(sessionData));
+    } catch (e) {
+      console.error('Failed to save admin session', e);
+    }
+    setActiveTab('admin');
+  };
+
+  // Admin logout handler
+  const handleAdminLogout = () => {
+    setAdminUser(null);
+    try {
+      localStorage.removeItem('hc_admin_session');
+    } catch (e) {
+      console.error('Failed to clear admin session', e);
+    }
+    setActiveTab('home');
+  };
 
   const handleAddToCart = (variantId, name, sku, price) => {
     setCart((prevCart) => {
@@ -62,7 +132,13 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} totalCartItems={totalCartItems} />
+      <Header 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        totalCartItems={totalCartItems}
+        adminUser={adminUser}
+        onLogout={handleAdminLogout}
+      />
 
       {/* Sharp & Smooth Order Toast Notification */}
       {cartToast && (
@@ -135,7 +211,14 @@ export default function App() {
         
         {activeTab === 'admin' && (
           <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
-            <AdminDashboard />
+            {adminUser ? (
+              <AdminDashboard adminUser={adminUser} onLogout={handleAdminLogout} />
+            ) : (
+              <AdminLogin 
+                onLoginSuccess={handleAdminLoginSuccess} 
+                onCancel={() => setActiveTab('home')} 
+              />
+            )}
           </div>
         )}
         
