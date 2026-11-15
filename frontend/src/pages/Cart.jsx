@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Truck, Trash2, MapPin, Loader, Info, FolderArchive, Layers, 
-  ShoppingBag, Plus, Minus, ArrowRight, MessageCircle, Send, CheckCircle2, AlertCircle 
+  ShoppingBag, Plus, Minus, ArrowRight, MessageCircle, Send, CheckCircle2, 
+  Printer, FileText, X, ShieldCheck, Download 
 } from 'lucide-react';
 
 export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCart, setActiveTab }) {
@@ -19,7 +20,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   const [errors, setErrors] = useState({});
   const [activeBoardId, setActiveBoardId] = useState(null);
 
-  // RFQ Submission Modal / State
+  // RFQ Submission Modal State
   const [showRfqForm, setShowRfqForm] = useState(false);
   const [rfqName, setRfqName] = useState('');
   const [rfqEmail, setRfqEmail] = useState('');
@@ -27,6 +28,11 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   const [rfqLocation, setRfqLocation] = useState('');
   const [rfqSubmitting, setRfqSubmitting] = useState(false);
   const [rfqSuccessId, setRfqSuccessId] = useState(null);
+
+  // Phase 2: Formal Quotation & PDF Spec Sheet Modal State
+  const [showPrintQuote, setShowPrintQuote] = useState(false);
+  const [quoteRef] = useState(() => 'HC-QT-' + Math.floor(100000 + Math.random() * 900000));
+  const [quoteClientName, setQuoteClientName] = useState('Architectural Client / Contractor');
 
   const fetchProjectData = async () => {
     try {
@@ -179,6 +185,14 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   const boardShippingFee = activeShipping?.calculation?.totalFee || 0;
   const boardFinalTotal = boardItemsSubtotal + boardShippingFee;
 
+  // Active items for quotation export
+  const activeItemsForQuote = viewMode === 'cart' 
+    ? cartItems.map(i => ({ name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity }))
+    : (activeBoard?.items || []).map(i => ({ name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity }));
+
+  const activeSubtotalForQuote = viewMode === 'cart' ? cartSubtotal : boardItemsSubtotal;
+  const activeGrandTotalForQuote = viewMode === 'cart' ? cartSubtotal : boardFinalTotal;
+
   return (
     <div className="cart-page-container">
       {/* Header & Mode Selector */}
@@ -189,7 +203,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
             Materials Order & Freight Engine
           </h2>
           <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
-            Review your selected materials, estimate site delivery freight, and submit orders directly via WhatsApp or official RFQ.
+            Review your selected materials, estimate site delivery freight, and export formal architectural quotes.
           </p>
         </div>
 
@@ -365,10 +379,19 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                   <MessageCircle size={20} /> Order via WhatsApp (+234 9068875555)
                 </a>
 
+                {/* Phase 2 Feature: Formal Printable PDF Quotation & Spec Sheet */}
+                <button 
+                  className="btn-outline" 
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginBottom: '0.75rem' }}
+                  onClick={() => setShowPrintQuote(true)}
+                >
+                  <Printer size={17} /> Print / Export Formal Quote (PDF)
+                </button>
+
                 {/* Primary Action 2: Formal Database RFQ */}
                 <button 
                   className="btn-gold" 
-                  style={{ width: '100%', justifyContent: 'center', padding: '0.95rem', marginBottom: '1rem' }}
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginBottom: '1rem' }}
                   onClick={() => setShowRfqForm(true)}
                 >
                   Submit as Formal RFQ <Send size={16} />
@@ -599,6 +622,14 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                   <MessageCircle size={18} /> Inquire via WhatsApp
                 </a>
 
+                <button 
+                  className="btn-outline" 
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginBottom: '1rem' }}
+                  onClick={() => setShowPrintQuote(true)}
+                >
+                  <Printer size={17} /> Export Formal Project Quote (PDF)
+                </button>
+
                 {activeError && (
                   <div style={{ backgroundColor: '#fef2f2', borderLeft: '4px solid #ef4444', padding: '0.75rem', borderRadius: '4px', fontSize: '0.85rem', color: '#991b1b', display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
                     <Info size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
@@ -619,6 +650,212 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* =========================================================================
+          PHASE 2: FORMAL PRINTABLE SPEC SHEET & PDF QUOTATION MODAL
+         ========================================================================= */}
+      {showPrintQuote && (
+        <div className="modal-backdrop print-modal-backdrop" onClick={() => setShowPrintQuote(false)}>
+          <div className="modal-dialog print-quote-dialog" onClick={(e) => e.stopPropagation()}>
+            
+            {/* Top Modal Controls (Hidden in Print) */}
+            <div className="print-controls-bar no-print">
+              <div>
+                <strong>Official Architectural Quotation</strong>
+                <span style={{ fontSize: '0.85rem', color: '#64748b', marginLeft: '0.5rem' }}>
+                  Ready to print or save as PDF
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                <button 
+                  className="btn-gold"
+                  style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}
+                  onClick={() => window.print()}
+                >
+                  <Printer size={16} /> Print / Save PDF
+                </button>
+                <a 
+                  href={`https://wa.me/2349068875555?text=${encodeURIComponent(`Hello HC Group, please find my Quotation Reference: ${quoteRef} totaling ₦${activeGrandTotalForQuote.toLocaleString('en-NG')} for procurement confirmation.`)}`}
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="whatsapp-action-btn"
+                  style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                >
+                  <MessageCircle size={16} /> Send to WhatsApp
+                </a>
+                <button 
+                  className="modal-close-btn" 
+                  style={{ position: 'static' }}
+                  onClick={() => setShowPrintQuote(false)}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Printable Document Sheet */}
+            <div className="printable-document">
+              
+              {/* Corporate Header */}
+              <div className="quote-header-grid">
+                <div className="quote-logo-wrap">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                    <img src="/assets/logo.jpg" alt="HC Group" style={{ height: '52px', borderRadius: '4px' }} />
+                    <div>
+                      <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', color: 'var(--color-bg-navy)', margin: 0 }}>
+                        HC <span style={{ color: 'var(--color-gold)' }}>GROUP</span>
+                      </h2>
+                      <span style={{ fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', color: '#64748b' }}>
+                        H-C COMPANY LTD • SOURCING & FIT-OUT
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: '1.5' }}>
+                    <p>Admiralty Way, Lekki Phase 1, Lagos &bull; Maitama District, Abuja, Nigeria</p>
+                    <p>Plant: HC Industrial Technology Park, Foshan, Guangdong</p>
+                    <p>Direct Hotline / WhatsApp: <strong>{directPhone}</strong> &bull; info@hcgroup-trade.com</p>
+                  </div>
+                </div>
+
+                <div className="quote-meta-wrap">
+                  <div className="quote-badge">OFFICIAL BILL OF QUANTITIES</div>
+                  <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#334155' }}>
+                    <div>Reference: <strong style={{ color: 'var(--color-bg-navy)', fontFamily: 'monospace' }}>{quoteRef}</strong></div>
+                    <div>Date of Issue: <strong>{new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</strong></div>
+                    <div>Quotation Validity: <strong>30 Business Days</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Client & Project Specs Summary */}
+              <div className="quote-client-summary">
+                <div className="summary-field">
+                  <span>Prepared For:</span>
+                  <input 
+                    type="text" 
+                    value={quoteClientName} 
+                    onChange={e => setQuoteClientName(e.target.value)}
+                    className="client-editable-field"
+                    placeholder="Enter Client / Firm Name"
+                  />
+                </div>
+                <div className="summary-field">
+                  <span>Project Sourcing Board:</span>
+                  <strong>{viewMode === 'cart' ? 'Direct Order Schedule' : (activeBoard?.name || 'Whole-House Scope')}</strong>
+                </div>
+                <div className="summary-field">
+                  <span>Site Delivery Destination:</span>
+                  <strong>{selectedZone.city ? `${selectedZone.city}, ${selectedZone.state}` : 'Lekki Phase 1, Lagos, Nigeria'}</strong>
+                </div>
+                <div className="summary-field">
+                  <span>Quality Standard:</span>
+                  <strong>ISO 9001 • CE Mark • Class B1 Fire Safe</strong>
+                </div>
+              </div>
+
+              {/* Line Items Table */}
+              <div className="quote-table-wrapper">
+                <table className="quote-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: '40px' }}>#</th>
+                      <th>Architectural Material & Specification</th>
+                      <th>SKU Code</th>
+                      <th style={{ textAlign: 'center' }}>Qty</th>
+                      <th style={{ textAlign: 'right' }}>Unit Rate (₦)</th>
+                      <th style={{ textAlign: 'right' }}>Amount (₦)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activeItemsForQuote.length === 0 ? (
+                      <tr>
+                        <td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+                          No materials selected in this quotation.
+                        </td>
+                      </tr>
+                    ) : (
+                      activeItemsForQuote.map((item, idx) => (
+                        <tr key={idx}>
+                          <td>0{idx + 1}</td>
+                          <td>
+                            <strong>{item.name}</strong>
+                          </td>
+                          <td style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#475569' }}>
+                            {item.sku}
+                          </td>
+                          <td style={{ textAlign: 'center', fontWeight: '600' }}>
+                            {item.quantity}
+                          </td>
+                          <td style={{ textAlign: 'right' }}>
+                            ₦{item.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                          </td>
+                          <td style={{ textAlign: 'right', fontWeight: '700' }}>
+                            ₦{item.subtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Totals & Freight Grid */}
+              <div className="quote-totals-grid">
+                <div className="quote-notes">
+                  <h4>Procurement & Logistics Schedule:</h4>
+                  <ul>
+                    <li>Factory fabrication: 25 - 45 days upon CAD blueprint sign-off.</li>
+                    <li>Freight mode: Dedicated hydraulic transit with crane offload to project site.</li>
+                    <li>On-site survey: Laser 3D LiDAR measurement audit included prior to final millwork.</li>
+                    <li>Payment terms: 50% factory commissioning deposit, 50% upon pre-dispatch inspection.</li>
+                  </ul>
+                </div>
+
+                <div className="quote-calculations-box">
+                  <div className="calc-row">
+                    <span>Materials Supply Subtotal:</span>
+                    <strong>₦{activeSubtotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
+                  </div>
+                  {viewMode === 'boards' && activeShipping && (
+                    <div className="calc-row">
+                      <span>Freight & Site Offload ({activeShipping.calculation.transportType.toUpperCase()}):</span>
+                      <strong>₦{activeShipping.calculation.totalFee.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
+                    </div>
+                  )}
+                  <div className="calc-row grand-total-row">
+                    <span>Total Estimated Quotation:</span>
+                    <strong style={{ color: 'var(--color-bg-navy)' }}>
+                      ₦{activeGrandTotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Warranty Stamp & Signatures */}
+              <div className="quote-signatures-row">
+                <div className="warranty-stamp">
+                  <ShieldCheck size={32} color="var(--color-gold)" />
+                  <div>
+                    <strong>10-Year Certified Guarantee</strong>
+                    <p>Covers structural joinery, pivot hardware & stone integrity.</p>
+                  </div>
+                </div>
+
+                <div className="signature-box">
+                  <div className="sig-line"></div>
+                  <span>Authorized Signature (HC Group Ltd)</span>
+                </div>
+
+                <div className="signature-box">
+                  <div className="sig-line"></div>
+                  <span>Client / Architect Acceptance</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       )}
     </div>

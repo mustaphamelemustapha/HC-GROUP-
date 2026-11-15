@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layers, Sparkles, Award, ClipboardList, Plus, FileText } from 'lucide-react';
+import { Layers, Sparkles, Award, Plus, FileText, ShoppingBag, MessageCircle, Check, ArrowRight } from 'lucide-react';
 
 export default function Catalog({ onAddToCart }) {
   const [products, setProducts] = useState([]);
@@ -20,6 +20,9 @@ export default function Catalog({ onAddToCart }) {
   const [selectedBoards, setSelectedBoards] = useState({});
   const [newBoardName, setNewBoardName] = useState('');
   const [creatingBoard, setCreatingBoard] = useState(false);
+  const [addedItemEffect, setAddedItemEffect] = useState({});
+
+  const directPhone = '+234 9068875555';
 
   const fetchCatalogData = async () => {
     try {
@@ -76,6 +79,29 @@ export default function Catalog({ onAddToCart }) {
     setActiveCardTabs(prev => ({ ...prev, [productId]: tab }));
   };
 
+  const handleAddToCartClick = (product) => {
+    const variant = selectedVariants[product.id] || (product.variants && product.variants[0]);
+    if (!variant) return;
+
+    if (onAddToCart) {
+      onAddToCart(variant.id, product.name, variant.sku, variant.price_markup);
+    }
+
+    // Snappy visual feedback on the button
+    setAddedItemEffect(prev => ({ ...prev, [product.id]: true }));
+    setTimeout(() => {
+      setAddedItemEffect(prev => ({ ...prev, [product.id]: false }));
+    }, 1500);
+  };
+
+  const getWhatsAppProductLink = (product) => {
+    const variant = selectedVariants[product.id] || (product.variants && product.variants[0]);
+    const priceStr = variant ? `₦${variant.price_markup.toLocaleString('en-NG', { minimumFractionDigits: 2 })}` : '';
+    const skuStr = variant ? variant.sku : '';
+    const msg = `Hello HC Group, I am interested in ordering/inquiring about:\n*${product.name}*\nSKU: ${skuStr}\nPrice: ${priceStr}\n\nPlease share lead time and delivery schedule. Thank you.`;
+    return `https://wa.me/2349068875555?text=${encodeURIComponent(msg)}`;
+  };
+
   const handleCreateBoard = async (e) => {
     e.preventDefault();
     if (!newBoardName.trim()) return;
@@ -128,7 +154,7 @@ export default function Catalog({ onAddToCart }) {
       if (!res.ok) throw new Error('Failed to assign item');
       
       const targetBoard = projectBoards.find(b => b.id === boardId);
-      alert(`Successfully assigned variant (SKU: ${variant.sku}) to Project Board: "${targetBoard?.name}"`);
+      alert(`Assigned "${variant.sku}" to Board "${targetBoard?.name}". You can review freight in the Cart/Project Board.`);
       
       // Refresh boards representation
       const refreshRes = await fetch('/api/v1/projects');
@@ -151,55 +177,48 @@ export default function Catalog({ onAddToCart }) {
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem' }}>
-        <p style={{ fontFamily: 'Cinzel', color: '#aa8c2c', fontSize: '1.5rem' }}>Loading Project Sourcing...</p>
+        <p style={{ fontFamily: 'var(--font-display)', color: '#aa8c2c', fontSize: '1.5rem' }}>
+          Loading Architectural Materials...
+        </p>
       </div>
     );
   }
 
   return (
-    <div>
-      <h2 className="section-title">Project Sourcing Hub</h2>
-
-      {/* Project Boards Administration Panel */}
-      <div style={{
-        backgroundColor: 'var(--color-bg-dark)',
-        color: '#ffffff',
-        padding: '1.5rem',
-        borderRadius: '8px',
-        marginBottom: '2rem',
-        border: '1px solid var(--color-gold-muted)',
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: '1.5rem'
-      }}>
+    <div className="catalog-page">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h3 style={{ fontFamily: 'Cinzel', color: 'var(--color-gold)', fontSize: '1.1rem', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <ClipboardList size={20} /> Active Project Sourcing Boards
-          </h3>
-          <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-            Group items, materials, and custom measurements by project task (e.g. Master Bedroom, Bath Renovation).
+          <span className="badge-luxury">WHOLE-HOUSE ARCHITECTURAL PORTFOLIO</span>
+          <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '0.25rem' }}>
+            Materials Catalog & CAD Specifications
+          </h2>
+          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
+            Factory-direct pricing, configurable dimensions, and 1-tap WhatsApp consultation.
           </p>
         </div>
 
-        <form onSubmit={handleCreateBoard} style={{ display: 'flex', gap: '0.5rem', width: '100%', maxWidth: '400px' }}>
+        {/* Quick Project Board Creator */}
+        <form onSubmit={handleCreateBoard} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <input 
             type="text" 
-            placeholder="e.g. Penthouse Bathroom Sourcing"
+            placeholder="New Project Board (e.g. Master Suite)" 
             value={newBoardName}
             onChange={(e) => setNewBoardName(e.target.value)}
-            className="filter-input"
-            style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: '#ffffff', border: '1px solid var(--color-bg-navy-light)' }}
-            required
+            style={{
+              padding: '0.6rem 1rem',
+              borderRadius: '6px',
+              border: '1px solid var(--color-border-light)',
+              fontSize: '0.85rem',
+              minWidth: '240px'
+            }}
           />
           <button 
             type="submit" 
-            className="add-to-cart-btn" 
-            style={{ width: 'auto', padding: '0 1.25rem', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+            className="btn-gold"
+            style={{ padding: '0.6rem 1.25rem', fontSize: '0.85rem' }}
             disabled={creatingBoard}
           >
-            <Plus size={16} /> Create Board
+            <Plus size={16} /> New Board
           </button>
         </form>
       </div>
@@ -207,41 +226,60 @@ export default function Catalog({ onAddToCart }) {
       <div className="catalog-layout">
         {/* Sidebar Filters */}
         <aside className="filter-sidebar">
-          <h3 className="filter-title">Project Categories</h3>
+          <h3 className="filter-title">Search & Categories</h3>
           
           <div className="filter-group">
-            <label>Search Inventory</label>
+            <label>Keyword Search</label>
             <input 
               type="text" 
               className="filter-input" 
-              placeholder="e.g. Custom Wardrobe, Bathtub..." 
+              placeholder="e.g. Pivot Door, Marble, Bathtub..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
           <div className="filter-group">
-            <label>Project Classification</label>
+            <label>Material Classification</label>
             <select 
               className="filter-select"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="">All Project Classes</option>
+              <option value="">All Architectural Lines</option>
               <option value="cat_whole_house">Whole-House Customization</option>
-              <option value="cat_sanitary">Sanitary Ware</option>
-              <option value="cat_flooring">Flooring & Staircase</option>
-              <option value="cat_kitchen">Kitchen & Wardrobe</option>
+              <option value="cat_sanitary">Sanitary Ware & Baths</option>
+              <option value="cat_flooring">Flooring & Marble Slabs</option>
+              <option value="cat_kitchen">Kitchen & Wardrobe Systems</option>
               <option value="cat_doors">Luxury Doors & Entries</option>
             </select>
+          </div>
+
+          <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginTop: '2rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: '700', letterSpacing: '1px', color: 'var(--color-gold-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '0.4rem' }}>
+              NEED CUSTOM BLUEPRINTS?
+            </span>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', lineHeight: '1.5', marginBottom: '1rem' }}>
+              We manufacture to exact millimeter CAD apertures. Chat directly with an engineer for non-standard sizes.
+            </p>
+            <a 
+              href={`https://wa.me/2349068875555?text=${encodeURIComponent('Hello HC Group, I need custom dimension quotes for a project.')}`}
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="whatsapp-action-btn"
+              style={{ padding: '0.5rem', fontSize: '0.85rem', justifyContent: 'center' }}
+            >
+              <MessageCircle size={15} /> WhatsApp (+234 9068875555)
+            </a>
           </div>
         </aside>
 
         {/* Product Grid */}
         <div className="products-grid">
           {filteredProducts.map((product) => {
-            const currentVariant = selectedVariants[product.id];
+            const currentVariant = selectedVariants[product.id] || (product.variants && product.variants[0]);
             const currentTab = activeCardTabs[product.id] || 'overview';
+            const isAdded = addedItemEffect[product.id];
             
             return (
               <article key={product.id} className="product-card">
@@ -255,19 +293,13 @@ export default function Catalog({ onAddToCart }) {
                       className="product-image"
                       onError={(e) => {
                         e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
+                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
                       }}
                     />
                   ) : null}
                   <div className="product-image-fallback" style={{ display: product.image_url ? 'none' : 'flex' }}>
-                    {product.category_id === 'cat_whole_house' ? (
-                      <Award size={40} style={{ color: '#d4af37', marginBottom: '0.5rem' }} />
-                    ) : product.category_id === 'cat_kitchen' ? (
-                      <Layers size={40} style={{ color: '#d4af37', marginBottom: '0.5rem' }} />
-                    ) : (
-                      <Sparkles size={40} style={{ color: '#d4af37', marginBottom: '0.5rem' }} />
-                    )}
-                    <div style={{ fontFamily: 'Cinzel', fontSize: '0.9rem', letterSpacing: '1px', padding: '0 1rem', textAlign: 'center' }}>
+                    <Sparkles size={40} style={{ color: '#d4af37', marginBottom: '0.5rem' }} />
+                    <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.9rem', letterSpacing: '1px', padding: '0 1rem', textAlign: 'center' }}>
                       {product.name}
                     </div>
                   </div>
@@ -289,11 +321,11 @@ export default function Catalog({ onAddToCart }) {
                         border: 'none',
                         background: 'none',
                         borderBottom: currentTab === 'overview' ? '2.5px solid var(--color-gold)' : 'none',
-                        color: currentTab === 'overview' ? 'var(--color-bg-dark)' : '#64748b',
+                        color: currentTab === 'overview' ? 'var(--color-bg-navy)' : '#64748b',
                         cursor: 'pointer'
                       }}
                     >
-                      Overview
+                      Overview & Order
                     </button>
                     <button 
                       onClick={() => toggleCardTab(product.id, 'blueprint')}
@@ -305,7 +337,7 @@ export default function Catalog({ onAddToCart }) {
                         border: 'none',
                         background: 'none',
                         borderBottom: currentTab === 'blueprint' ? '2.5px solid var(--color-gold)' : 'none',
-                        color: currentTab === 'blueprint' ? 'var(--color-bg-dark)' : '#64748b',
+                        color: currentTab === 'blueprint' ? 'var(--color-bg-navy)' : '#64748b',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -313,43 +345,91 @@ export default function Catalog({ onAddToCart }) {
                         gap: '0.25rem'
                       }}
                     >
-                      <FileText size={12} /> Blueprint & Tech Specs
+                      <FileText size={12} /> CAD Specifications
                     </button>
                   </div>
 
                   {currentTab === 'overview' ? (
                     <div>
-                      <p className="product-desc" style={{ minHeight: '44px' }}>{product.description}</p>
+                      <p className="product-desc" style={{ minHeight: '44px', fontSize: '0.85rem', color: '#64748b', marginBottom: '0.75rem' }}>
+                        {product.description}
+                      </p>
 
                       {/* Variant Selection */}
                       {product.variants && product.variants.length > 1 && (
                         <div className="filter-group" style={{ marginBottom: '0.75rem' }}>
-                          <label style={{ fontSize: '0.75rem' }}>Configuration</label>
+                          <label style={{ fontSize: '0.75rem', fontWeight: '600', color: '#475569' }}>Configuration / Spec</label>
                           <select 
                             className="filter-select" 
                             value={currentVariant?.id || ''}
                             onChange={(e) => handleVariantChange(product.id, e.target.value, product)}
+                            style={{ padding: '0.45rem', fontSize: '0.85rem' }}
                           >
                             {product.variants.map((v) => (
                               <option key={v.id} value={v.id}>
-                                SKU: {v.sku}
+                                SKU: {v.sku} — ₦{v.price_markup.toLocaleString('en-NG')}
                               </option>
                             ))}
                           </select>
                         </div>
                       )}
 
+                      {/* Price Display */}
                       {currentVariant && (
-                        <div className="variant-price" style={{ marginBottom: '1rem' }}>
-                          ₦{currentVariant.price_markup.toFixed(2)} 
-                          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 'normal' }}> (Base Supply)</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
+                          <div className="variant-price" style={{ margin: 0 }}>
+                            ₦{currentVariant.price_markup.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                          </div>
+                          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                            Base Supply (Ex-Factory)
+                          </span>
                         </div>
                       )}
+
+                      {/* SHARP & SMOOTH ACTION BUTTONS */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.5rem', marginBottom: '1rem' }}>
+                        <button
+                          className="btn-gold"
+                          style={{
+                            padding: '0.65rem 0.75rem',
+                            fontSize: '0.85rem',
+                            justifyContent: 'center',
+                            backgroundColor: isAdded ? '#10b981' : 'var(--color-gold)',
+                            color: isAdded ? '#ffffff' : 'var(--color-bg-navy)'
+                          }}
+                          onClick={() => handleAddToCartClick(product)}
+                        >
+                          {isAdded ? (
+                            <>
+                              <Check size={16} /> Added!
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingBag size={16} /> Add to Order
+                            </>
+                          )}
+                        </button>
+
+                        <a
+                          href={getWhatsAppProductLink(product)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="whatsapp-action-btn"
+                          style={{
+                            padding: '0.65rem 0.5rem',
+                            fontSize: '0.8rem',
+                            justifyContent: 'center'
+                          }}
+                          title="Quick inquiry on WhatsApp"
+                        >
+                          <MessageCircle size={15} /> WhatsApp
+                        </a>
+                      </div>
                     </div>
                   ) : (
-                    /* Blueprint specs list EAV parameters beautifully in a corporate structured grid */
+                    /* Blueprint specs list EAV parameters */
                     <div style={{ minHeight: '166px', fontSize: '0.8rem', color: '#475569', backgroundColor: '#f8fafc', padding: '0.75rem', borderRadius: '4px', border: '1px solid var(--color-border-light)', marginBottom: '1rem' }}>
-                      <div style={{ fontWeight: '700', color: 'var(--color-bg-dark)', marginBottom: '0.5rem', borderBottom: '1px solid var(--color-border-light)', paddingBottom: '0.25rem' }}>
+                      <div style={{ fontWeight: '700', color: 'var(--color-bg-navy)', marginBottom: '0.5rem', borderBottom: '1px solid var(--color-border-light)', paddingBottom: '0.25rem' }}>
                         TECHNICAL SPECIFICATION GRID
                       </div>
                       {currentVariant && currentVariant.attributes && currentVariant.attributes.length > 0 ? (
@@ -361,47 +441,44 @@ export default function Catalog({ onAddToCart }) {
                             </div>
                           ))}
                           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <span style={{ color: '#64748b' }}>Fulfillment weight</span>
+                            <span style={{ color: '#64748b' }}>Weight</span>
                             <span style={{ fontWeight: '600', color: '#1e293b' }}>{currentVariant.weight_kg} kg</span>
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <span style={{ color: '#64748b' }}>Freight Volume</span>
+                            <span style={{ color: '#64748b' }}>Volume</span>
                             <span style={{ fontWeight: '600', color: '#1e293b' }}>{currentVariant.volume_m3} m³</span>
                           </div>
                         </div>
                       ) : (
-                        <p style={{ color: '#94a3b8' }}>No technical specs registered.</p>
+                        <p style={{ color: '#94a3b8' }}>Custom milling available on request.</p>
                       )}
                     </div>
                   )}
 
-                  {/* Project Board Allocation System */}
-                  <div style={{ borderTop: '1px solid var(--color-border-light)', paddingTop: '1rem', marginTop: '0.5rem' }}>
-                    <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: '600' }}>
-                      Assign to Project Board
-                    </label>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  {/* Project Board Allocation */}
+                  <div style={{ borderTop: '1px solid var(--color-border-light)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
                       <select 
                         className="filter-select"
                         value={selectedBoards[product.id] || ''}
                         onChange={(e) => setSelectedBoards(prev => ({ ...prev, [product.id]: e.target.value }))}
-                        style={{ padding: '0.4rem' }}
+                        style={{ padding: '0.35rem', fontSize: '0.75rem' }}
                       >
                         {projectBoards.map((b) => (
                           <option key={b.id} value={b.id}>
-                            {b.name}
+                            Board: {b.name}
                           </option>
                         ))}
                         {projectBoards.length === 0 && (
-                          <option value="">No Active Boards</option>
+                          <option value="">Default Project</option>
                         )}
                       </select>
                       <button 
                         onClick={() => handleAssignToBoard(product.id)}
-                        className="add-to-cart-btn"
-                        style={{ width: 'auto', padding: '0.4rem 1rem', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
+                        className="btn-outline"
+                        style={{ width: 'auto', padding: '0.35rem 0.75rem', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
                       >
-                        Assign Material
+                        Assign
                       </button>
                     </div>
                   </div>

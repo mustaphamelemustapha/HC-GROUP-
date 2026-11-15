@@ -11,10 +11,12 @@ import About from './pages/About.jsx';
 import Services from './pages/Services.jsx';
 import Projects from './pages/Projects.jsx';
 import Contact from './pages/Contact.jsx';
+import { CheckCircle2, ShoppingBag, MessageCircle, X, ArrowRight } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [cart, setCart] = useState([]);
+  const [cartToast, setCartToast] = useState(null);
 
   const handleAddToCart = (variantId, name, sku, price) => {
     setCart((prevCart) => {
@@ -28,7 +30,12 @@ export default function App() {
       }
       return [...prevCart, { variantId, name, sku, price, quantity: 1 }];
     });
-    alert(`Added "${name}" (SKU: ${sku}) to your order.`);
+
+    // Sleek Luxury Toast Notification (Replaces annoying browser alert)
+    setCartToast({ name, sku, price });
+    setTimeout(() => {
+      setCartToast(null);
+    }, 4500);
   };
 
   const handleUpdateQty = (variantId, newQty) => {
@@ -56,6 +63,48 @@ export default function App() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
       <Header activeTab={activeTab} setActiveTab={setActiveTab} totalCartItems={totalCartItems} />
+
+      {/* Sharp & Smooth Order Toast Notification */}
+      {cartToast && (
+        <div className="luxury-cart-toast">
+          <div className="toast-content">
+            <div className="toast-icon-wrap">
+              <CheckCircle2 size={24} color="#10b981" />
+            </div>
+            <div className="toast-text">
+              <strong>Added to Your Order</strong>
+              <span>{cartToast.name} (SKU: {cartToast.sku})</span>
+            </div>
+          </div>
+
+          <div className="toast-actions">
+            <button 
+              className="toast-view-cart-btn"
+              onClick={() => {
+                setActiveTab('cart');
+                setCartToast(null);
+              }}
+            >
+              <ShoppingBag size={14} /> View Order ({totalCartItems})
+            </button>
+            <a 
+              href={`https://wa.me/2349068875555?text=${encodeURIComponent(`Hello HC Group, I just added "${cartToast.name}" (SKU: ${cartToast.sku}, ₦${cartToast.price?.toLocaleString('en-NG')}) to my order. Please confirm stock and delivery lead time.`)}`}
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="toast-whatsapp-btn"
+            >
+              <MessageCircle size={14} /> WhatsApp
+            </a>
+            <button 
+              className="toast-close-btn"
+              onClick={() => setCartToast(null)}
+              aria-label="Dismiss notification"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
 
       <main style={{ flex: 1, padding: 0, margin: 0, maxWidth: '100%' }}>
         {activeTab === 'home' && <Home setActiveTab={setActiveTab} />}
@@ -109,7 +158,7 @@ export default function App() {
 
       <Footer setActiveTab={setActiveTab} />
 
-      {/* Real-time WhatsApp & Direct Calling Floating Concierge */}
+      {/* Floating WhatsApp Concierge Widget */}
       <WhatsAppWidget />
     </div>
   );

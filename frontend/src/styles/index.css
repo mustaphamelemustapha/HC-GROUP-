@@ -2624,3 +2624,326 @@ nav.main-nav {
   .cart-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
   .cart-item > div:last-child { align-self: flex-end; }
 }
+
+
+/* ==========================================================================
+   Luxury Cart Toast Notification
+   ========================================================================== */
+.luxury-cart-toast {
+  position: fixed;
+  top: 90px;
+  right: 25px;
+  background: var(--color-bg-navy);
+  border: 1px solid var(--color-gold);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 15px 35px rgba(7, 13, 30, 0.4);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--color-text-light);
+  max-width: 500px;
+}
+
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.toast-icon-wrap {
+  flex-shrink: 0;
+}
+.toast-text strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--color-gold);
+}
+.toast-text span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.toast-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.toast-view-cart-btn {
+  background: var(--color-gold);
+  color: var(--color-bg-navy);
+  border: none;
+  border-radius: 4px;
+  padding: 0.45rem 0.85rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: var(--transition-smooth);
+  white-space: nowrap;
+}
+.toast-view-cart-btn:hover {
+  background: var(--color-gold-hover);
+}
+.toast-whatsapp-btn {
+  background: #25D366;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 0.45rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+.toast-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+.toast-close-btn:hover {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   Phase 2: Formal Architectural Quotation & PDF Spec Sheet Modal
+   ========================================================================== */
+.print-quote-dialog {
+  max-width: 900px;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.print-controls-bar {
+  background-color: var(--color-bg-navy);
+  color: #ffffff;
+  padding: 0.85rem 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.printable-document {
+  background-color: #ffffff;
+  color: #0f172a;
+  padding: 3rem;
+  font-family: var(--font-body);
+}
+
+.quote-header-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2rem;
+  border-bottom: 2px solid var(--color-bg-navy);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.quote-badge {
+  display: inline-block;
+  background-color: var(--color-bg-navy);
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+}
+
+.quote-client-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.summary-field span {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 0.2rem;
+}
+.summary-field strong {
+  font-size: 0.95rem;
+  color: var(--color-bg-navy);
+}
+
+.client-editable-field {
+  border: 1px dashed #cbd5e1;
+  background: transparent;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-bg-navy);
+  padding: 0.25rem 0.4rem;
+  width: 90%;
+  border-radius: 4px;
+}
+.client-editable-field:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  background-color: #ffffff;
+}
+
+.quote-table-wrapper {
+  margin-bottom: 2rem;
+}
+
+.quote-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.quote-table th {
+  background-color: #f1f5f9;
+  color: var(--color-bg-navy);
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid #cbd5e1;
+  text-align: left;
+}
+.quote-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.quote-totals-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+.quote-notes h4 {
+  font-size: 0.9rem;
+  color: var(--color-bg-navy);
+  margin-bottom: 0.5rem;
+}
+.quote-notes ul {
+  font-size: 0.8rem;
+  color: #475569;
+  padding-left: 1.25rem;
+  line-height: 1.6;
+}
+
+.quote-calculations-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.calc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #475569;
+}
+.grand-total-row {
+  border-top: 2px solid #cbd5e1;
+  padding-top: 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.quote-signatures-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 2rem;
+  align-items: flex-end;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 2rem;
+}
+.warranty-stamp {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.warranty-stamp strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--color-bg-navy);
+}
+.warranty-stamp p {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.signature-box {
+  text-align: center;
+}
+.sig-line {
+  border-bottom: 1px solid #0f172a;
+  height: 40px;
+  margin-bottom: 0.5rem;
+}
+.signature-box span {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Print-Specific Styles (Triggers on window.print())
+   ========================================================================== */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  header, footer, .whatsapp-floating-widget, .luxury-cart-toast, .no-print, .print-controls-bar {
+    display: none !important;
+  }
+  .print-modal-backdrop, .print-quote-dialog {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+  .printable-document, .printable-document * {
+    visibility: visible !important;
+  }
+  .printable-document {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    padding: 0.5cm !important;
+    box-shadow: none !important;
+  }
+}
