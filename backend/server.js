@@ -120,6 +120,69 @@ app.post('/api/admin/products', async (req, res) => {
   });
 });
 
+// GET API Categories
+app.get('/api/v1/categories', async (req, res) => {
+  try {
+    const categories = await query(`SELECT * FROM categories ORDER BY name ASC`);
+    res.json(categories);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch categories' });
+  }
+});
+
+// Admin endpoint: Update a variant's price and/or stock level
+app.patch('/api/admin/variants/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { price_markup, stock_quantity } = req.body;
+
+    const updates = [];
+    const params = [];
+
+    if (price_markup !== undefined && !isNaN(price_markup)) {
+      updates.push('price_markup = ?');
+      params.push(Number(price_markup));
+    }
+    if (stock_quantity !== undefined && !isNaN(stock_quantity)) {
+      updates.push('stock_quantity = ?');
+      params.push(Number(stock_quantity));
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: 'No valid fields provided to update' });
+    }
+
+    params.push(id);
+    db.run(
+      `UPDATE product_variants SET ${updates.join(', ')} WHERE id = ?`,
+      params,
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: 'Variant not found' });
+        res.json({ success: true, updated: this.changes });
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update variant' });
+  }
+});
+
+// Admin endpoint: Deactivate a product
+app.delete('/api/admin/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    db.run(`UPDATE products SET is_active = 0 WHERE id = ?`, [id], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ success: true, deleted: this.changes });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to deactivate product' });
+  }
+});
+
 // GET all products with details (Categories, Variants, Attributes, and Bulk Pricing Rules)
 app.get('/api/v1/products', async (req, res) => {
   try {
@@ -184,6 +247,21 @@ app.get('/api/v1/shipping/zones', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch shipping zones' });
+  }
+});
+
+// GET all shipping zones with rates & logistics details for admin review
+app.get('/api/v1/shipping/rates', async (req, res) => {
+  try {
+    const rates = await query(`
+      SELECT id, state, city, base_rate, per_kg_rate, transport_type 
+      FROM shipping_zones 
+      ORDER BY state, city, transport_type
+    `);
+    res.json(rates);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch shipping rates' });
   }
 });
 
