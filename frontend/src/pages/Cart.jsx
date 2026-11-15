@@ -30,8 +30,8 @@ import {
 export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCart, setActiveTab }) {
   const directPhone = '+234 9068875555';
   
-  // Switch between Direct Material Order and Architectural Project Sourcing Boards
-  const [viewMode, setViewMode] = useState(cartItems.length > 0 ? 'cart' : 'boards');
+  // Default to Direct Material Order view so users always see their cart items or empty state
+  const [viewMode, setViewMode] = useState('cart');
 
   // Project Boards State
   const [projectBoards, setProjectBoards] = useState([]);
@@ -64,18 +64,25 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   const [quoteSubmitSuccess, setQuoteSubmitSuccess] = useState(false);
   const [quoteSubmitting, setQuoteSubmitting] = useState(false);
 
+  // Safe helper to extract transport fleet label
+  const getTransportFleetLabel = (shippingData) => {
+    if (!shippingData) return 'Standard Freight Transit';
+    const rawType = shippingData?.transport?.type || shippingData?.calculation?.transportType || 'flatbed';
+    return String(rawType).replace(/_/g, ' ').toUpperCase();
+  };
+
   const fetchProjectData = async () => {
     try {
       const res = await fetch('/api/v1/projects');
       if (res.ok) {
         const data = await res.json();
-        setProjectBoards(data);
-        if (data.length > 0 && !activeBoardId) {
+        setProjectBoards(data || []);
+        if (Array.isArray(data) && data.length > 0 && !activeBoardId) {
           setActiveBoardId(data[0].id);
         }
       }
     } catch (e) {
-      console.error(e);
+      console.error('Projects fetch error:', e);
     }
   };
 
@@ -84,19 +91,23 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
     fetch('/api/v1/shipping/zones')
       .then((res) => res.json())
       .then((data) => {
-        setZones(data);
-        if (data.length > 0) {
-          // Default to Borno / Maiduguri HQ zone if found
-          const bornoZone = data.find(z => z.state.toLowerCase() === 'borno') || data[0];
-          setSelectedZone(bornoZone);
+        if (Array.isArray(data)) {
+          setZones(data);
+          if (data.length > 0) {
+            const bornoZone = data.find(z => z?.state && String(z.state).toLowerCase() === 'borno') || data[0];
+            if (bornoZone) {
+              setSelectedZone(bornoZone);
+              setQuoteSiteAddress(`${bornoZone.city || 'Maiduguri'}, ${bornoZone.state || 'Borno'}, Nigeria`);
+            }
+          }
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error('Zones fetch error:', err));
   }, []);
 
   // Recalculate freight for Direct Cart
   useEffect(() => {
-    if (!selectedZone.state || !selectedZone.city || cartItems.length === 0) {
+    if (!selectedZone?.state || !selectedZone?.city || !Array.isArray(cartItems) || cartItems.length === 0) {
       setCartShipping(null);
       return;
     }
@@ -131,7 +142,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
 
   // Recalculate freight for Active Project Board
   useEffect(() => {
-    if (!activeBoardId || !selectedZone.state || !selectedZone.city) return;
+    if (!activeBoardId || !selectedZone?.state || !selectedZone?.city) return;
     const activeBoard = projectBoards.find(b => b.id === activeBoardId);
     if (!activeBoard || !activeBoard.items || activeBoard.items.length === 0) {
       setBoardShippingResults(prev => ({ ...prev, [activeBoardId]: null }));
@@ -185,7 +196,8 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
 
   // Calculations for Direct Cart
   const cartSubtotal = useMemo(() => {
-    return cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    if (!Array.isArray(cartItems)) return 0;
+    return cartItems.reduce((acc, item) => acc + ((item.price || 0) * (item.quantity || 1)), 0);
   }, [cartItems]);
 
   const cartShippingFee = cartShipping?.calculation?.totalFee || 0;
@@ -194,14 +206,29 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   // Calculations for Active Project Board
   const activeBoard = projectBoards.find(b => b.id === activeBoardId);
   const activeBoardShipping = activeBoardId ? boardShippingResults[activeBoardId] : null;
-  const boardItemsSubtotal = activeBoard?.items?.reduce((acc, item) => acc + (item.price * item.quantity), 0) || 0;
+  const boardItemsSubtotal = activeBoard?.items?.reduce((acc, item) => acc + ((item.price || 0) * (item.quantity || 1)), 0) || 0;
   const boardShippingFee = activeBoardShipping?.calculation?.totalFee || 0;
   const boardFinalTotal = boardItemsSubtotal + boardShippingFee;
 
   // Active items for quotation export
-  const activeItemsForQuote = viewMode === 'cart' 
-    ? cartItems.map(i => ({ name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity }))
-    : (activeBoard?.items || []).map(i => ({ name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity }));
+  const activeItemsForQuote = useMemo(() => {
+    if (viewMode === 'cart') {
+      return (cartItems || []).map(i => ({
+        name: i.name,
+        sku: i.sku,
+        quantity: i.quantity || 1,
+        price: i.price || 0,
+        subtotal: (i.price || 0) * (i.quantity || 1)
+      }));
+    }
+    return (activeBoard?.items || []).map(i => ({
+      name: i.name,
+      sku: i.sku,
+      quantity: i.quantity || 1,
+      price: i.price || 0,
+      subtotal: (i.price || 0) * (i.quantity || 1)
+    }));
+  }, [viewMode, cartItems, activeBoard]);
 
   const activeSubtotalForQuote = viewMode === 'cart' ? cartSubtotal : boardItemsSubtotal;
   const activeShippingData = viewMode === 'cart' ? cartShipping : activeBoardShipping;
@@ -210,23 +237,27 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
 
   // Generate WhatsApp Order Message
   const generateWhatsAppQuoteLink = () => {
-    let msg = `*HC GROUP — OFFICIAL BILL OF QUANTITIES QUOTATION*\n`;
-    msg += `Ref: ${quoteRef}\n`;
-    msg += `Client: ${quoteClientName}\n`;
-    msg += `Site Location: ${quoteSiteAddress}\n`;
-    msg += `Project Scope: ${quoteProjectType}\n\n`;
-    msg += `*SCHEDULE OF MATERIALS:*\n`;
-    activeItemsForQuote.forEach((item, idx) => {
-      msg += `${idx + 1}. *${item.name}* (SKU: ${item.sku})\n`;
-      msg += `   Qty: ${item.quantity} × ₦${item.price.toLocaleString('en-NG')} = ₦${item.subtotal.toLocaleString('en-NG')}\n`;
-    });
-    msg += `\n*Material Supply Subtotal:* ₦${activeSubtotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n`;
-    if (activeShippingData) {
-      msg += `*Site Delivery Freight (${activeShippingData.calculation.transportType.toUpperCase()}):* ₦${activeFreightFeeForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n`;
+    try {
+      let msg = `*HC GROUP — OFFICIAL BILL OF QUANTITIES QUOTATION*\n`;
+      msg += `Ref: ${quoteRef}\n`;
+      msg += `Client: ${quoteClientName}\n`;
+      msg += `Site Location: ${quoteSiteAddress}\n`;
+      msg += `Project Scope: ${quoteProjectType}\n\n`;
+      msg += `*SCHEDULE OF MATERIALS:*\n`;
+      activeItemsForQuote.forEach((item, idx) => {
+        msg += `${idx + 1}. *${item.name}* (SKU: ${item.sku})\n`;
+        msg += `   Qty: ${item.quantity} × ₦${Number(item.price || 0).toLocaleString('en-NG')} = ₦${Number(item.subtotal || 0).toLocaleString('en-NG')}\n`;
+      });
+      msg += `\n*Material Supply Subtotal:* ₦${Number(activeSubtotalForQuote || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n`;
+      if (activeShippingData) {
+        msg += `*Site Delivery Freight (${getTransportFleetLabel(activeShippingData)}):* ₦${Number(activeFreightFeeForQuote || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n`;
+      }
+      msg += `*TOTAL ESTIMATED INVESTMENT:* ₦${Number(activeGrandTotalForQuote || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n\n`;
+      msg += `Headquarters: Sir Kashim Ibrahim Way, Maiduguri, Borno State.\nPlease confirm technical CAD review and production schedule.`;
+      return `https://wa.me/2349068875555?text=${encodeURIComponent(msg)}`;
+    } catch {
+      return `https://wa.me/2349068875555?text=${encodeURIComponent('Hello HC Group, I would like to inquire about my architectural order.')}`;
     }
-    msg += `*TOTAL ESTIMATED INVESTMENT:* ₦${activeGrandTotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n\n`;
-    msg += `Headquarters: Sir Kashim Ibrahim Way, Maiduguri, Borno State.\nPlease confirm technical CAD review and production schedule.`;
-    return `https://wa.me/2349068875555?text=${encodeURIComponent(msg)}`;
   };
 
   // Submit Formal Quotation to Backend RFQ Database
@@ -234,14 +265,14 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
     setQuoteSubmitting(true);
     try {
       const scheduleSummary = activeItemsForQuote
-        .map((it, idx) => `${idx + 1}. ${it.name} (SKU: ${it.sku}, Qty: ${it.quantity}, Total: ₦${it.subtotal.toLocaleString('en-NG')})`)
+        .map((it, idx) => `${idx + 1}. ${it.name} (SKU: ${it.sku}, Qty: ${it.quantity}, Total: ₦${Number(it.subtotal || 0).toLocaleString('en-NG')})`)
         .join('\n');
 
       const fullMessage = `QUOTATION REFERENCE: ${quoteRef}\n` +
         `Site Address: ${quoteSiteAddress}\n` +
-        `Materials Subtotal: ₦${activeSubtotalForQuote.toLocaleString('en-NG')}\n` +
-        `Logistics Freight: ₦${activeFreightFeeForQuote.toLocaleString('en-NG')}\n` +
-        `Total Investment: ₦${activeGrandTotalForQuote.toLocaleString('en-NG')}\n\n` +
+        `Materials Subtotal: ₦${Number(activeSubtotalForQuote || 0).toLocaleString('en-NG')}\n` +
+        `Logistics Freight: ₦${Number(activeFreightFeeForQuote || 0).toLocaleString('en-NG')}\n` +
+        `Total Investment: ₦${Number(activeGrandTotalForQuote || 0).toLocaleString('en-NG')}\n\n` +
         `SCHEDULE OF FINISHES:\n${scheduleSummary}`;
 
       const res = await fetch('/api/v1/inquiries', {
@@ -254,7 +285,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
           company: quoteClientName,
           project_type: quoteProjectType,
           scope: 'Official Architectural BoQ',
-          budget: `₦${activeGrandTotalForQuote.toLocaleString('en-NG')}`,
+          budget: `₦${Number(activeGrandTotalForQuote || 0).toLocaleString('en-NG')}`,
           location: quoteSiteAddress,
           message: fullMessage
         })
@@ -292,9 +323,9 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
           company: 'Direct Client Order',
           project_type: 'Material Sourcing & Delivery',
           scope: 'Direct Cart Schedule',
-          budget: `₦${cartGrandTotal.toLocaleString('en-NG')}`,
+          budget: `₦${Number(cartGrandTotal || 0).toLocaleString('en-NG')}`,
           location: rfqLocation,
-          message: `Ordered Items: ${lineItemsSummary}. Delivery Site: ${selectedZone.city}, ${selectedZone.state}.`
+          message: `Ordered Items: ${lineItemsSummary}. Delivery Site: ${selectedZone?.city || ''}, ${selectedZone?.state || ''}.`
         })
       });
 
@@ -342,7 +373,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
             }}
           >
             <ShoppingBag size={18} />
-            Direct Order ({cartItems.reduce((sum, i) => sum + i.quantity, 0)})
+            Direct Order ({cartItems.reduce((sum, i) => sum + (i.quantity || 1), 0)})
           </button>
           
           <button
@@ -371,9 +402,9 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
          ========================================================================= */}
       {viewMode === 'cart' && (
         <>
-          {cartItems.length === 0 ? (
+          {(!cartItems || cartItems.length === 0) ? (
             <div style={{ backgroundColor: '#ffffff', border: '1px solid var(--color-border-light)', borderRadius: '12px', padding: '4rem 2rem', textAlign: 'center', boxShadow: 'var(--shadow-sm)' }}>
-              <ShoppingBag size={56} color="var(--color-gold-muted)" style={{ marginBottom: '1.25rem' }} />
+              <ShoppingBag size={56} color="var(--color-gold-muted)" style={{ margin: '0 auto 1.25rem' }} />
               <h3 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)', fontSize: '1.6rem', marginBottom: '0.75rem' }}>
                 Your Material Cart is Empty
               </h3>
@@ -399,7 +430,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               <div className="cart-items-section">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border-light)', paddingBottom: '1rem', marginBottom: '1.25rem' }}>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', color: 'var(--color-bg-navy)' }}>
-                    Selected Architectural Items ({cartItems.reduce((sum, i) => sum + i.quantity, 0)})
+                    Selected Architectural Items ({cartItems.reduce((sum, i) => sum + (i.quantity || 1), 0)})
                   </h3>
                   <button 
                     onClick={onClearCart} 
@@ -415,7 +446,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                       <div className="cart-item-info">
                         <h4 style={{ fontSize: '1.05rem', color: 'var(--color-bg-navy)', marginBottom: '0.25rem' }}>{item.name}</h4>
                         <div className="cart-item-meta" style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                          SKU: <span style={{ color: 'var(--color-gold)', fontWeight: '700' }}>{item.sku}</span> &bull; Unit Rate: ₦{item.price.toLocaleString('en-NG')}
+                          SKU: <span style={{ color: 'var(--color-gold)', fontWeight: '700' }}>{item.sku}</span> &bull; Unit Rate: ₦{Number(item.price || 0).toLocaleString('en-NG')}
                         </div>
                       </div>
 
@@ -423,7 +454,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                       <div className="qty-stepper">
                         <button 
                           className="qty-btn"
-                          onClick={() => onUpdateQty && onUpdateQty(item.variantId, item.quantity - 1)}
+                          onClick={() => onUpdateQty && onUpdateQty(item.variantId, (item.quantity || 1) - 1)}
                           aria-label="Decrease quantity"
                         >
                           <Minus size={14} />
@@ -431,7 +462,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                         <span className="qty-value">{item.quantity}</span>
                         <button 
                           className="qty-btn"
-                          onClick={() => onUpdateQty && onUpdateQty(item.variantId, item.quantity + 1)}
+                          onClick={() => onUpdateQty && onUpdateQty(item.variantId, (item.quantity || 1) + 1)}
                           aria-label="Increase quantity"
                         >
                           <Plus size={14} />
@@ -441,7 +472,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                       {/* Item Subtotal & Delete */}
                       <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
                         <div style={{ fontWeight: '700', fontSize: '1.1rem', color: 'var(--color-bg-navy)' }}>
-                          ₦{(item.price * item.quantity).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                          ₦{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                         </div>
                         <button 
                           onClick={() => onRemove && onRemove(item.variantId)}
@@ -470,7 +501,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                   </label>
                   <select 
                     className="filter-select"
-                    value={`${selectedZone.state}|${selectedZone.city}`}
+                    value={`${selectedZone?.state || ''}|${selectedZone?.city || ''}`}
                     onChange={handleZoneChange}
                     style={{ width: '100%' }}
                   >
@@ -540,10 +571,10 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                 {cartShipping && (
                   <div style={{ backgroundColor: '#f8fafc', padding: '0.85rem', borderRadius: '6px', border: '1px solid var(--color-border-light)', fontSize: '0.8rem', color: '#64748b' }}>
                     <div style={{ fontWeight: '700', color: 'var(--color-bg-navy)', marginBottom: '0.2rem' }}>
-                      Recommended Logistics Fleet: <span style={{ color: 'var(--color-gold)', textTransform: 'uppercase' }}>{cartShipping.calculation.transportType.replace('_', ' ')}</span>
+                      Recommended Fleet: <span style={{ color: 'var(--color-gold)' }}>{getTransportFleetLabel(cartShipping)}</span>
                     </div>
                     <div>
-                      Load Metrics: {cartShipping.metrics.totalWeightKg.toFixed(1)} kg &bull; {cartShipping.metrics.totalVolumeM3.toFixed(2)} m³
+                      Load Metrics: {cartShipping?.metrics?.totalWeightKg?.toFixed(1) || '0.0'} kg &bull; {cartShipping?.metrics?.totalVolumeM3?.toFixed(2) || '0.00'} m³
                     </div>
                   </div>
                 )}
@@ -557,7 +588,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               <div className="modal-dialog" style={{ maxWidth: '520px', padding: '2.5rem' }} onClick={(e) => e.stopPropagation()}>
                 {rfqSuccessId ? (
                   <div style={{ textAlign: 'center' }}>
-                    <CheckCircle2 size={52} color="var(--color-gold)" style={{ marginBottom: '1rem' }} />
+                    <CheckCircle2 size={52} color="var(--color-gold)" style={{ margin: '0 auto 1rem' }} />
                     <h3 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)', marginBottom: '0.5rem' }}>
                       Official RFQ Submitted!
                     </h3>
@@ -568,7 +599,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                     <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '1rem' }}>
                       Our sourcing directors will review and contact you within 24 hours.
                     </p>
-                    <button className="btn-gold" style={{ marginTop: '1.5rem' }} onClick={() => { setShowRfqForm(false); setRfqSuccessId(null); }}>
+                    <button className="btn-gold" style={{ marginTop: '1.5rem', marginInline: 'auto' }} onClick={() => { setShowRfqForm(false); setRfqSuccessId(null); }}>
                       Close Window
                     </button>
                   </div>
@@ -676,7 +707,12 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               </button>
             ))}
             {projectBoards.length === 0 && (
-              <p style={{ color: '#94a3b8' }}>Create a project board in the Catalog to get started.</p>
+              <div style={{ backgroundColor: '#ffffff', padding: '2rem', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center', width: '100%' }}>
+                <p style={{ color: '#64748b', margin: '0 0 1rem 0' }}>No saved Project Boards found. Sourced products appear on your Direct Order schedule.</p>
+                <button className="btn-gold" onClick={() => setViewMode('cart')}>
+                  View Direct Order Schedule
+                </button>
+              </div>
             )}
           </div>
 
@@ -706,7 +742,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                       </div>
                       <div style={{ textAlign: 'right' }}>
                         <div style={{ fontWeight: '700', color: 'var(--color-bg-navy)' }}>
-                          ₦{(item.price * item.quantity).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                          ₦{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                         </div>
                       </div>
                     </div>
@@ -727,7 +763,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                   </label>
                   <select 
                     className="filter-select"
-                    value={`${selectedZone.state}|${selectedZone.city}`}
+                    value={`${selectedZone?.state || ''}|${selectedZone?.city || ''}`}
                     onChange={handleZoneChange}
                   >
                     {zones.map((zone, idx) => (
@@ -746,7 +782,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ color: '#64748b' }}>Delivery Freight</span>
                     <span style={{ fontWeight: '600' }}>
-                      {activeBoardShipping ? `₦${activeBoardShipping.calculation.totalFee.toLocaleString('en-NG', { minimumFractionDigits: 2 })}` : '₦0.00'}
+                      {activeBoardShipping ? `₦${boardShippingFee.toLocaleString('en-NG', { minimumFractionDigits: 2 })}` : '₦0.00'}
                     </span>
                   </div>
                 </div>
@@ -765,7 +801,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                 </button>
 
                 <a 
-                  href={`https://wa.me/2349068875555?text=${encodeURIComponent(`Hello HC Group, I am reviewing Project Board "${activeBoard?.name}" totaling ₦${boardFinalTotal.toLocaleString('en-NG')} for delivery to ${selectedZone.city}, ${selectedZone.state}. Please provide the formal schedule.`)}`}
+                  href={`https://wa.me/2349068875555?text=${encodeURIComponent(`Hello HC Group, I am reviewing Project Board "${activeBoard?.name}" totaling ₦${boardFinalTotal.toLocaleString('en-NG')} for delivery to ${selectedZone?.city || ''}, ${selectedZone?.state || ''}. Please provide the formal schedule.`)}`}
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="whatsapp-action-btn" 
@@ -777,10 +813,10 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                 {activeBoardShipping && (
                   <div style={{ backgroundColor: '#f8fafc', padding: '1rem', borderRadius: '6px', border: '1px solid var(--color-border-light)', fontSize: '0.85rem' }}>
                     <div style={{ fontWeight: '600', color: 'var(--color-bg-navy)', marginBottom: '0.35rem' }}>
-                      Recommended Transport: <span style={{ color: 'var(--color-gold)', textTransform: 'uppercase' }}>{activeBoardShipping.calculation.transportType.replace('_', ' ')}</span>
+                      Recommended Fleet: <span style={{ color: 'var(--color-gold)' }}>{getTransportFleetLabel(activeBoardShipping)}</span>
                     </div>
                     <div style={{ color: '#64748b' }}>
-                      Total Load: {activeBoardShipping.metrics.totalWeightKg.toFixed(1)} kg &bull; {activeBoardShipping.metrics.totalVolumeM3.toFixed(2)} m³
+                      Total Load: {activeBoardShipping?.metrics?.totalWeightKg?.toFixed(1) || '0.0'} kg &bull; {activeBoardShipping?.metrics?.totalVolumeM3?.toFixed(2) || '0.00'} m³
                     </div>
                   </div>
                 )}
@@ -975,10 +1011,10 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                             {item.quantity}
                           </td>
                           <td style={{ textAlign: 'right' }}>
-                            ₦{item.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                            ₦{Number(item.price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                           </td>
                           <td style={{ textAlign: 'right', fontWeight: '700', color: 'var(--color-bg-navy)' }}>
-                            ₦{item.subtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                            ₦{Number(item.subtotal || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                           </td>
                         </tr>
                       ))
@@ -1002,12 +1038,12 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                 <div className="quote-calculations-box">
                   <div className="calc-row">
                     <span>Materials Supply Subtotal:</span>
-                    <strong>₦{activeSubtotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
+                    <strong>₦{Number(activeSubtotalForQuote || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
                   </div>
                   {activeShippingData && (
                     <div className="calc-row">
-                      <span>Logistics Freight ({activeShippingData.calculation.transportType.replace('_', ' ').toUpperCase()}):</span>
-                      <strong>₦{activeFreightFeeForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
+                      <span>Logistics Freight ({getTransportFleetLabel(activeShippingData)}):</span>
+                      <strong>₦{Number(activeFreightFeeForQuote || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</strong>
                     </div>
                   )}
                   <div className="calc-row">
@@ -1017,7 +1053,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                   <div className="calc-row grand-total-row">
                     <span>Total Estimated Investment:</span>
                     <strong style={{ color: 'var(--color-bg-navy)', fontSize: '1.3rem' }}>
-                      ₦{activeGrandTotalForQuote.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                      ₦{Number(activeGrandTotalForQuote || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                     </strong>
                   </div>
                 </div>
