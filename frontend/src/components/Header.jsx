@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { ShoppingBag, ChevronDown, Settings, Menu, X, ArrowRight } from 'lucide-react';
+import { ShoppingBag, ChevronDown, Settings, Menu, X, ArrowRight, Phone, MessageCircle } from 'lucide-react';
 
 export default function Header({ activeTab, setActiveTab, totalCartItems }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
+
+  const directPhone = '+234 9068875555';
+  const whatsappUrl = `https://wa.me/2349068875555?text=${encodeURIComponent(
+    'Hello HC Group, I am interested in your luxury architectural materials and turnkey interior solutions.'
+  )}`;
 
   const handleNavClick = (tab) => {
     setActiveTab(tab);
@@ -13,6 +18,27 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
 
   return (
     <header>
+      {/* Top VIP Concierge Announcement Strip */}
+      <div className="top-concierge-bar">
+        <div className="top-concierge-inner">
+          <div className="top-tagline">
+            <span>HC GROUP</span> • Bespoke Whole-House Customization & Architectural Sourcing
+          </div>
+          <div className="top-contacts">
+            <a href="tel:+2349068875555" className="top-contact-link">
+              <Phone size={13} color="var(--color-gold)" />
+              <span>Call: <strong>{directPhone}</strong></span>
+            </a>
+            <span className="top-sep">|</span>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="top-contact-link whatsapp-link">
+              <MessageCircle size={13} color="#25D366" />
+              <span>WhatsApp Concierge</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Header Bar */}
       <div className="header-container">
         {/* Mobile Hamburger Toggle Button */}
         <button 
@@ -103,6 +129,16 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
 
         {/* Right Header Actions */}
         <div className="header-actions">
+          {/* Quick Call Action for Desktop */}
+          <a 
+            href={`tel:+2349068875555`} 
+            className="desktop-header-phone"
+            title="Direct Consultation Hotline"
+          >
+            <Phone size={16} />
+            <span>+234 9068875555</span>
+          </a>
+
           <span 
             className="cart-icon"
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: activeTab === 'admin' ? 'var(--color-gold)' : '' }}
@@ -116,7 +152,7 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
             className="cart-icon"
             style={{ cursor: 'pointer', color: activeTab === 'cart' ? 'var(--color-gold)' : '' }}
             onClick={() => handleNavClick('cart')}
-            title="Project Board / Cart"
+            title="View Order / Project Board"
           >
             <ShoppingBag size={24} />
             {totalCartItems > 0 && <span className="cart-count">{totalCartItems}</span>}
@@ -135,9 +171,23 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
               <button 
                 className="mobile-close-btn"
                 onClick={() => setMobileMenuOpen(false)}
+                aria-label="Close menu"
               >
                 <X size={24} />
               </button>
+            </div>
+
+            {/* Quick Contact Box on Mobile */}
+            <div className="mobile-contact-card">
+              <span className="mobile-contact-label">DIRECT ARCHITECTURAL HOTLINE</span>
+              <a href="tel:+2349068875555" className="mobile-call-btn">
+                <Phone size={15} />
+                <span>+234 9068875555</span>
+              </a>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="mobile-whatsapp-btn">
+                <MessageCircle size={16} />
+                <span>Chat on WhatsApp</span>
+              </a>
             </div>
 
             <nav className="mobile-nav-list">
@@ -209,7 +259,7 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
                 className={`mobile-nav-item ${activeTab === 'admin' ? 'active' : ''}`}
                 onClick={() => handleNavClick('admin')}
               >
-                ADMIN INVENTORY
+                ADMIN CONTROL CENTER
               </div>
             </nav>
 
@@ -219,7 +269,7 @@ export default function Header({ activeTab, setActiveTab, totalCartItems }) {
                 style={{ width: '100%', justifyContent: 'center' }}
                 onClick={() => handleNavClick('contact')}
               >
-                Request Quotation <ArrowRight size={16} />
+                Request Project Quote <ArrowRight size={16} />
               </button>
             </div>
           </div>

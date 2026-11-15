@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { 
   Mail, Phone, MapPin, Clock, Send, CheckCircle2, AlertCircle, 
-  HelpCircle, ChevronDown, ChevronUp, MessageSquare, ShieldCheck, ArrowRight 
+  HelpCircle, ChevronDown, ChevronUp, MessageSquare, ShieldCheck, ArrowRight, MessageCircle 
 } from 'lucide-react';
 
 export default function Contact({ setActiveTab }) {
+  const directPhone = '+234 9068875555';
+  const whatsappUrl = `https://wa.me/2349068875555?text=${encodeURIComponent(
+    'Hello HC Group, I am interested in your luxury architectural materials and turnkey interior solutions.'
+  )}`;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,7 +17,7 @@ export default function Contact({ setActiveTab }) {
     company: '',
     project_type: 'Private Villa',
     scope: ['Doors & Windows'],
-    budget: '$50,000 - $150,000',
+    budget: '₦50M - ₦150M ($50,000 - $150,000)',
     location: '',
     message: ''
   });
@@ -76,20 +81,24 @@ export default function Contact({ setActiveTab }) {
 
   const faqs = [
     {
+      q: 'How quickly can your team deploy for on-site measurement in Nigeria or internationally?',
+      a: 'For projects in Lagos, Abuja, and surrounding regions, our technical surveying team can deploy within 24 to 48 hours with 3D LiDAR laser scanners. For international projects, we schedule spatial audits aligned with your contractor’s construction milestones.'
+    },
+    {
+      q: 'Can I discuss my project directly over phone or WhatsApp right now?',
+      a: `Yes! You can call or chat directly with our senior project sourcing director at ${directPhone}. We review blueprints, preliminary schedules, and specification sheets via WhatsApp in real-time.`
+    },
+    {
       q: 'What is the standard procurement and production lead time?',
-      a: 'Bespoke custom items such as architectural pivot doors, laser-cut marble slabs, and custom modular joinery typically require 25 to 45 business days for factory fabrication. Freight logistics range from 5 days (air cargo) to 20-35 days (ocean container freight depending on destination port).'
+      a: 'Bespoke custom items such as architectural pivot doors, laser-cut marble slabs, and custom modular joinery typically require 25 to 45 business days for factory fabrication. Freight logistics range from 5 days (air cargo) to 20-35 days (ocean container freight directly cleared into Lagos port or international destinations).'
     },
     {
       q: 'Do you deliver physical material sample kits?',
-      a: 'Yes. Once an initial architectural drawing or material schedule is reviewed with our engineering team, we dispatch a curated sample box (hardwood finishes, marble batches, hardware swatches, aluminum profiles) directly via express courier to your office.'
+      a: 'Yes. Once an initial architectural drawing or material schedule is reviewed with our engineering team, we dispatch a curated sample box (hardwood finishes, marble batches, hardware swatches, aluminum profiles) directly via express courier to your office or residence.'
     },
     {
       q: 'How are customs clearance and import duties handled?',
-      a: 'We provide full DDP (Delivered Duty Paid) or CIF (Cost, Insurance and Freight) shipping terms. Our sovereign logistics partners manage customs declarations, import documentation, and coordinated offloading at your project site.'
-    },
-    {
-      q: 'Can your team provide on-site measurement and installation abroad?',
-      a: 'Absolutely. For whole-house luxury projects, we deploy senior measurement technicians with 3D LiDAR scanners for initial spatial audits, followed by factory-certified master installers for final assembly.'
+      a: 'We provide full DDP (Delivered Duty Paid) shipping terms. Our dedicated logistics partners manage port customs declarations, tariff documentation, bonded transport, and coordinated hydraulic offloading at your project site.'
     }
   ];
 
@@ -108,7 +117,7 @@ export default function Contact({ setActiveTab }) {
           </h1>
           <p className="contact-hero-desc">
             Submit your project specifications, CAD drawings, or material requirements. 
-            Our dedicated project directors will review your scope and respond within 24 hours.
+            Speak directly with our engineering team for immediate quotes and on-site measurements.
           </p>
         </div>
       </section>
@@ -128,28 +137,37 @@ export default function Contact({ setActiveTab }) {
                 </p>
                 <div className="ticket-badge">{successResult.inquiryId}</div>
                 <p style={{ fontSize: '0.95rem', color: '#64748b', marginTop: '1rem' }}>
-                  A Senior Technical Director has been assigned to your request and will reach out via <strong>{formData.email}</strong> within 24 hours with preliminary pricing and schedule coordination.
+                  A Senior Technical Director has been assigned to your request and will reach out via <strong>{formData.email}</strong> or phone/WhatsApp within 24 hours with preliminary pricing and schedule coordination.
                 </p>
-                <button 
-                  className="btn-gold" 
-                  style={{ marginTop: '2rem' }}
-                  onClick={() => {
-                    setSuccessResult(null);
-                    setFormData({
-                      name: '',
-                      email: '',
-                      phone: '',
-                      company: '',
-                      project_type: 'Private Villa',
-                      scope: ['Doors & Windows'],
-                      budget: '$50,000 - $150,000',
-                      location: '',
-                      message: ''
-                    });
-                  }}
-                >
-                  Submit Another Inquiry
-                </button>
+                <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <a 
+                    href={whatsappUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="whatsapp-action-btn"
+                  >
+                    <MessageCircle size={18} /> Chat on WhatsApp Now
+                  </a>
+                  <button 
+                    className="btn-outline" 
+                    onClick={() => {
+                      setSuccessResult(null);
+                      setFormData({
+                        name: '',
+                        email: '',
+                        phone: '',
+                        company: '',
+                        project_type: 'Private Villa',
+                        scope: ['Doors & Windows'],
+                        budget: '₦50M - ₦150M ($50,000 - $150,000)',
+                        location: '',
+                        message: ''
+                      });
+                    }}
+                  >
+                    Submit Another Request
+                  </button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
@@ -158,7 +176,7 @@ export default function Contact({ setActiveTab }) {
                     Request Quotation & Consultation
                   </h2>
                   <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
-                    Please fill out the technical specifications below for your project.
+                    Fill out your project specifications below, or call our direct hotline: <strong style={{ color: 'var(--color-gold-muted)' }}>{directPhone}</strong>
                   </p>
                 </div>
 
@@ -175,7 +193,7 @@ export default function Contact({ setActiveTab }) {
                     <input 
                       type="text" 
                       required 
-                      placeholder="e.g. Lord Alistair Vance" 
+                      placeholder="e.g. Chief Adeleke / Arch. Ibrahim" 
                       value={formData.name}
                       onChange={e => setFormData({ ...formData, name: e.target.value })}
                     />
@@ -185,7 +203,7 @@ export default function Contact({ setActiveTab }) {
                     <input 
                       type="email" 
                       required 
-                      placeholder="e.g. vance@architects.com" 
+                      placeholder="e.g. contact@domain.com" 
                       value={formData.email}
                       onChange={e => setFormData({ ...formData, email: e.target.value })}
                     />
@@ -194,16 +212,16 @@ export default function Contact({ setActiveTab }) {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Phone / WhatsApp</label>
+                    <label>Phone / WhatsApp *</label>
                     <input 
                       type="text" 
-                      placeholder="+1 (555) 019-2834" 
+                      placeholder="e.g. +234 906 887 5555" 
                       value={formData.phone}
                       onChange={e => setFormData({ ...formData, phone: e.target.value })}
                     />
                   </div>
                   <div className="form-group">
-                    <label>Company / Firm / Estate</label>
+                    <label>Company / Architectural Firm</label>
                     <input 
                       type="text" 
                       placeholder="e.g. Studio Vance Architecture" 
@@ -233,19 +251,19 @@ export default function Contact({ setActiveTab }) {
                       value={formData.budget}
                       onChange={e => setFormData({ ...formData, budget: e.target.value })}
                     >
-                      <option value="$25,000 - $50,000">$25,000 - $50,000</option>
-                      <option value="$50,000 - $150,000">$50,000 - $150,000</option>
-                      <option value="$150,000 - $500,000">$150,000 - $500,000</option>
-                      <option value="$500,000+">$500,000+ (Whole-Estate Development)</option>
+                      <option value="₦25M - ₦50M ($25,000 - $50,000)">₦25M - ₦50M ($25,000 - $50,000)</option>
+                      <option value="₦50M - ₦150M ($50,000 - $150,000)">₦50M - ₦150M ($50,000 - $150,000)</option>
+                      <option value="₦150M - ₦500M ($150,000 - $500,000)">₦150M - ₦500M ($150,000 - $500,000)</option>
+                      <option value="₦500M+ ($500,000+ Whole-Estate Development)">₦500M+ ($500,000+ Whole-Estate)</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Project Location (City, Country)</label>
+                  <label>Project Location (City, State / Country)</label>
                   <input 
                     type="text" 
-                    placeholder="e.g. Dubai, UAE or Beverly Hills, CA" 
+                    placeholder="e.g. Lekki Phase 1, Lagos / Maitama, Abuja / Dubai, UAE" 
                     value={formData.location}
                     onChange={e => setFormData({ ...formData, location: e.target.value })}
                   />
@@ -271,10 +289,10 @@ export default function Contact({ setActiveTab }) {
                 </div>
 
                 <div className="form-group">
-                  <label>Project Scope & Requirements</label>
+                  <label>Project Scope & Specifications</label>
                   <textarea 
                     rows={4}
-                    placeholder="Describe your dimensions, preferred woods/stones, hardware specifications, or special acoustic/fire safety requirements..."
+                    placeholder="Provide details on ceiling heights, door aperture dimensions, preferred wood species, marble finishes, or site delivery requirements..."
                     value={formData.message}
                     onChange={e => setFormData({ ...formData, message: e.target.value })}
                   />
@@ -299,16 +317,46 @@ export default function Contact({ setActiveTab }) {
           {/* Contact Direct Info Column */}
           <div className="contact-info-col">
             
+            {/* VIP Direct Action Card */}
+            <div className="vip-hotline-card">
+              <span className="badge-luxury" style={{ marginBottom: '0.75rem' }}>DIRECT CONCIERGE HOTLINE</span>
+              <h3 style={{ fontSize: '1.7rem', color: '#ffffff', marginBottom: '0.5rem' }}>
+                {directPhone}
+              </h3>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+                Speak directly with an architectural director or message us on WhatsApp for rapid material quotes and site surveys.
+              </p>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="whatsapp-action-btn">
+                  <MessageCircle size={18} />
+                  <span>WhatsApp Chat</span>
+                </a>
+                <a href="tel:+2349068875555" className="call-action-btn" style={{ flex: 1, justifyContent: 'center' }}>
+                  <Phone size={16} />
+                  <span>Call Direct</span>
+                </a>
+              </div>
+            </div>
+
             {/* Global Offices Card */}
             <div className="info-card">
-              <h3 className="info-card-title">Global Headquarters & Facilities</h3>
+              <h3 className="info-card-title">Corporate Offices & Facilities</h3>
               
               <div className="info-item">
                 <MapPin size={22} color="var(--color-gold)" className="info-icon" />
                 <div>
-                  <strong>Manufacturing Base & Showroom</strong>
+                  <strong>Nigeria Operations & Project Sourcing</strong>
+                  <p>Admiralty Way, Lekki Phase 1, Lagos &bull; Maitama District, Abuja</p>
+                  <span className="info-sub">Direct Line: +234 9068875555 &bull; In-Person Consultation</span>
+                </div>
+              </div>
+
+              <div className="info-item">
+                <MapPin size={22} color="var(--color-gold)" className="info-icon" />
+                <div>
+                  <strong>Automated CNC Manufacturing Plant</strong>
                   <p>HC Industrial Technology Park, Foshan, Guangdong Province</p>
-                  <span className="info-sub">50,000 m² Automated CNC & Joinery Facility</span>
+                  <span className="info-sub">50,000 m² Automated Factory & Stone Cutting Yards</span>
                 </div>
               </div>
 
@@ -317,25 +365,25 @@ export default function Contact({ setActiveTab }) {
                 <div>
                   <strong>Middle East Liaison Office</strong>
                   <p>Emaar Square, Downtown Dubai, United Arab Emirates</p>
-                  <span className="info-sub">Architectural Consulting & Project Handover</span>
+                  <span className="info-sub">High-End Hospitality & Luxury Residential Sourcing</span>
                 </div>
               </div>
 
               <div className="info-item">
                 <Mail size={22} color="var(--color-gold)" className="info-icon" />
                 <div>
-                  <strong>Executive Concierge & Inquiries</strong>
-                  <p>concierge@hcgroup-trade.com</p>
+                  <strong>Official Architectural Inquiries</strong>
+                  <p>info@hcgroup-trade.com</p>
                   <span className="info-sub">Encrypted CAD Blueprint submissions</span>
                 </div>
               </div>
 
               <div className="info-item">
-                <Phone size={22} color="var(--color-gold)" className="info-icon" />
+                <Clock size={22} color="var(--color-gold)" className="info-icon" />
                 <div>
-                  <strong>Direct Engineering Hotline</strong>
-                  <p>+86 757 8892 1099 / +971 4 812 9000</p>
-                  <span className="info-sub">Monday – Saturday: 08:00 – 20:00 (GMT+8)</span>
+                  <strong>Operating Hours</strong>
+                  <p>Monday – Saturday: 08:00 – 19:00 (WAT / GMT+1)</p>
+                  <span className="info-sub">24/7 Priority Concierge for Active Building Sites</span>
                 </div>
               </div>
             </div>
@@ -344,9 +392,9 @@ export default function Contact({ setActiveTab }) {
             <div className="turnkey-callout-card">
               <ShieldCheck size={36} color="var(--color-gold)" />
               <div>
-                <h4>Direct Sovereign Support</h4>
+                <h4>Certified Turnkey Accountability</h4>
                 <p>
-                  Every approved inquiry is paired with a dedicated project manager who handles quotation, CAD verification, and freight logistics until handover.
+                  Every order is backed by dedicated project engineers, certified zero-tolerance laser fitting, and our 10-year structural warranty.
                 </p>
               </div>
             </div>

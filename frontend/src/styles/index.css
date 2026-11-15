@@ -2021,3 +2021,606 @@ nav.main-nav {
   .modal-dialog { padding: 1rem; }
   .modal-stats-row { grid-template-columns: 1fr; }
 }
+
+
+/* ==========================================================================
+   Top VIP Concierge Bar & Quick Actions
+   ========================================================================== */
+.top-concierge-bar {
+  background-color: #070d1e;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  font-size: 0.8rem;
+  padding: 0.4rem 1.5rem;
+  color: var(--color-text-muted);
+}
+.top-concierge-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.top-tagline {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.top-tagline span {
+  color: var(--color-gold);
+  font-weight: 700;
+}
+.top-contacts {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.top-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-text-light);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+.top-contact-link:hover {
+  color: var(--color-gold);
+}
+.top-contact-link strong {
+  color: var(--color-gold);
+}
+.top-sep {
+  color: rgba(255, 255, 255, 0.2);
+}
+.whatsapp-link:hover {
+  color: #25D366;
+}
+
+.desktop-header-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold);
+  padding: 0.45rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  margin-right: 0.5rem;
+}
+.desktop-header-phone:hover {
+  background: var(--color-gold);
+  color: var(--color-bg-navy);
+}
+
+/* Mobile Drawer Contact Card */
+.mobile-contact-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.mobile-contact-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--color-gold);
+  text-transform: uppercase;
+}
+.mobile-call-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-bg-navy-light);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.mobile-whatsapp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #25D366;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   Floating WhatsApp Concierge Widget
+   ========================================================================== */
+.whatsapp-floating-widget {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.whatsapp-trigger-btn {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+.whatsapp-trigger-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5);
+}
+.whatsapp-label {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+.whatsapp-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  border: 2px solid #25D366;
+  animation: pulseEffect 2s infinite;
+  pointer-events: none;
+}
+@keyframes pulseEffect {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+.whatsapp-popup-card {
+  width: 320px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(7, 13, 30, 0.25);
+  border: 1px solid var(--color-border-light);
+  overflow: hidden;
+  margin-bottom: 12px;
+  animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.whatsapp-popup-header {
+  background-color: var(--color-bg-navy);
+  color: #ffffff;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--color-gold);
+}
+.whatsapp-header-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.online-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #25D366;
+  box-shadow: 0 0 8px #25D366;
+}
+.whatsapp-header-info strong {
+  display: block;
+  font-size: 0.95rem;
+}
+.whatsapp-header-info span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+.whatsapp-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.whatsapp-close-btn:hover {
+  color: #ffffff;
+}
+
+.whatsapp-popup-body {
+  padding: 1.25rem;
+  font-size: 0.9rem;
+  color: #334155;
+  line-height: 1.6;
+}
+.whatsapp-direct-number {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.whatsapp-popup-footer {
+  padding: 0 1.25rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.whatsapp-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #25D366;
+  color: #ffffff;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+}
+.whatsapp-action-btn:hover {
+  background-color: #1ea952;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
+.call-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-bg-navy);
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
+  padding: 0.65rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: var(--transition-smooth);
+}
+.call-action-btn:hover {
+  background-color: var(--color-gold);
+  color: var(--color-bg-navy);
+}
+
+/* ==========================================================================
+   Home VIP Consultation Banner
+   ========================================================================== */
+.vip-consultation-banner {
+  background: linear-gradient(135deg, var(--color-bg-navy) 0%, #16254c 100%);
+  border: 1px solid var(--color-gold);
+  border-radius: 12px;
+  padding: 3.5rem;
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-lg);
+}
+.vip-banner-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+.vip-banner-text h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+.vip-banner-text p {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+.vip-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+}
+.vip-checks span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.vip-banner-actions {
+  background: rgba(7, 13, 30, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 10px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.vip-phone-box {
+  margin-bottom: 1.5rem;
+}
+.vip-phone-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.35rem;
+}
+.vip-phone-number {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.6rem;
+  color: #ffffff;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+.vip-phone-number:hover {
+  color: var(--color-gold);
+}
+
+.vip-hotline-card {
+  background: linear-gradient(135deg, var(--color-bg-navy) 0%, #16254c 100%);
+  border: 1px solid var(--color-gold);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.footer-direct-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: var(--color-gold);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Cart & Materials Layout
+   ========================================================================== */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
+.cart-items-section {
+  background: #ffffff;
+  border: 1px solid var(--color-border-light);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 1rem;
+}
+.cart-item:last-child {
+  border-bottom: none;
+}
+.cart-item-info {
+  flex: 1;
+}
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: var(--color-bg-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+.qty-btn:hover {
+  background-color: var(--color-bg-navy);
+  color: var(--color-gold);
+  border-color: var(--color-gold);
+}
+.summary-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border-light);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+.summary-title {
+  font-family: var(--font-display);
+  color: var(--color-bg-navy);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+/* ==========================================================================
+   Shop The Look Hotspot Refinements
+   ========================================================================== */
+.room-mockup-container {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-gold-muted);
+}
+.room-scene-box {
+  width: 100%;
+  height: 520px;
+  background: linear-gradient(to bottom, #070d1e 0%, #0c1630 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 2rem;
+  text-align: center;
+}
+.room-ceiling-glow {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 40%;
+  background: radial-gradient(circle at 50% 10%, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+}
+.room-brand-watermark {
+  font-family: var(--font-display);
+  color: rgba(212, 175, 55, 0.12);
+  font-size: 6rem;
+  letter-spacing: 12px;
+  pointer-events: none;
+  user-select: none;
+}
+.room-scene-pill {
+  position: absolute;
+  bottom: 25px;
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  background-color: rgba(7, 13, 30, 0.85);
+  display: flex;
+  align-items: center;
+}
+.hotspot {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+}
+.hotspot-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.5);
+  animation: beaconPulse 2s infinite ease-out;
+}
+@keyframes beaconPulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+.hotspot-beacon-dot {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color-gold);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+}
+.hotspot-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  background-color: #070d1e;
+  border: 1px solid var(--color-gold);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: left;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  animation: fadeIn 0.25s ease;
+}
+.hotspot:hover .hotspot-tooltip,
+.hotspot.active-touch .hotspot-tooltip,
+.hotspot-tooltip.visible-touch {
+  display: block;
+}
+.tooltip-title {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: var(--font-display);
+}
+.tooltip-price {
+  color: var(--color-gold);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+.tooltip-btn {
+  width: 100%;
+  background-color: var(--color-gold);
+  color: var(--color-bg-navy);
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: var(--transition-smooth);
+}
+.tooltip-btn:hover {
+  background-color: var(--color-gold-hover);
+}
+
+/* ==========================================================================
+   Full Mobile Responsiveness Audit
+   ========================================================================== */
+@media (max-width: 900px) {
+  .top-tagline { display: none; }
+  .top-concierge-inner { justify-content: center; }
+  .vip-banner-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .cart-layout { grid-template-columns: 1fr; }
+  .desktop-header-phone { display: none; }
+}
+
+@media (max-width: 600px) {
+  .room-scene-box { height: 420px; }
+  .room-brand-watermark { font-size: 3.5rem; }
+  .whatsapp-popup-card { width: 290px; right: 10px; }
+  .whatsapp-floating-widget { bottom: 15px; right: 15px; }
+  .whatsapp-trigger-btn { padding: 0.6rem 1rem; }
+  .whatsapp-label { display: none; }
+  .vip-consultation-banner { padding: 2rem 1.25rem; }
+  .vip-banner-actions { padding: 1.5rem 1rem; }
+  .vip-phone-number { font-size: 1.3rem; }
+  .cart-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .cart-item > div:last-child { align-self: flex-end; }
+}

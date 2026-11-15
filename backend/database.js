@@ -70,7 +70,44 @@ function initializeDatabase() {
           console.error('Failed to read SQL init files:', e.message);
         }
       } else {
-        console.log('Database tables already exist. Skipping seed.');
+        console.log('Database tables already exist. Ensuring schema & shipping zones are current...');
+        // Ensure inquiries table exists
+        db.run(`CREATE TABLE IF NOT EXISTS inquiries (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL,
+          phone TEXT,
+          company TEXT,
+          project_type TEXT,
+          scope TEXT,
+          budget TEXT,
+          location TEXT,
+          message TEXT,
+          status TEXT DEFAULT 'pending',
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`);
+
+        // Check if expanded Nigerian zones are present
+        db.get("SELECT count(*) as count FROM shipping_zones WHERE city = 'Lekki Phase 1'", (err, row) => {
+          if (!row || row.count === 0) {
+            console.log('Seeding expanded Nigerian shipping zones (Lekki, VI, Maitama, etc.)...');
+            try {
+              const seedSql = fs.readFileSync(path.join(DB_DIR, 'seed.sql'), 'utf8');
+              const zonesInsertIdx = seedSql.indexOf('INSERT INTO shipping_zones');
+              if (zonesInsertIdx !== -1) {
+                const zonesSql = seedSql.substring(zonesInsertIdx);
+                db.run("DELETE FROM shipping_zones", () => {
+                  db.exec(zonesSql, (err) => {
+                    if (err) console.error('Zone update error:', err);
+                    else console.log('Nigerian shipping zones loaded successfully.');
+                  });
+                });
+              }
+            } catch (e) {
+              console.error('Failed reading seed.sql for zone update:', e.message);
+            }
+          }
+        });
       }
     });
   });

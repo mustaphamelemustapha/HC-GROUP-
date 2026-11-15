@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
+import WhatsAppWidget from './components/WhatsAppWidget.jsx';
 import Home from './pages/Home.jsx';
 import Catalog from './pages/Catalog.jsx';
 import ShopTheLook from './pages/ShopTheLook.jsx';
@@ -53,7 +54,7 @@ export default function App() {
   const totalCartItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
       <Header activeTab={activeTab} setActiveTab={setActiveTab} totalCartItems={totalCartItems} />
 
       <main style={{ flex: 1, padding: 0, margin: 0, maxWidth: '100%' }}>
@@ -78,6 +79,7 @@ export default function App() {
               onUpdateQty={handleUpdateQty} 
               onRemove={handleRemove} 
               onClearCart={handleClearCart}
+              setActiveTab={setActiveTab}
             />
           </div>
         )}
@@ -105,7 +107,10 @@ export default function App() {
         )}
       </main>
 
-      <Footer />
+      <Footer setActiveTab={setActiveTab} />
+
+      {/* Real-time WhatsApp & Direct Calling Floating Concierge */}
+      <WhatsAppWidget />
     </div>
   );
 }

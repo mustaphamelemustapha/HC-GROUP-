@@ -131,14 +131,41 @@ INSERT INTO bulk_pricing_rules (id, variant_id, min_quantity, unit_price) VALUES
 
 -- 7. Shipping Rates
 INSERT INTO shipping_zones (id, state, city, base_rate, per_kg_rate, transport_type) VALUES
-('sz_lagos_ikoyi_p', 'Lagos', 'Ikoyi', 15.00, 0.50, 'parcel'),
-('sz_lagos_ikoyi_f', 'Lagos', 'Ikoyi', 120.00, 2.00, 'flatbed'),
-('sz_lagos_ikoyi_c', 'Lagos', 'Ikoyi', 300.00, 4.00, 'crane_lift'),
+-- Lagos Hubs
+('sz_lagos_lekki_p', 'Lagos', 'Lekki Phase 1', 15000.00, 150.00, 'parcel'),
+('sz_lagos_lekki_f', 'Lagos', 'Lekki Phase 1', 95000.00, 350.00, 'flatbed'),
+('sz_lagos_lekki_c', 'Lagos', 'Lekki Phase 1', 250000.00, 600.00, 'crane_lift'),
 
-('sz_lagos_ikeja_p', 'Lagos', 'Ikeja', 25.00, 0.80, 'parcel'),
-('sz_lagos_ikeja_f', 'Lagos', 'Ikeja', 150.00, 2.50, 'flatbed'),
-('sz_lagos_ikeja_c', 'Lagos', 'Ikeja', 350.00, 5.00, 'crane_lift'),
+('sz_lagos_ikoyi_p', 'Lagos', 'Ikoyi', 18000.00, 150.00, 'parcel'),
+('sz_lagos_ikoyi_f', 'Lagos', 'Ikoyi', 110000.00, 350.00, 'flatbed'),
+('sz_lagos_ikoyi_c', 'Lagos', 'Ikoyi', 280000.00, 650.00, 'crane_lift'),
 
-('sz_abuja_wuse_p', 'Abuja', 'Wuse', 35.00, 1.20, 'parcel'),
-('sz_abuja_wuse_f', 'Abuja', 'Wuse', 250.00, 4.00, 'flatbed'),
-('sz_abuja_wuse_c', 'Abuja', 'Wuse', 500.00, 8.00, 'crane_lift');
+('sz_lagos_vi_p', 'Lagos', 'Victoria Island', 18000.00, 150.00, 'parcel'),
+('sz_lagos_vi_f', 'Lagos', 'Victoria Island', 110000.00, 350.00, 'flatbed'),
+('sz_lagos_vi_c', 'Lagos', 'Victoria Island', 280000.00, 650.00, 'crane_lift'),
+
+('sz_lagos_ikeja_p', 'Lagos', 'Ikeja GRA', 22000.00, 200.00, 'parcel'),
+('sz_lagos_ikeja_f', 'Lagos', 'Ikeja GRA', 130000.00, 400.00, 'flatbed'),
+('sz_lagos_ikeja_c', 'Lagos', 'Ikeja GRA', 320000.00, 700.00, 'crane_lift'),
+
+-- Abuja Hubs
+('sz_abuja_maitama_p', 'Abuja', 'Maitama', 25000.00, 250.00, 'parcel'),
+('sz_abuja_maitama_f', 'Abuja', 'Maitama', 180000.00, 500.00, 'flatbed'),
+('sz_abuja_maitama_c', 'Abuja', 'Maitama', 380000.00, 850.00, 'crane_lift'),
+
+('sz_abuja_wuse_p', 'Abuja', 'Wuse 2', 25000.00, 250.00, 'parcel'),
+('sz_abuja_wuse_f', 'Abuja', 'Wuse 2', 180000.00, 500.00, 'flatbed'),
+('sz_abuja_wuse_c', 'Abuja', 'Wuse 2', 380000.00, 850.00, 'crane_lift'),
+
+('sz_abuja_asokoro_p', 'Abuja', 'Asokoro', 25000.00, 250.00, 'parcel'),
+('sz_abuja_asokoro_f', 'Abuja', 'Asokoro', 180000.00, 500.00, 'flatbed'),
+('sz_abuja_asokoro_c', 'Abuja', 'Asokoro', 380000.00, 850.00, 'crane_lift'),
+
+-- Regional Commercial Hubs
+('sz_rivers_ph_p', 'Rivers', 'Port Harcourt', 35000.00, 300.00, 'parcel'),
+('sz_rivers_ph_f', 'Rivers', 'Port Harcourt', 250000.00, 650.00, 'flatbed'),
+('sz_rivers_ph_c', 'Rivers', 'Port Harcourt', 480000.00, 1100.00, 'crane_lift'),
+
+('sz_kano_central_p', 'Kano', 'Kano Central', 40000.00, 350.00, 'parcel'),
+('sz_kano_central_f', 'Kano', 'Kano Central', 280000.00, 700.00, 'flatbed'),
+('sz_kano_central_c', 'Kano', 'Kano Central', 520000.00, 1200.00, 'crane_lift');
