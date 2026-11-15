@@ -2,11 +2,10 @@
   command = "npm install --prefix frontend && npm run build --prefix frontend"
   publish = "frontend/dist"
 
-# Redirect API calls to the Render Backend
+# Redirect API calls to the Coolify Backend
 [[redirects]]
   from = "/api/*"
-  # TODO: Replace this URL with your actual Render URL after deploying the backend
-  to = "https://hc-group-backend.onrender.com/api/:splat"
+  to = "http://37.27.152.61:5001/api/:splat"
   status = 200
   force = true
 
