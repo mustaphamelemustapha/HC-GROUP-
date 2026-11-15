@@ -1,5 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, Layers, Box, DollarSign, Image as ImageIcon, CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { 
+  Sparkles, 
+  Layers, 
+  Box, 
+  DollarSign, 
+  Image as ImageIcon, 
+  CheckCircle, 
+  AlertCircle, 
+  UploadCloud, 
+  Camera, 
+  Trash2, 
+  Link2,
+  CheckCircle2,
+  FileImage
+} from 'lucide-react';
 
 const CATEGORIES = [
   { id: 'cat_doors', name: 'Luxury Doors & Entries', prefix: 'HC-DOOR' },
@@ -41,6 +55,12 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
     load_capacity: '350 kg load rating'
   });
 
+  // Image upload tab mode: 'upload' | 'url'
+  const [imageInputMode, setImageInputMode] = useState('upload');
+  const [uploadedImageInfo, setUploadedImageInfo] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
+
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -60,6 +80,94 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // Process uploaded image file with browser canvas auto-optimization
+  const processImageFile = (file) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Selected file must be an image (JPEG, PNG, WEBP, or HEIC).');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        // Optimize image resolution: maximum 1600px width/height for fast loading
+        const maxDim = 1600;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to high-fidelity JPEG data URL
+        const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+        const approxSizeKb = Math.round((optimizedDataUrl.length * 0.75) / 1024);
+
+        setFormData(prev => ({ ...prev, image_url: optimizedDataUrl }));
+        setUploadedImageInfo({
+          name: file.name,
+          size: `${approxSizeKb} KB`,
+          dimensions: `${width} × ${height} px`
+        });
+        setError(null);
+      };
+
+      img.onerror = () => {
+        setError('Failed to process image file. Please try another picture.');
+      };
+
+      img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileInputChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      processImageFile(e.target.files[0]);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processImageFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData(prev => ({ ...prev, image_url: '' }));
+    setUploadedImageInfo(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -68,6 +176,12 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
     const priceNum = parseFloat(formData.price);
     if (isNaN(priceNum) || priceNum <= 0) {
       setError('Please provide a valid unit price in Nigerian Naira (₦).');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.image_url) {
+      setError('Please upload a product picture or select an architectural image.');
       setLoading(false);
       return;
     }
@@ -128,7 +242,287 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
         </div>
       )}
 
-      {/* Basic Classification */}
+      {/* 1. DEDICATED PICTURE UPLOAD SPACE */}
+      <div style={{
+        background: '#ffffff',
+        border: '1px solid var(--color-border-light)',
+        borderRadius: '10px',
+        padding: '1.25rem',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <Camera size={18} color="var(--color-gold)" />
+              <label style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--color-bg-navy)', margin: 0 }}>
+                Product Photography / Picture *
+              </label>
+            </div>
+            <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
+              Upload actual product photo from your device or select an architectural visual
+            </span>
+          </div>
+
+          {/* Toggle between Device Upload vs URL/Preset */}
+          <div style={{ display: 'flex', background: '#f1f5f9', padding: '0.2rem', borderRadius: '6px' }}>
+            <button
+              type="button"
+              onClick={() => setImageInputMode('upload')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                border: 'none',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                background: imageInputMode === 'upload' ? 'var(--color-bg-navy)' : 'transparent',
+                color: imageInputMode === 'upload' ? 'var(--color-gold)' : '#64748b'
+              }}
+            >
+              <UploadCloud size={13} /> Upload Picture
+            </button>
+            <button
+              type="button"
+              onClick={() => setImageInputMode('url')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                border: 'none',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                background: imageInputMode === 'url' ? 'var(--color-bg-navy)' : 'transparent',
+                color: imageInputMode === 'url' ? 'var(--color-gold)' : '#64748b'
+              }}
+            >
+              <Link2 size={13} /> Preset / URL
+            </button>
+          </div>
+        </div>
+
+        {/* UPLOAD MODE */}
+        {imageInputMode === 'upload' && (
+          <div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileInputChange}
+              accept="image/*"
+              style={{ display: 'none' }}
+            />
+
+            {!formData.image_url || formData.image_url.startsWith('/assets/') ? (
+              // Empty Upload Dropzone
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                style={{
+                  border: isDragging ? '2px dashed var(--color-gold)' : '2px dashed #cbd5e1',
+                  backgroundColor: isDragging ? '#fef9e7' : '#fafafa',
+                  borderRadius: '10px',
+                  padding: '2.25rem 1.5rem',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <div style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '50%',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1rem',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}>
+                  <UploadCloud size={28} color="var(--color-gold)" />
+                </div>
+                <div style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--color-bg-navy)' }}>
+                  Click to select or drag & drop a picture here
+                </div>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.35rem' }}>
+                  Supports camera photos, PNG, JPG, WEBP (Automatically optimized for web)
+                </div>
+                <button
+                  type="button"
+                  style={{
+                    marginTop: '1rem',
+                    backgroundColor: 'var(--color-bg-navy)',
+                    color: 'var(--color-gold)',
+                    border: 'none',
+                    padding: '0.45rem 1.15rem',
+                    borderRadius: '6px',
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Browse Device Photos
+                </button>
+              </div>
+            ) : (
+              // Active Upload Preview Card
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.25rem',
+                padding: '1rem',
+                backgroundColor: '#f8fafc',
+                border: '1px solid #e2e8f0',
+                borderRadius: '8px',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{
+                  width: '120px',
+                  height: '100px',
+                  borderRadius: '6px',
+                  overflow: 'hidden',
+                  border: '2px solid var(--color-gold)',
+                  backgroundColor: '#000',
+                  flexShrink: 0
+                }}>
+                  <img
+                    src={formData.image_url}
+                    alt="Upload preview"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+
+                <div style={{ flex: 1, minWidth: '200px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                    <CheckCircle2 size={16} color="#10b981" />
+                    <strong style={{ color: 'var(--color-bg-navy)', fontSize: '0.9rem' }}>
+                      {uploadedImageInfo?.name || 'Custom Uploaded Picture'}
+                    </strong>
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
+                    Status: <span style={{ color: '#10b981', fontWeight: '600' }}>Optimized & Ready to Publish</span>
+                    {uploadedImageInfo && (
+                      <span> • {uploadedImageInfo.dimensions} ({uploadedImageInfo.size})</span>
+                    )}
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                      style={{
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: '4px',
+                        border: '1px solid #cbd5e1',
+                        background: '#ffffff',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        color: 'var(--color-bg-navy)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Change Photo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: '4px',
+                        border: '1px solid #fecaca',
+                        background: '#fef2f2',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        color: '#dc2626',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <Trash2 size={12} /> Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* URL & PRESET MODE */}
+        {imageInputMode === 'url' && (
+          <div>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <input
+                type="text"
+                name="image_url"
+                className="filter-input"
+                value={formData.image_url}
+                onChange={handleChange}
+                placeholder="https://... or /assets/products/door_1.jpeg"
+                style={{ flex: 1 }}
+              />
+              {formData.image_url && (
+                <div style={{
+                  width: '45px',
+                  height: '45px',
+                  borderRadius: '6px',
+                  overflow: 'hidden',
+                  border: '1px solid var(--color-gold)',
+                  flexShrink: 0
+                }}>
+                  <img
+                    src={formData.image_url}
+                    alt="Preview"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Quick Bundled Architectural Presets */}
+            <div>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block', marginBottom: '0.35rem' }}>
+                Or select from bundled architectural project photos:
+              </span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                {QUICK_ASSETS.map((asset) => (
+                  <button
+                    type="button"
+                    key={asset.path}
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, image_url: asset.path }));
+                      setUploadedImageInfo(null);
+                    }}
+                    style={{
+                      fontSize: '0.72rem',
+                      padding: '0.2rem 0.55rem',
+                      borderRadius: '12px',
+                      border: formData.image_url === asset.path ? '1px solid var(--color-gold)' : '1px solid #cbd5e1',
+                      background: formData.image_url === asset.path ? '#fef9e7' : '#ffffff',
+                      color: formData.image_url === asset.path ? 'var(--color-bg-navy)' : '#64748b',
+                      cursor: 'pointer',
+                      fontWeight: formData.image_url === asset.path ? '700' : '500'
+                    }}
+                  >
+                    {asset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 2. BASIC CLASSIFICATION */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '0.35rem', fontSize: '0.85rem', fontWeight: '600', color: 'var(--color-bg-navy)' }}>
@@ -165,7 +559,7 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
         </div>
       </div>
 
-      {/* Product Name */}
+      {/* 3. PRODUCT NAME */}
       <div>
         <label style={{ display: 'block', marginBottom: '0.35rem', fontSize: '0.85rem', fontWeight: '600', color: 'var(--color-bg-navy)' }}>
           Product / System Name *
@@ -182,7 +576,7 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
         />
       </div>
 
-      {/* Description */}
+      {/* 4. DESCRIPTION */}
       <div>
         <label style={{ display: 'block', marginBottom: '0.35rem', fontSize: '0.85rem', fontWeight: '600', color: 'var(--color-bg-navy)' }}>
           Architectural Scope & Description
@@ -198,7 +592,7 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
         />
       </div>
 
-      {/* Pricing & Inventory */}
+      {/* 5. PRICING & INVENTORY */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '0.35rem', fontSize: '0.85rem', fontWeight: '600', color: 'var(--color-bg-navy)' }}>
@@ -239,7 +633,7 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
         </div>
       </div>
 
-      {/* Freight & Logistics Parameters */}
+      {/* 6. FREIGHT & LOGISTICS PARAMETERS */}
       <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
           <Box size={16} color="var(--color-gold)" />
@@ -277,7 +671,7 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
         </div>
       </div>
 
-      {/* Architectural Specifications (EAV) */}
+      {/* 7. ARCHITECTURAL TECHNICAL SPECIFICATIONS */}
       <div style={{ background: '#fdfcf7', padding: '1.25rem', borderRadius: '8px', border: '1px solid #f1e7cc' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
           <Sparkles size={16} color="var(--color-gold)" />
@@ -341,70 +735,7 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
         </div>
       </div>
 
-      {/* Image URL & Quick Asset Select */}
-      <div>
-        <label style={{ display: 'block', marginBottom: '0.35rem', fontSize: '0.85rem', fontWeight: '600', color: 'var(--color-bg-navy)' }}>
-          Product Image URL
-        </label>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <input
-            type="text"
-            name="image_url"
-            className="filter-input"
-            value={formData.image_url}
-            onChange={handleChange}
-            placeholder="/assets/products/door_1.jpeg"
-            style={{ flex: 1 }}
-          />
-          {formData.image_url && (
-            <div style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: '6px',
-              overflow: 'hidden',
-              border: '1px solid var(--color-gold)',
-              flexShrink: 0
-            }}>
-              <img
-                src={formData.image_url}
-                alt="Preview"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Quick Asset Pill Selector */}
-        <div style={{ marginTop: '0.5rem' }}>
-          <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block', marginBottom: '0.35rem' }}>
-            Or choose a bundled high-res architectural asset:
-          </span>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-            {QUICK_ASSETS.map((asset) => (
-              <button
-                type="button"
-                key={asset.path}
-                onClick={() => setFormData(prev => ({ ...prev, image_url: asset.path }))}
-                style={{
-                  fontSize: '0.72rem',
-                  padding: '0.2rem 0.55rem',
-                  borderRadius: '12px',
-                  border: formData.image_url === asset.path ? '1px solid var(--color-gold)' : '1px solid #cbd5e1',
-                  background: formData.image_url === asset.path ? '#fef9e7' : '#ffffff',
-                  color: formData.image_url === asset.path ? 'var(--color-bg-navy)' : '#64748b',
-                  cursor: 'pointer',
-                  fontWeight: formData.image_url === asset.path ? '700' : '500'
-                }}
-              >
-                {asset.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
+      {/* 8. ACTION BUTTONS */}
       <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
         <button
           type="submit"
