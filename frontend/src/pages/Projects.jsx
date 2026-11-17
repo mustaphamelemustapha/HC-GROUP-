@@ -245,7 +245,7 @@ export default function Projects({ setActiveTab }) {
                 <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', marginBottom: '0.75rem', color: 'var(--color-bg-navy)' }}>
                   Architectural Scope & Challenge
                 </h4>
-                <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+                <p style={{ color: '#1e293b', fontSize: '0.95rem', lineHeight: '1.7', marginBottom: '1.5rem' }}>
                   {activeProjectModal.description}
                 </p>
 

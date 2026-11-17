@@ -324,7 +324,7 @@ export default function Contact({ setActiveTab }) {
               <h3 style={{ fontSize: '1.7rem', color: '#ffffff', marginBottom: '0.5rem' }}>
                 {directPhone}
               </h3>
-              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+              <p style={{ color: '#cbd5e1', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
                 Speak directly with an architectural director or message us on WhatsApp for rapid material quotes and site surveys.
               </p>
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>

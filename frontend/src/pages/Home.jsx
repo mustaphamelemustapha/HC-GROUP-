@@ -286,7 +286,7 @@ export default function Home({ setActiveTab }) {
         <div className="section-header">
           <span className="section-eyebrow" style={{ color: 'var(--color-gold)' }}>CURATED PORTFOLIO</span>
           <h2 className="section-title">Architectural Product Lines</h2>
-          <p className="section-subtitle" style={{ color: 'var(--color-text-muted)' }}>
+          <p className="section-subtitle" style={{ color: '#cbd5e1' }}>
             Discover our comprehensive range of high-end doors, Italian marble, custom joinery, and sanitary ware.
           </p>
         </div>
@@ -303,20 +303,8 @@ export default function Home({ setActiveTab }) {
       </section>
 
       {/* Interactive 3D Virtual Showroom Featured Section */}
-      <section className="section-container dark" style={{ padding: '2rem 2rem 4rem' }}>
-        <div style={{
-          backgroundColor: '#0c1630',
-          border: '1px solid var(--color-border-gold)',
-          borderRadius: '6px',
-          padding: '3.5rem 3rem',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '3rem',
-          alignItems: 'center',
-          boxShadow: '0 20px 45px rgba(0, 0, 0, 0.5)',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
+      <section className="section-container dark home-3d-feature-section">
+        <div className="home-3d-feature-banner">
           <div>
             <div style={{ marginBottom: '1rem' }}>
               <span className="badge-luxury">THE HC ATELIER &bull; ARCHITECTURAL COMMISSIONING</span>
@@ -324,7 +312,7 @@ export default function Home({ setActiveTab }) {
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.3rem', color: '#ffffff', marginBottom: '1.25rem', lineHeight: '1.25', letterSpacing: '0.04em' }}>
               Experience Bespoke Finishes in <span style={{ color: 'var(--color-gold)' }}>Three Dimensions</span>
             </h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.98rem', lineHeight: '1.75', marginBottom: '2.25rem' }}>
+            <p style={{ color: '#cbd5e1', fontSize: '0.98rem', lineHeight: '1.75', marginBottom: '2.25rem' }}>
               Inspect millimeter-precision CAD models of our oversized copper pivot doors, hand-knotted silk carpets, and bookmatched Carrara marble slabs. Orbit 360°, examine natural daylight reflection across organic textures, and tailor individual bespoke finishes prior to factory fabrication.
             </p>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
@@ -382,7 +370,7 @@ export default function Home({ setActiveTab }) {
       </section>
 
       {/* Direct VIP Consultation Callout Banner */}
-      <section className="section-container" style={{ padding: '0 2rem' }}>
+      <section className="section-container home-vip-section">
         <div className="vip-consultation-banner">
           <div className="vip-banner-grid">
             <div className="vip-banner-text">

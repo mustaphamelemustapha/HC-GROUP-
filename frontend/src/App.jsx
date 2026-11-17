@@ -312,13 +312,13 @@ export default function App() {
           {activeTab === 'home' && <Home setActiveTab={setActiveTab} />}
           
           {activeTab === 'catalog' && (
-            <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
+            <div className="page-wrapper-responsive">
               <Catalog onAddToCart={handleAddToCart} />
             </div>
           )}
           
           {activeTab === 'shop-look' && (
-            <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
+            <div className="page-wrapper-responsive">
               <ShopTheLook onAddToCart={handleAddToCart} />
             </div>
           )}
@@ -328,7 +328,7 @@ export default function App() {
           )}
           
           {activeTab === 'cart' && (
-            <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
+            <div className="page-wrapper-responsive">
               <Cart 
                 cartItems={cart} 
                 onUpdateQty={handleUpdateQty} 
@@ -340,7 +340,7 @@ export default function App() {
           )}
           
           {activeTab === 'admin' && (
-            <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
+            <div className="page-wrapper-responsive">
               {adminUser ? (
                 <AdminDashboard adminUser={adminUser} onLogout={handleAdminLogout} />
               ) : (

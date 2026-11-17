@@ -332,7 +332,7 @@ export default function Catalog({ onAddToCart }) {
           <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '0.25rem' }}>
             Materials Catalog & CAD Specifications
           </h2>
-          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
+          <p style={{ color: '#334155', fontSize: '0.95rem', lineHeight: '1.6' }}>
             Factory-direct pricing in Nigerian Naira (₦), configurable dimensions, and 1-tap WhatsApp consultation.
           </p>
         </div>
@@ -443,7 +443,7 @@ export default function Catalog({ onAddToCart }) {
             <span style={{ fontSize: '0.75rem', fontWeight: '700', letterSpacing: '1px', color: 'var(--color-gold-muted)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.4rem' }}>
               <Calculator size={14} color="var(--color-gold)" /> CUSTOM CAD SIZING MATRIX
             </span>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', lineHeight: '1.5', marginBottom: '1rem' }}>
+            <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: '1.5', marginBottom: '1rem' }}>
               Need non-standard apertures, custom rug dimensions, or book-matched slab square meters? Calculate instant CAD blueprints.
             </p>
             <button
@@ -619,7 +619,7 @@ export default function Catalog({ onAddToCart }) {
 
                       {currentTab === 'overview' ? (
                         <div>
-                          <p className="product-desc" style={{ minHeight: '44px', fontSize: '0.85rem', color: '#64748b', marginBottom: '0.75rem' }}>
+                          <p className="product-desc" style={{ minHeight: '44px', fontSize: '0.88rem', color: '#334155', marginBottom: '0.75rem', lineHeight: '1.5' }}>
                             {product.description}
                           </p>
 

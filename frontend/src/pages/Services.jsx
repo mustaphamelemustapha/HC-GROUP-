@@ -214,7 +214,7 @@ export default function Services({ setActiveTab }) {
         <div className="section-header">
           <span className="section-eyebrow" style={{ color: 'var(--color-gold)' }}>SEAMLESS ORCHESTRATION</span>
           <h2 className="section-title">The Turnkey Execution Process</h2>
-          <p className="section-subtitle" style={{ color: 'var(--color-text-muted)' }}>
+          <p className="section-subtitle" style={{ color: '#cbd5e1' }}>
             Six integrated phases that eliminate coordination risks between suppliers and subcontractors.
           </p>
         </div>

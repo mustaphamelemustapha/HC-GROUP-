@@ -72,7 +72,7 @@ export default function Footer({ setActiveTab }) {
                 <a href="tel:+2349068875555" style={{ color: 'var(--color-gold)', fontWeight: '700', fontSize: '1rem' }}>
                   {directPhone}
                 </a>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                <span style={{ display: 'block', fontSize: '0.8rem', color: '#cbd5e1' }}>
                   Call / WhatsApp Direct Hotline
                 </span>
               </div>
@@ -83,7 +83,7 @@ export default function Footer({ setActiveTab }) {
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#25D366', fontWeight: '600' }}>
                   Open WhatsApp Chat
                 </a>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                <span style={{ display: 'block', fontSize: '0.8rem', color: '#cbd5e1' }}>
                   Instant response from our team
                 </span>
               </div>
@@ -94,7 +94,7 @@ export default function Footer({ setActiveTab }) {
                 <a href="mailto:info@hcgroup-trade.com" style={{ color: '#ffffff' }}>
                   info@hcgroup-trade.com
                 </a>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                <span style={{ display: 'block', fontSize: '0.8rem', color: '#cbd5e1' }}>
                   Architectural CAD & Inquiries
                 </span>
               </div>
@@ -103,10 +103,10 @@ export default function Footer({ setActiveTab }) {
               <MapPin size={18} color="var(--color-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
                 <strong style={{ color: '#ffffff' }}>Corporate Headquarters:</strong>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                <span style={{ display: 'block', fontSize: '0.8rem', color: '#cbd5e1' }}>
                   HC Group House, Sir Kashim Ibrahim Way / GRA, Maiduguri, Borno State, Nigeria
                 </span>
-                <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold-muted)', marginTop: '2px' }}>
+                <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-gold)', marginTop: '2px' }}>
                   Liaison Desks: Maitama, Abuja & Lekki Phase 1, Lagos
                 </span>
               </div>
@@ -115,7 +115,7 @@ export default function Footer({ setActiveTab }) {
               <Factory size={18} color="var(--color-gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
                 <strong style={{ color: '#ffffff' }}>Manufacturing Base:</strong>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                <span style={{ display: 'block', fontSize: '0.8rem', color: '#cbd5e1' }}>
                   HC Industrial Park, Foshan, Guangdong Province
                 </span>
               </div>

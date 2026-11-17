@@ -142,7 +142,7 @@ export default function About({ setActiveTab }) {
         <div className="section-header">
           <span className="section-eyebrow" style={{ color: 'var(--color-gold)' }}>STANDARDS OF DISTINCTION</span>
           <h2 className="section-title">Four Pillars of Architectural Mastery</h2>
-          <p className="section-subtitle" style={{ color: 'var(--color-text-muted)' }}>
+          <p className="section-subtitle" style={{ color: '#cbd5e1' }}>
             How we maintain absolute quality control across millions of square feet of luxury developments.
           </p>
         </div>

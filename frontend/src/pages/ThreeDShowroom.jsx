@@ -701,14 +701,14 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
             <span className="badge-luxury">
               THE HOUSE OF HC &bull; PRIVATE ATELIER
             </span>
-            <span style={{ fontSize: '0.72rem', color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: '0.72rem', color: 'var(--color-gold-muted)', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: '600' }}>
               Bespoke Commissioning
             </span>
           </div>
           <h2 className="section-title" style={{ marginBottom: '0.35rem', textAlign: 'left', letterSpacing: '0.04em' }}>
             The Digital Architectural Atelier
           </h2>
-          <p style={{ color: '#64748b', fontSize: '0.95rem', maxWidth: '68ch' }}>
+          <p style={{ color: '#334155', fontSize: '0.95rem', maxWidth: '68ch', lineHeight: '1.65' }}>
             Inspect millimeter-precision geometries, examine tactile light reflection across natural materials, and tailor individual bespoke finishes prior to factory fabrication.
           </p>
         </div>
@@ -829,13 +829,13 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
             <h3 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)', fontSize: '1.4rem', marginTop: '0.35rem', marginBottom: '0.5rem' }}>
               {activeItem.name}
             </h3>
-            <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.82rem', color: '#64748b', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.82rem', color: '#475569', marginBottom: '1rem', flexWrap: 'wrap' }}>
               <span>SKU: <strong style={{ color: 'var(--color-gold)' }}>{activeItem.sku}</strong></span>
               <span>&bull;</span>
-              <span>Lead: <strong>{activeItem.leadTime}</strong></span>
+              <span>Lead: <strong style={{ color: 'var(--color-bg-navy)' }}>{activeItem.leadTime}</strong></span>
             </div>
 
-            <p style={{ color: '#475569', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '1.25rem' }}>
+            <p style={{ color: '#1e293b', fontSize: '0.92rem', lineHeight: '1.65', marginBottom: '1.25rem' }}>
               {activeItem.desc}
             </p>
 
@@ -844,14 +844,14 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-bg-navy)', fontWeight: '700', fontSize: '0.85rem', marginBottom: '0.3rem' }}>
                 <Ruler size={14} color="var(--color-gold)" /> CAD Engineering Sizing:
               </div>
-              <div style={{ fontFamily: 'monospace', fontSize: '0.88rem', color: '#334155', fontWeight: '600' }}>
+              <div style={{ fontFamily: 'monospace', fontSize: '0.88rem', color: '#0f172a', fontWeight: '700' }}>
                 {activeItem.dimensions}
               </div>
             </div>
 
             {/* Material Finish Swatches */}
             <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-              <label className="inspector-section-label">
+              <label className="inspector-section-label" style={{ color: '#334155', fontWeight: '700' }}>
                 Curated Material Finish: <strong style={{ color: 'var(--color-bg-navy)' }}>{selectedFinish.name}</strong>
               </label>
               <div className="finish-swatches-grid">
@@ -877,7 +877,7 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
               <div style={{ fontWeight: '700', fontSize: '0.85rem', color: 'var(--color-bg-navy)', marginBottom: '0.5rem' }}>
                 Factory Specifications & Guarantee:
               </div>
-              <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem', color: '#64748b', lineHeight: '1.7' }}>
+              <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.84rem', color: '#334155', lineHeight: '1.7' }}>
                 {activeItem.features.map((feat, idx) => (
                   <li key={idx}>{feat}</li>
                 ))}
@@ -887,7 +887,7 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
             {/* Pricing & Commercial Order Action */}
             <div className="inspector-purchase-box">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
-                <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Commercial Unit Rate:</span>
+                <span style={{ fontSize: '0.88rem', color: '#475569', fontWeight: '600' }}>Commercial Unit Rate:</span>
                 <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', fontWeight: '700', color: 'var(--color-bg-navy)' }}>
                   ₦{activeItem.price.toLocaleString('en-NG')}
                 </span>

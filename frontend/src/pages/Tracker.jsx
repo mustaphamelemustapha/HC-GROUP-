@@ -251,7 +251,7 @@ export default function Tracker({ setActiveTab }) {
 
         {/* Quick Test Demo Tickets */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: '600' }}>
+          <span style={{ fontSize: '0.78rem', color: '#334155', fontWeight: '600' }}>
             Instant Sample Commissions:
           </span>
           {Object.keys(SAMPLE_PROJECTS).map((code) => {
@@ -427,7 +427,7 @@ export default function Tracker({ setActiveTab }) {
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--color-bg-navy)', margin: '0.25rem 0' }}>
                 Fabrication & Logistics Milestones
               </h3>
-              <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
+              <p style={{ color: '#334155', fontSize: '0.9rem', margin: 0, lineHeight: '1.6' }}>
                 Every milestone requires photographic sign-off by a certified HC Group technical director.
               </p>
             </div>

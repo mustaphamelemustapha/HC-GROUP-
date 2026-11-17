@@ -363,7 +363,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
           <h2 className="section-title" style={{ marginBottom: '0.25rem', textAlign: 'left' }}>
             Materials Order & Freight Engine
           </h2>
-          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
+          <p style={{ color: '#334155', fontSize: '0.95rem', lineHeight: '1.6' }}>
             Review your architectural specifications, calculate site delivery freight, and export formal BoQ quotations.
           </p>
         </div>
@@ -421,7 +421,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               <h3 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)', fontSize: '1.6rem', marginBottom: '0.75rem' }}>
                 Your Material Cart is Empty
               </h3>
-              <p style={{ color: '#64748b', maxWidth: '540px', margin: '0 auto 2rem auto', fontSize: '0.95rem' }}>
+              <p style={{ color: '#334155', maxWidth: '540px', margin: '0 auto 2rem auto', fontSize: '0.95rem', lineHeight: '1.6' }}>
                 Browse our premium architectural doors, luxury hand-knotted carpets & rugs, Italian marble slabs, freestanding stone bathtubs, or "Shop The Look" interactive room scenes to specify materials.
               </p>
               <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
