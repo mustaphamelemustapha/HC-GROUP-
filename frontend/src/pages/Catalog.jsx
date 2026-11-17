@@ -338,7 +338,7 @@ export default function Catalog({ onAddToCart }) {
         </div>
 
         {/* Quick Project Board Creator */}
-        <form onSubmit={handleCreateBoard} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <form onSubmit={handleCreateBoard} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', width: '100%', maxWidth: '440px' }}>
           <input 
             type="text" 
             placeholder="New Project Board (e.g. Master Suite)" 
@@ -349,13 +349,15 @@ export default function Catalog({ onAddToCart }) {
               borderRadius: '6px',
               border: '1px solid var(--color-border-light)',
               fontSize: '0.85rem',
-              minWidth: '240px'
+              flex: '1 1 180px',
+              minWidth: 0,
+              maxWidth: '100%'
             }}
           />
           <button 
             type="submit" 
             className="btn-gold"
-            style={{ padding: '0.6rem 1.25rem', fontSize: '0.85rem' }}
+            style={{ padding: '0.6rem 1.25rem', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
             disabled={creatingBoard}
           >
             <Plus size={16} /> New Board
@@ -466,7 +468,7 @@ export default function Catalog({ onAddToCart }) {
         </aside>
 
         {/* Main Content Area */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1, minWidth: 0, width: '100%' }}>
           
           {/* Quick-Filter Horizontal Category Pills */}
           <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}>
@@ -681,7 +683,7 @@ export default function Catalog({ onAddToCart }) {
                           </button>
 
                           {/* Action Buttons */}
-                          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.5rem', marginBottom: '1rem' }}>
+                          <div className="product-card-actions">
                             <button
                               className="btn-gold"
                               style={{

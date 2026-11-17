@@ -176,7 +176,7 @@ export default function Contact({ setActiveTab }) {
                   <h2 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)', fontSize: '1.8rem', marginBottom: '0.5rem' }}>
                     Request Quotation & Consultation
                   </h2>
-                  <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
+                  <p style={{ color: '#334155', fontSize: '0.95rem' }}>
                     Fill out your project specifications below, or call our direct hotline: <strong style={{ color: 'var(--color-gold-muted)' }}>{directPhone}</strong>
                   </p>
                 </div>

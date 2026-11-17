@@ -79,13 +79,13 @@ export default function About({ setActiveTab }) {
             <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
               Bridging Visionary Design & Industrial Precision
             </h2>
-            <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.8', marginBottom: '1.5rem' }}>
+            <p style={{ color: '#1e293b', fontSize: '1.05rem', lineHeight: '1.8', marginBottom: '1.5rem' }}>
               At <strong>HC Group (H-C COMPANY LTD)</strong>, we reject standard mass production in favor of bespoke architectural integrity. 
               Headquartered in Maiduguri, Borno State, with liaison offices in Abuja and Lagos and manufacturing facilities in Foshan, 
               our company was founded with a singular ambition: to provide developers, architects, and private estate owners 
               with a single, accountable source for their complete interior envelope.
             </p>
-            <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.8', marginBottom: '2rem' }}>
+            <p style={{ color: '#1e293b', fontSize: '1.05rem', lineHeight: '1.8', marginBottom: '2rem' }}>
               From magnificent 3.2-meter copper-clad pivot doors and custom modular walk-in wardrobes to monolithic 
               stone bathtubs, museum-grade hand-knotted architectural silk carpets, and acoustic wood cladding, every element is engineered to endure generations.
             </p>

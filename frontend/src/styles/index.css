@@ -1242,13 +1242,12 @@ nav.main-nav {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
+  width: 100%;
 }
 
 .product-card {
-  container-type: inline-size;
-  container-name: product-card;
   background-color: #ffffff;
   border-radius: 10px;
   border: 1px solid var(--color-border-light);
@@ -1257,6 +1256,22 @@ nav.main-nav {
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.product-card-actions {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.shop-look-materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.75rem;
+  width: 100%;
 }
 
 .product-card:hover {
@@ -4491,5 +4506,72 @@ html {
     right: 1.25rem;
     width: 38px;
     height: 38px;
+  }
+}
+
+/* ==========================================================================
+   Master Responsive Media Queries (Enforced at Bottom of Stylesheet)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .catalog-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .filter-sidebar {
+    position: static !important;
+    top: auto !important;
+    width: 100% !important;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    width: 100% !important;
+  }
+
+  .product-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .shop-look-materials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .cart-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .showroom-studio-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-card-actions {
+    grid-template-columns: 1fr !important;
+    gap: 0.6rem !important;
+  }
+
+  .product-card-actions > * {
+    width: 100% !important;
+  }
+
+  .catalog-page {
+    padding: 1rem 0 3rem !important;
+  }
+
+  .catalog-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  .product-image-container {
+    height: 230px !important;
   }
 }

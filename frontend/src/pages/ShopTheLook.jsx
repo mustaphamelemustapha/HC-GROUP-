@@ -647,7 +647,7 @@ export default function ShopTheLook({ onAddToCart }) {
           </p>
         </div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.75rem' }}>
+        <div className="shop-look-materials-grid">
           {currentRoom.hotspots.map((spot) => (
             <div 
               key={spot.id}
