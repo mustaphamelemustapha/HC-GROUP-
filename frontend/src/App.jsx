@@ -136,9 +136,12 @@ export default function App() {
     }
   });
 
-  // Wrapped tab setter that keeps URL hash in sync
-  const setActiveTab = (tab) => {
+  const [catalogCategory, setCatalogCategory] = useState('');
+
+  // Wrapped tab setter that keeps URL hash in sync and accepts optional category filter
+  const setActiveTab = (tab, category = '') => {
     setActiveTabState(tab);
+    setCatalogCategory(category);
     if (tab === 'home') {
       if (window.location.hash) {
         window.history.pushState(null, '', window.location.pathname);
@@ -313,7 +316,7 @@ export default function App() {
           
           {activeTab === 'catalog' && (
             <div className="page-wrapper-responsive">
-              <Catalog onAddToCart={handleAddToCart} />
+              <Catalog onAddToCart={handleAddToCart} initialCategory={catalogCategory} />
             </div>
           )}
           

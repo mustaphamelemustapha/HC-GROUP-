@@ -5,7 +5,7 @@ import {
   Ruler, Calculator, CheckCircle2, ChevronRight, Info
 } from 'lucide-react';
 
-export default function Catalog({ onAddToCart }) {
+export default function Catalog({ onAddToCart, initialCategory = '' }) {
   const [products, setProducts] = useState([]);
   const [projectBoards, setProjectBoards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,13 @@ export default function Catalog({ onAddToCart }) {
   
   // Filters
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(initialCategory || '');
+
+  useEffect(() => {
+    if (initialCategory !== undefined) {
+      setCategory(initialCategory);
+    }
+  }, [initialCategory]);
   
   // Selected variant state per product (keyed by product ID)
   const [selectedVariants, setSelectedVariants] = useState({});
