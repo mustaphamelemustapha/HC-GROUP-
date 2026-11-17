@@ -249,7 +249,7 @@ export default function App() {
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative', backgroundColor: 'var(--color-bg-page)', color: 'var(--color-text-dark)' }}>
       <Header 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
