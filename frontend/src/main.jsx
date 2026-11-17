@@ -32,27 +32,17 @@ class GlobalErrorBoundary extends Component {
           color: '#ffffff'
         }}>
           <div style={{
-            maxWidth: '620px',
+            maxWidth: '560px',
             width: '100%',
-            backgroundColor: '#122044',
-            borderRadius: '16px',
-            border: '1px solid rgba(212, 175, 55, 0.4)',
+            backgroundColor: '#0e1832',
+            borderRadius: '4px',
+            border: '1px solid rgba(197, 160, 89, 0.4)',
             padding: '3rem 2.5rem',
             textAlign: 'center',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)'
           }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              margin: '0 auto 1.5rem',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(212, 175, 55, 0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '1px solid #d4af37'
-            }}>
-              <span style={{ fontSize: '28px', color: '#d4af37' }}>⚜</span>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <img src="/assets/logo.jpg" alt="HC Group" style={{ height: '54px', borderRadius: '3px', border: '1px solid rgba(197, 160, 89, 0.4)' }} />
             </div>
             
             <h2 style={{

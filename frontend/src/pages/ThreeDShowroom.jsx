@@ -695,21 +695,21 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
   return (
     <div className="showroom-page-container">
       {/* Top Breadcrumb & Title */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <span className="badge-luxury" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Sparkles size={12} /> INTERACTIVE 3D VIRTUAL SHOWROOM
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
+            <span className="badge-luxury">
+              THE HOUSE OF HC &bull; PRIVATE ATELIER
             </span>
-            <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: '700', letterSpacing: '1px' }}>
-              • WEBGL 60 FPS
+            <span style={{ fontSize: '0.72rem', color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+              Bespoke Commissioning
             </span>
           </div>
-          <h2 className="section-title" style={{ marginBottom: '0.25rem', textAlign: 'left' }}>
-            3D Architectural Studio & Material Configurator
+          <h2 className="section-title" style={{ marginBottom: '0.35rem', textAlign: 'left', letterSpacing: '0.04em' }}>
+            The Digital Architectural Atelier
           </h2>
-          <p style={{ color: '#64748b', fontSize: '0.95rem' }}>
-            Orbit, inspect millimeter-precision geometries, test dynamic daylighting, and specify bespoke architectural materials.
+          <p style={{ color: '#64748b', fontSize: '0.95rem', maxWidth: '68ch' }}>
+            Inspect millimeter-precision geometries, examine tactile light reflection across natural materials, and tailor individual bespoke finishes prior to factory fabrication.
           </p>
         </div>
 
@@ -737,27 +737,27 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
           <div className="canvas-floating-top-bar">
             {/* Lighting Mode Selector */}
             <div className="lighting-pill-group">
-              <span className="lighting-label">Lighting Ambience:</span>
+              <span className="lighting-label">Ambience:</span>
               <button 
                 className={`lighting-btn ${lightingMode === 'daylight' ? 'active' : ''}`}
                 onClick={() => setLightingMode('daylight')}
-                title="5500K Architectural Daylight"
+                title="5000K Natural Gallery Daylight"
               >
-                <Sun size={14} /> Daylight
+                Daylight
               </button>
               <button 
                 className={`lighting-btn ${lightingMode === 'sunset' ? 'active' : ''}`}
                 onClick={() => setLightingMode('sunset')}
-                title="3200K Golden Hour Sunset"
+                title="3200K Golden Hour Solarium"
               >
-                <Sunset size={14} /> Golden Hour
+                Golden Hour
               </button>
               <button 
                 className={`lighting-btn ${lightingMode === 'midnight' ? 'active' : ''}`}
                 onClick={() => setLightingMode('midnight')}
-                title="4000K Executive Midnight Ambience"
+                title="4000K Executive Nocturne"
               >
-                <Moon size={14} /> Midnight VIP
+                Nocturne
               </button>
             </div>
 
@@ -768,14 +768,14 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
                 onClick={() => setAutoRotate(!autoRotate)}
                 title="Toggle 360° Auto-Rotation"
               >
-                <RotateCw size={14} /> {autoRotate ? 'Rotating' : 'Static'}
+                <RotateCw size={14} /> {autoRotate ? 'Auto-Orbit' : 'Static'}
               </button>
               <button 
                 className="canvas-tool-btn"
                 onClick={handleSnapshot}
                 title="Download High-Res 3D Snapshot (PNG)"
               >
-                <Camera size={14} /> Snapshot
+                <Camera size={14} /> Export View
               </button>
             </div>
           </div>
@@ -785,21 +785,21 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
             <div className="canvas-pivot-toggle-bar">
               <button 
                 className="btn-gold"
-                style={{ padding: '0.55rem 1.25rem', fontSize: '0.85rem' }}
+                style={{ padding: '0.55rem 1.25rem', fontSize: '0.82rem', letterSpacing: '0.12em' }}
                 onClick={() => setDoorOpen(!doorOpen)}
               >
-                {doorOpen ? 'Close Pivot Door' : 'Interactive Swing Open (75° Pivot)'}
+                {doorOpen ? 'Engage Closer (0°)' : 'Engage Pivot Swing (75° Motion)'}
               </button>
             </div>
           )}
 
           {/* Floating Bottom Help Note */}
           <div className="canvas-floating-bottom-hint">
-            <span>Left-Click + Drag: <strong>Orbit 360°</strong></span>
+            <span>Left-Click: <strong>Orbit 360°</strong></span>
             <span>&bull;</span>
-            <span>Scroll: <strong>Zoom</strong></span>
+            <span>Scroll: <strong>Magnify</strong></span>
             <span>&bull;</span>
-            <span>Right-Click: <strong>Pan</strong></span>
+            <span>Right-Click: <strong>Pan Axis</strong></span>
           </div>
         </div>
 
@@ -808,16 +808,16 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
           
           {/* Model Category Tab Strip */}
           <div className="inspector-models-list">
-            <label className="inspector-section-label">Select 3D Architectural Model:</label>
+            <label className="inspector-section-label">Select Atelier Commission:</label>
             <div className="model-selector-pills">
-              {SHOWROOM_ITEMS.map((item) => (
+              {SHOWROOM_ITEMS.map((item, idx) => (
                 <button
                   key={item.id}
                   className={`model-pill-btn ${activeItemId === item.id ? 'active' : ''}`}
                   onClick={() => setActiveItemId(item.id)}
                 >
                   <Box size={14} />
-                  <span>{item.name.split('(')[0].trim()}</span>
+                  <span>{['I.', 'II.', 'III.', 'IV.'][idx]} {item.name.split('(')[0].trim()}</span>
                 </button>
               ))}
             </div>

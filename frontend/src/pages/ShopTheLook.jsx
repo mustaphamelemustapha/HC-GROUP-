@@ -260,21 +260,19 @@ export default function ShopTheLook({ onAddToCart }) {
       {/* Header Introduction */}
       <div style={{ textAlign: 'center', maxWidth: '850px', margin: '0 auto 2.5rem auto' }}>
         <span className="badge-luxury">
-          <Sparkles size={13} color="var(--color-gold)" style={{ marginRight: '6px' }} />
-          INTERACTIVE ARCHITECTURAL SHOWROOM
+          CURATED ARCHITECTURAL SPACES &bull; ROOM COMMISSIONS
         </span>
-        <h1 className="section-title" style={{ display: 'block', margin: '0.75rem 0' }}>
-          Shop The Look: Curated Living Spaces
+        <h1 className="section-title" style={{ display: 'block', margin: '0.75rem 0', letterSpacing: '0.04em' }}>
+          Shop The Look: Architectural Environments
         </h1>
         <p className="section-subtitle" style={{ margin: '0 auto' }}>
-          Explore photorealistic luxury installations. Tap the glowing golden beacons on any architectural element 
-          to inspect laser tolerances, materials, and add items directly to your procurement quotation.
+          Examine fully integrated interior commissions. Select the architectural hotspots on doors, rugs, and stonework to view material specifications or commission the complete turnkey package.
         </p>
       </div>
 
       {/* Room Selector Switcher */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
-        {rooms.map(room => {
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
+        {rooms.map((room, idx) => {
           const isActive = room.id === selectedRoomId;
           return (
             <button
@@ -288,20 +286,22 @@ export default function ShopTheLook({ onAddToCart }) {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.75rem 1.4rem',
-                borderRadius: '30px',
-                border: isActive ? '1.5px solid var(--color-gold)' : '1px solid var(--color-border-light)',
+                borderRadius: '2px',
+                border: isActive ? '1px solid var(--color-gold)' : '1px solid var(--color-border-light)',
                 backgroundColor: isActive ? 'var(--color-bg-navy)' : '#ffffff',
                 color: isActive ? 'var(--color-gold)' : 'var(--color-bg-navy)',
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.9rem',
+                fontSize: '0.82rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
                 fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'var(--transition-smooth)',
-                boxShadow: isActive ? 'var(--shadow-gold-sm)' : 'var(--shadow-sm)'
+                boxShadow: isActive ? '0 4px 14px rgba(11, 19, 41, 0.2)' : 'var(--shadow-sm)'
               }}
             >
-              <Layers size={16} color={isActive ? 'var(--color-gold)' : '#64748b'} />
-              <span>{room.name}</span>
+              <Layers size={14} color={isActive ? 'var(--color-gold)' : '#64748b'} />
+              <span>{['01.', '02.', '03.', '04.'][idx]} {room.name}</span>
             </button>
           );
         })}

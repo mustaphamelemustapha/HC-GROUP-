@@ -486,16 +486,18 @@ export default function Catalog({ onAddToCart }) {
                   onClick={() => setCategory(cat.id)}
                   style={{
                     whiteSpace: 'nowrap',
-                    padding: '0.5rem 1.1rem',
-                    borderRadius: '20px',
-                    fontSize: '0.85rem',
-                    fontWeight: isSelected ? '700' : '500',
+                    padding: '0.6rem 1.25rem',
+                    borderRadius: '2px',
+                    fontSize: '0.78rem',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    fontWeight: isSelected ? '700' : '600',
                     border: isSelected ? '1px solid var(--color-gold)' : '1px solid var(--color-border-light)',
                     backgroundColor: isSelected ? 'var(--color-bg-navy)' : '#ffffff',
                     color: isSelected ? 'var(--color-gold)' : '#475569',
                     cursor: 'pointer',
                     transition: 'var(--transition-smooth)',
-                    boxShadow: isSelected ? 'var(--shadow-gold-sm)' : 'var(--shadow-sm)'
+                    boxShadow: isSelected ? '0 4px 14px rgba(11, 19, 41, 0.2)' : 'var(--shadow-sm)'
                   }}
                 >
                   {cat.label}

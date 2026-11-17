@@ -123,20 +123,8 @@ export default function Header({ activeTab, setActiveTab, totalCartItems, adminU
             <span 
               className={`nav-link ${activeTab === '3d-show' ? 'active' : ''}`}
               onClick={() => handleNavClick('3d-show')}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
             >
-              3D SHOWROOM
-              <span style={{ 
-                fontSize: '0.65rem', 
-                backgroundColor: 'rgba(212, 175, 55, 0.25)', 
-                color: 'var(--color-gold)', 
-                padding: '0.1rem 0.45rem', 
-                borderRadius: '4px', 
-                border: '1px solid rgba(212, 175, 55, 0.5)',
-                fontWeight: '700'
-              }}>
-                3D
-              </span>
+              3D ATELIER
             </span>
           </div>
 

@@ -202,23 +202,22 @@ export default function Home({ setActiveTab }) {
 
         {/* Hero Content Overlay */}
         <div className="hero-content">
-          {/* Live Media Tag Badge */}
+          {/* Classical Architectural Provenance Badge */}
           <div className="hero-badge-reel">
-            <span className="hero-badge-pulse"></span>
             <span>{activeMedia.badge}</span>
           </div>
 
           <h1 className="hero-title">
-            Premium Building <span>Materials</span>
+            Bespoke Architectural <span>Materials</span>
           </h1>
 
           <p className="hero-subtitle">
             {activeMedia.subtitle}
           </p>
 
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '2rem' }}>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '2.25rem' }}>
             <a href="#" className="hero-cta" onClick={(e) => { e.preventDefault(); setActiveTab('catalog'); }}>
-              Explore Materials
+              Explore Portfolio
             </a>
             <a 
               href={whatsappUrl} 
@@ -226,8 +225,8 @@ export default function Home({ setActiveTab }) {
               rel="noopener noreferrer" 
               className="hero-cta whatsapp-cta"
             >
-              <MessageCircle size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-              WhatsApp: {directPhone}
+              <MessageCircle size={17} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+              WhatsApp Concierge
             </a>
           </div>
         </div>
@@ -308,38 +307,37 @@ export default function Home({ setActiveTab }) {
         <div style={{
           backgroundColor: '#0c1630',
           border: '1px solid var(--color-border-gold)',
-          borderRadius: '16px',
-          padding: '3rem 2.5rem',
+          borderRadius: '6px',
+          padding: '3.5rem 3rem',
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '2.5rem',
+          gap: '3rem',
           alignItems: 'center',
           boxShadow: '0 20px 45px rgba(0, 0, 0, 0.5)',
           position: 'relative',
           overflow: 'hidden'
         }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <span className="badge-luxury">IMMERSIVE SPATIAL STUDIO</span>
-              <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: '700' }}>• WEBGL 3D</span>
+            <div style={{ marginBottom: '1rem' }}>
+              <span className="badge-luxury">THE HC ATELIER &bull; ARCHITECTURAL COMMISSIONING</span>
             </div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', color: '#ffffff', marginBottom: '1rem', lineHeight: '1.2' }}>
-              Inspect Whole-House Materials in <span style={{ color: 'var(--color-gold)' }}>Interactive 3D</span>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.3rem', color: '#ffffff', marginBottom: '1.25rem', lineHeight: '1.25', letterSpacing: '0.04em' }}>
+              Experience Bespoke Finishes in <span style={{ color: 'var(--color-gold)' }}>Three Dimensions</span>
             </h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.98rem', lineHeight: '1.7', marginBottom: '2rem' }}>
-              Experience millimeter-precision CAD models of our oversized copper pivot doors, hand-knotted silk carpets, and bookmatched Carrara marble slabs. Orbit 360°, test real-world architectural daylighting, and customize luxury finishes before fabrication.
+            <p style={{ color: '#94a3b8', fontSize: '0.98rem', lineHeight: '1.75', marginBottom: '2.25rem' }}>
+              Inspect millimeter-precision CAD models of our oversized copper pivot doors, hand-knotted silk carpets, and bookmatched Carrara marble slabs. Orbit 360°, examine natural daylight reflection across organic textures, and tailor individual bespoke finishes prior to factory fabrication.
             </p>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <button 
                 className="btn-gold" 
-                style={{ padding: '0.9rem 2rem', fontSize: '0.95rem' }}
+                style={{ padding: '0.95rem 2.2rem', fontSize: '0.85rem' }}
                 onClick={() => setActiveTab('3d-show')}
               >
-                Launch 3D Virtual Showroom <ArrowRight size={16} />
+                Enter Digital Atelier <ArrowRight size={16} />
               </button>
               <button 
                 className="btn-outline" 
-                style={{ padding: '0.9rem 1.75rem', color: '#ffffff', borderColor: 'rgba(212, 175, 55, 0.4)' }}
+                style={{ padding: '0.95rem 1.85rem', color: '#ffffff', borderColor: 'rgba(212, 175, 55, 0.45)', fontSize: '0.85rem' }}
                 onClick={() => setActiveTab('shop-look')}
               >
                 Shop The Look (Room Hotspots)
@@ -349,35 +347,35 @@ export default function Home({ setActiveTab }) {
 
           <div style={{ position: 'relative', textAlign: 'center' }}>
             <div style={{
-              borderRadius: '12px',
+              borderRadius: '4px',
               overflow: 'hidden',
-              border: '1px solid rgba(212, 175, 55, 0.3)',
+              border: '1px solid rgba(212, 175, 55, 0.35)',
               boxShadow: '0 15px 35px rgba(0, 0, 0, 0.6)'
             }}>
               <img 
                 src="/assets/products/door_1.jpeg" 
                 alt="3D Architectural Material Preview" 
-                style={{ width: '100%', height: '340px', objectFit: 'cover', display: 'block' }}
+                style={{ width: '100%', height: '360px', objectFit: 'cover', display: 'block' }}
               />
             </div>
             <div style={{
               position: 'absolute',
-              bottom: '1rem',
+              bottom: '1.25rem',
               left: '50%',
               transform: 'translateX(-50%)',
-              background: 'rgba(12, 22, 48, 0.92)',
-              border: '1px solid var(--color-gold)',
-              borderRadius: '9999px',
-              padding: '0.45rem 1.4rem',
+              background: 'rgba(12, 22, 48, 0.95)',
+              border: '1px solid rgba(197, 160, 89, 0.45)',
+              borderRadius: '2px',
+              padding: '0.5rem 1.4rem',
               color: 'var(--color-gold)',
-              fontSize: '0.78rem',
-              fontWeight: '700',
-              letterSpacing: '1px',
+              fontSize: '0.74rem',
+              fontWeight: '600',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
               whiteSpace: 'nowrap',
-              backdropFilter: 'blur(8px)',
               boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
             }}>
-              360° ORBITAL VIEWER • REAL-TIME DAYLIGHTING
+              360° Material Commissioning &bull; Natural Daylighting
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, Phone, X, Sparkles, Ruler, Truck, FileText } from 'lucide-react';
+import { MessageCircle, Phone, X, Layers, Ruler, Truck, FileText } from 'lucide-react';
 
 export default function WhatsAppWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,11 +11,11 @@ export default function WhatsAppWidget() {
   const QUICK_PROMPTS = [
     {
       label: 'Luxury Carpets & Rugs',
-      icon: <Sparkles size={13} />,
+      icon: <Layers size={13} />,
       text: 'Hello HC Group, I would like to inquire about your Luxury Hand-Knotted Silk & Wool Carpets collection.'
     },
     {
-      label: '3D Virtual Studio / Doors',
+      label: '3D Atelier & Custom Doors',
       icon: <FileText size={13} />,
       text: 'Hello HC Group, I am reviewing your 3D Architectural Showroom for custom oversized pivot doors.'
     },
@@ -128,9 +128,8 @@ export default function WhatsAppWidget() {
         aria-label="Contact via WhatsApp"
         title="Direct Line: +234 9068875555"
       >
-        <span className="whatsapp-pulse"></span>
-        <MessageCircle size={28} />
-        <span className="whatsapp-label">WhatsApp</span>
+        <MessageCircle size={26} />
+        <span className="whatsapp-label">Concierge</span>
       </button>
     </div>
   );
