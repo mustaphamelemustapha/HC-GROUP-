@@ -223,15 +223,17 @@ export default function ShopTheLook({ onAddToCart }) {
 
   const currentRoom = rooms.find(r => r.id === selectedRoomId) || rooms[0];
 
-  const packageSubtotal = currentRoom.hotspots.reduce((sum, spot) => sum + spot.price, 0);
+  const packageSubtotal = (currentRoom?.hotspots || []).reduce((sum, spot) => sum + (spot?.price || 0), 0);
   const packageDiscountRate = 0.05; // 5% Turnkey Procurement Package Discount
   const packageDiscountAmount = packageSubtotal * packageDiscountRate;
   const packageTotal = packageSubtotal - packageDiscountAmount;
 
   const handleAddEntirePackage = () => {
-    if (onAddToCart) {
+    if (onAddToCart && Array.isArray(currentRoom?.hotspots)) {
       currentRoom.hotspots.forEach(spot => {
-        onAddToCart(spot.variantId, spot.title, spot.sku, spot.price);
+        if (spot) {
+          onAddToCart(spot.variantId, spot.title, spot.sku, spot.price);
+        }
       });
     }
     setPackageAddedEffect(true);

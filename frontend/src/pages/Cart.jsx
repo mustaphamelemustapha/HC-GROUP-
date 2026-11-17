@@ -132,9 +132,9 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        items: cartItems.map(item => ({
+        items: (cartItems || []).filter(Boolean).map(item => ({
           variantId: item.variantId,
-          quantity: item.quantity
+          quantity: item.quantity || 1
         })),
         state: selectedZone.state,
         city: selectedZone.city
@@ -166,9 +166,9 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        items: activeBoard.items.map(item => ({
+        items: (activeBoard?.items || []).filter(Boolean).map(item => ({
           variantId: item.variantId,
-          quantity: item.quantity
+          quantity: item.quantity || 1
         })),
         state: selectedZone.state,
         city: selectedZone.city
@@ -459,12 +459,12 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {cartItems.map((item) => (
-                    <div key={item.variantId} className="cart-item">
+                  {(cartItems || []).filter(Boolean).map((item, idx) => (
+                    <div key={item?.variantId || idx} className="cart-item">
                       <div className="cart-item-info">
-                        <h4 style={{ fontSize: '1.05rem', color: 'var(--color-bg-navy)', marginBottom: '0.25rem' }}>{item.name}</h4>
+                        <h4 style={{ fontSize: '1.05rem', color: 'var(--color-bg-navy)', marginBottom: '0.25rem' }}>{item?.name || 'Architectural Specification'}</h4>
                         <div className="cart-item-meta" style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                          SKU: <span style={{ color: 'var(--color-gold)', fontWeight: '700' }}>{item.sku}</span> &bull; Unit Rate: ₦{Number(item.price || 0).toLocaleString('en-NG')}
+                          SKU: <span style={{ color: 'var(--color-gold)', fontWeight: '700' }}>{item?.sku || 'HC-SPEC'}</span> &bull; Unit Rate: ₦{Number(item?.price || 0).toLocaleString('en-NG')}
                         </div>
                       </div>
 
@@ -472,15 +472,15 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                       <div className="qty-stepper">
                         <button 
                           className="qty-btn"
-                          onClick={() => onUpdateQty && onUpdateQty(item.variantId, (item.quantity || 1) - 1)}
+                          onClick={() => onUpdateQty && onUpdateQty(item?.variantId, (item?.quantity || 1) - 1)}
                           aria-label="Decrease quantity"
                         >
                           <Minus size={14} />
                         </button>
-                        <span className="qty-value">{item.quantity}</span>
+                        <span className="qty-value">{item?.quantity || 1}</span>
                         <button 
                           className="qty-btn"
-                          onClick={() => onUpdateQty && onUpdateQty(item.variantId, (item.quantity || 1) + 1)}
+                          onClick={() => onUpdateQty && onUpdateQty(item?.variantId, (item?.quantity || 1) + 1)}
                           aria-label="Increase quantity"
                         >
                           <Plus size={14} />
@@ -490,10 +490,10 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                       {/* Item Subtotal & Delete */}
                       <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
                         <div style={{ fontWeight: '700', fontSize: '1.1rem', color: 'var(--color-bg-navy)' }}>
-                          ₦{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                          ₦{(((item?.price || 0) * (item?.quantity || 1))).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                         </div>
                         <button 
-                          onClick={() => onRemove && onRemove(item.variantId)}
+                          onClick={() => onRemove && onRemove(item?.variantId)}
                           style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 0 }}
                           title="Remove item"
                         >
@@ -523,9 +523,9 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                     onChange={handleZoneChange}
                     style={{ width: '100%' }}
                   >
-                    {zones.map((zone, idx) => (
-                      <option key={idx} value={`${zone.state}|${zone.city}`}>
-                        {zone.city}, {zone.state}
+                    {(zones || []).filter(Boolean).map((zone, idx) => (
+                      <option key={idx} value={`${zone?.state || ''}|${zone?.city || ''}`}>
+                        {zone?.city || 'Zone'}, {zone?.state || 'Nigeria'}
                       </option>
                     ))}
                   </select>
@@ -750,17 +750,17 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                   </button>
                 </div>
 
-                {activeBoard.items && activeBoard.items.length > 0 ? (
-                  activeBoard.items.map((item, idx) => (
+                {Array.isArray(activeBoard?.items) && activeBoard.items.length > 0 ? (
+                  activeBoard.items.filter(Boolean).map((item, idx) => (
                     <div key={idx} className="cart-item">
                       <div className="cart-item-info">
-                        <h4 style={{ fontSize: '1rem', color: 'var(--color-bg-navy)' }}>{item.name}</h4>
-                        <div className="cart-item-meta" style={{ fontSize: '0.8rem', color: '#64748b' }}>SKU: {item.sku}</div>
-                        <div className="cart-item-meta" style={{ fontSize: '0.8rem', color: '#64748b' }}>Qty Assigned: <strong>{item.quantity}</strong></div>
+                        <h4 style={{ fontSize: '1rem', color: 'var(--color-bg-navy)' }}>{item?.name || 'Architectural Specification'}</h4>
+                        <div className="cart-item-meta" style={{ fontSize: '0.8rem', color: '#64748b' }}>SKU: {item?.sku || 'HC-SPEC'}</div>
+                        <div className="cart-item-meta" style={{ fontSize: '0.8rem', color: '#64748b' }}>Qty Assigned: <strong>{item?.quantity || 1}</strong></div>
                       </div>
                       <div style={{ textAlign: 'right' }}>
                         <div style={{ fontWeight: '700', color: 'var(--color-bg-navy)' }}>
-                          ₦{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                          ₦{(((item?.price || 0) * (item?.quantity || 1))).toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                         </div>
                       </div>
                     </div>
@@ -784,9 +784,9 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                     value={`${selectedZone?.state || ''}|${selectedZone?.city || ''}`}
                     onChange={handleZoneChange}
                   >
-                    {zones.map((zone, idx) => (
-                      <option key={idx} value={`${zone.state}|${zone.city}`}>
-                        {zone.city}, {zone.state}
+                    {(zones || []).filter(Boolean).map((zone, idx) => (
+                      <option key={idx} value={`${zone?.state || ''}|${zone?.city || ''}`}>
+                        {zone?.city || 'Zone'}, {zone?.state || 'Nigeria'}
                       </option>
                     ))}
                   </select>

@@ -96,7 +96,32 @@ export default function App() {
   };
 
   const [activeTab, setActiveTabState] = useState(getInitialTab);
-  const [cart, setCart] = useState([]);
+  
+  // Safe localStorage backed Cart state
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hc_cart_items');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(item => item && item.variantId);
+        }
+      }
+      return [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Sync cart to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('hc_cart_items', JSON.stringify(cart));
+    } catch (e) {
+      console.warn('Failed to persist cart items to localStorage', e);
+    }
+  }, [cart]);
+
   const [cartToast, setCartToast] = useState(null);
   const [scrollPercent, setScrollPercent] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -175,15 +200,16 @@ export default function App() {
 
   const handleAddToCart = (variantId, name, sku, price) => {
     setCart((prevCart) => {
-      const existing = prevCart.find(item => item.variantId === variantId);
+      const safePrev = Array.isArray(prevCart) ? prevCart.filter(Boolean) : [];
+      const existing = safePrev.find(item => item && item.variantId === variantId);
       if (existing) {
-        return prevCart.map(item =>
-          item.variantId === variantId
+        return safePrev.map(item =>
+          item && item.variantId === variantId
             ? { ...item, quantity: (item.quantity || 1) + 1 }
             : item
         );
       }
-      return [...prevCart, { variantId, name, sku, price: Number(price || 0), quantity: 1 }];
+      return [...safePrev, { variantId, name: name || 'Architectural Specification', sku: sku || 'HC-SPEC', price: Number(price || 0), quantity: 1 }];
     });
 
     // Sleek Luxury Toast Notification (Replaces annoying browser alert)
@@ -198,22 +224,29 @@ export default function App() {
       handleRemove(variantId);
       return;
     }
-    setCart((prevCart) =>
-      prevCart.map(item =>
-        item.variantId === variantId ? { ...item, quantity: newQty } : item
-      )
-    );
+    setCart((prevCart) => {
+      const safePrev = Array.isArray(prevCart) ? prevCart.filter(Boolean) : [];
+      return safePrev.map(item =>
+        item && item.variantId === variantId ? { ...item, quantity: newQty } : item
+      );
+    });
   };
 
   const handleRemove = (variantId) => {
-    setCart((prevCart) => prevCart.filter(item => item.variantId !== variantId));
+    setCart((prevCart) => {
+      const safePrev = Array.isArray(prevCart) ? prevCart.filter(Boolean) : [];
+      return safePrev.filter(item => item && item.variantId !== variantId);
+    });
   };
 
   const handleClearCart = () => {
     setCart([]);
   };
 
-  const totalCartItems = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+  const totalCartItems = (Array.isArray(cart) ? cart : []).reduce(
+    (acc, item) => acc + ((item && item.quantity) || 1),
+    0
+  );
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
