@@ -17,6 +17,7 @@ import {
 
 const CATEGORIES = [
   { id: 'cat_doors', name: 'Luxury Doors & Entries', prefix: 'HC-DOOR' },
+  { id: 'cat_carpets', name: 'Luxury Architectural Carpets & Rugs', prefix: 'HC-CRPT' },
   { id: 'cat_whole_house', name: 'Whole-House Customization', prefix: 'HC-WHC' },
   { id: 'cat_flooring', name: 'Flooring & Staircase / Marble', prefix: 'HC-MRBL' },
   { id: 'cat_kitchen', name: 'Kitchen & Wardrobe', prefix: 'HC-KTC' },
@@ -30,6 +31,14 @@ const QUICK_ASSETS = [
   { label: 'Classic Oak', path: '/assets/products/door_4.jpeg' },
   { label: 'Flush Door', path: '/assets/products/door_5.jpeg' },
   { label: 'Glass Door', path: '/assets/products/door_6.jpeg' },
+  { label: 'Royal Isfahan Silk Rug', path: '/assets/products/carpets/carpet_1.jpeg' },
+  { label: 'Imperial Kashan Carpet', path: '/assets/products/carpets/carpet_2.jpeg' },
+  { label: 'Tabriz Gold Weft Rug', path: '/assets/products/carpets/carpet_3.jpeg' },
+  { label: 'Aura Abstract Silk Rug', path: '/assets/products/carpets/carpet_4.jpeg' },
+  { label: 'Heriz Palace Carpet', path: '/assets/products/carpets/carpet_5.jpeg' },
+  { label: 'Anatolian Oushak Rug', path: '/assets/products/carpets/carpet_6.jpeg' },
+  { label: 'Qom Pure Mulberry Silk', path: '/assets/products/carpets/carpet_8.jpeg' },
+  { label: 'Nain Arabesque Rug', path: '/assets/products/carpets/carpet_10.jpeg' },
   { label: 'Wardrobe System', path: '/assets/products/interior_1.jpeg' },
   { label: 'Resin Bathtub', path: '/assets/products/interior_2.jpeg' },
   { label: 'Carrara Marble', path: '/assets/products/interior_3.jpeg' },

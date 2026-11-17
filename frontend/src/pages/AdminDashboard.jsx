@@ -526,6 +526,7 @@ export default function AdminDashboard({ adminUser, onLogout }) {
               >
                 <option value="all">All Architectural Classes</option>
                 <option value="cat_doors">Luxury Doors & Entries</option>
+                <option value="cat_carpets">Luxury Architectural Carpets & Rugs</option>
                 <option value="cat_whole_house">Whole-House Customization</option>
                 <option value="cat_flooring">Flooring & Staircase / Marble</option>
                 <option value="cat_kitchen">Kitchen & Wardrobe</option>

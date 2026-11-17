@@ -41,8 +41,9 @@ export default function Footer({ setActiveTab }) {
             <li><a href="#" onClick={(e) => handleNav('home', e)}>Home</a></li>
             <li><a href="#" onClick={(e) => handleNav('about', e)}>About HC Group</a></li>
             <li><a href="#" onClick={(e) => handleNav('services', e)}>One-Stop Turnkey Service</a></li>
-            <li><a href="#" onClick={(e) => handleNav('projects', e)}>Global Projects Portfolio</a></li>
+            <li><a href="#" onClick={(e) => handleNav('projects', e)}>Signature Projects (Maiduguri & Regional)</a></li>
             <li><a href="#" onClick={(e) => handleNav('shop-look', e)}>Shop The Look (Room Hotspots)</a></li>
+            <li><a href="#" onClick={(e) => handleNav('tracking', e)}>Client Project Tracker (#tracking)</a></li>
             <li><a href="#" onClick={(e) => handleNav('contact', e)}>Request Formal Quote (RFQ)</a></li>
           </ul>
         </div>
@@ -52,11 +53,11 @@ export default function Footer({ setActiveTab }) {
           <h4 className="footer-title">Architectural Lines</h4>
           <ul className="footer-links">
             <li><a href="#" onClick={(e) => handleNav('catalog', e)}>Luxury Pivot & French Doors</a></li>
+            <li><a href="#" onClick={(e) => handleNav('catalog', e)}>Luxury Architectural Carpets & Rugs</a></li>
             <li><a href="#" onClick={(e) => handleNav('catalog', e)}>Italian Carrara Marble & Slabs</a></li>
             <li><a href="#" onClick={(e) => handleNav('catalog', e)}>Freestanding Solid Stone Baths</a></li>
             <li><a href="#" onClick={(e) => handleNav('catalog', e)}>Modular Custom Wardrobes</a></li>
             <li><a href="#" onClick={(e) => handleNav('catalog', e)}>Acoustic Timber Wall Cladding</a></li>
-            <li><a href="#" onClick={(e) => handleNav('catalog', e)}>Thermal-Break Sliding Glass</a></li>
           </ul>
         </div>
 

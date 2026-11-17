@@ -408,8 +408,8 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               <h3 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-bg-navy)', fontSize: '1.6rem', marginBottom: '0.75rem' }}>
                 Your Material Cart is Empty
               </h3>
-              <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 2rem auto', fontSize: '0.95rem' }}>
-                Browse our premium architectural doors, Italian marble slabs, freestanding stone bathtubs, or "Shop The Look" interactive room scenes to specify materials.
+              <p style={{ color: '#64748b', maxWidth: '540px', margin: '0 auto 2rem auto', fontSize: '0.95rem' }}>
+                Browse our premium architectural doors, luxury hand-knotted carpets & rugs, Italian marble slabs, freestanding stone bathtubs, or "Shop The Look" interactive room scenes to specify materials.
               </p>
               <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                 {setActiveTab && (
@@ -420,6 +420,11 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
                 {setActiveTab && (
                   <button className="btn-outline" onClick={() => setActiveTab('shop-look')}>
                     Shop The Look (Room Hotspots)
+                  </button>
+                )}
+                {setActiveTab && (
+                  <button className="btn-outline" onClick={() => setActiveTab('tracking')}>
+                    Track Active Project
                   </button>
                 )}
               </div>

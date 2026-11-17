@@ -31,6 +31,7 @@ export default function Contact({ setActiveTab }) {
 
   const scopeOptions = [
     'Doors & Windows',
+    'Luxury Architectural Carpets & Rugs',
     'Kitchen & Wardrobe',
     'Sanitary Ware & Baths',
     'Marble & Stone Slabs',

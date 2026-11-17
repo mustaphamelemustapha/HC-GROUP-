@@ -12,9 +12,10 @@ import About from './pages/About.jsx';
 import Services from './pages/Services.jsx';
 import Projects from './pages/Projects.jsx';
 import Contact from './pages/Contact.jsx';
+import Tracker from './pages/Tracker.jsx';
 import { CheckCircle2, ShoppingBag, MessageCircle, X, ArrowRight, AlertTriangle, RefreshCw } from 'lucide-react';
 
-const VALID_TABS = ['home', 'catalog', 'shop-look', 'cart', 'admin', 'about', 'services', 'projects', 'contact'];
+const VALID_TABS = ['home', 'catalog', 'shop-look', 'cart', 'admin', 'about', 'services', 'projects', 'contact', 'tracking'];
 
 // Robust Error Boundary preventing white blank screen crashes
 class ErrorBoundary extends Component {
@@ -304,6 +305,10 @@ export default function App() {
           
           {activeTab === 'contact' && (
             <Contact setActiveTab={setActiveTab} />
+          )}
+
+          {activeTab === 'tracking' && (
+            <Tracker setActiveTab={setActiveTab} />
           )}
         </ErrorBoundary>
       </main>

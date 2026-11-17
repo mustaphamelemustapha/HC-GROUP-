@@ -16,99 +16,105 @@ export default function Projects({ setActiveTab }) {
       year: '2025',
       area: '2,800 m²',
       image: '/assets/products/interior_1.jpeg',
-      description: 'An executive private estate featuring custom 3.2m motorized copper pivot doors, book-matched Italian Carrara marble floorings, and bespoke walk-in walnut dressing suites.',
+      description: 'An executive private estate featuring custom 3.2m motorized copper pivot doors, book-matched Italian Carrara marble floorings, Royal Isfahan hand-knotted silk carpets, and bespoke walk-in walnut dressing suites.',
       materials: [
         'Grande Copper-Clad Architectural Pivot Doors',
+        'Royal Isfahan Hand-Knotted Silk & Wool Rugs',
         'Book-matched Italian Carrara Marble Slabs',
         'Minimalist Floor-to-Ceiling Walnut Wardrobes',
         'Acoustic Timber Cladding & Security Glazing'
       ],
-      freightMode: 'Dedicated Hydraulic Flatbed Direct to Maiduguri Site'
+      freightMode: 'Dedicated Heavy Hydraulic Flatbed Direct to Maiduguri Site'
     },
     {
       id: 2,
-      title: 'Azure Shore Ocean Resort',
+      title: 'Kyarimi Presidential Residence & VIP Pavilion',
       category: 'Luxury Hospitality',
-      location: 'Baa Atoll, Maldives',
+      location: 'Old GRA, Maiduguri, Borno State',
       year: '2025',
-      area: '8,500 m²',
+      area: '4,500 m²',
       image: '/assets/products/interior_2.jpeg',
-      description: 'Overwater luxury villas and private pavilions outfitted with salt-mist resistant minimalist glass sliding doors, freestanding composite stone bathtubs, and custom teak cabinetry.',
+      description: 'VIP presidential reception and private pavilions outfitted with freestanding solid resin stone bathtubs, Imperial Kashan medallion wool carpets, moisture-sealed vanity millwork, and concealed wall-flush doors.',
       materials: [
-        'Freestanding Solid Composite Resin Bathtubs',
-        'Marine-Grade Aluminum Sliding Pocket Doors',
-        'Moisture-Sealed Solid Teak Vanities',
-        'Custom Brushed Gold Sanitary Fixtures'
+        'Imperial Kashan Medallion Luxury Wool Carpets',
+        'Freestanding Solid Composite Resin Stone Bathtubs',
+        'Concealed Aluminum Frame Wall-Flush Doors',
+        'Custom Brushed Gold Sanitary Fixtures & Vanities',
+        'Italian Carrara Polished Marble Flooring'
       ],
-      freightMode: 'Direct Maritime Freight to Island Jetty'
+      freightMode: 'Dedicated Escorted Heavy Flatbed to Maiduguri GRA'
     },
     {
       id: 3,
-      title: 'Skyline Grand Penthouse',
-      category: 'Penthouse Living',
-      location: 'Manhattan, New York, USA',
+      title: 'Borno State Commercial Complex & Executive Suites',
+      category: 'Commercial Landmarks',
+      location: 'Sir Kashim Ibrahim Way, Maiduguri, Borno State',
       year: '2024',
-      area: '720 m²',
+      area: '6,200 m²',
       image: '/assets/products/interior_3.jpeg',
-      description: 'A duplex penthouse crowning a 65-story skyscraper in Midtown. Features seamless flush-invisible doors, architectural matte black steel French partitions, and European oak planks.',
+      description: 'A multi-story commercial complex and executive suites overlooking central Maiduguri. Features seamless flush doors, architectural steel French partitions, Tabriz heritage gold weft rugs, and acoustic walnut wall systems.',
       materials: [
-        'European White Oak Matte Flooring',
-        'Aurelia Architectural Steel French Doors',
-        'Concealed Aluminum Frame Wall-Flush Doors',
-        'Integrated Smart Motorized Joinery'
+        'Tabriz Mahi Heritage Silk & Gold Weft Rugs',
+        'Aurelia Architectural Steel French Partition Doors',
+        'Class B1 Fire-Safe Acoustic Natural Walnut Panels',
+        'Concealed Magnetic Wall-Integrated Interior Doors',
+        'Heavy-Duty High-Traffic Commercial Marble Tiles'
       ],
-      freightMode: 'Air Freight + High-Rise Crane Rigging'
+      freightMode: 'Direct Logistics Fleet Delivery to Sir Kashim Ibrahim Way'
     },
     {
       id: 4,
-      title: 'The Luminary Private Clinic & Spa',
-      category: 'Commercial Landmarks',
-      location: 'Mayfair, London, UK',
+      title: 'Lake Chad Executive Lodges & Wellness Retreat',
+      category: 'Luxury Hospitality',
+      location: 'Bama Road Corridor, Maiduguri, Borno State',
       year: '2024',
-      area: '1,800 m²',
+      area: '3,800 m²',
       image: '/assets/products/interior_4.jpeg',
-      description: 'A high-end private wellness facility requiring Class B1 fire-rated acoustic wall paneling, sound-damped frosted glass privacy doors, and seamless stone reception counters.',
+      description: 'An executive sanctuary and wellness facility outfitted with Class B1 fire-rated acoustic wall paneling, frosted glass privacy doors, Anatolian Oushak soft-tone living rugs, and seamless stone counters.',
       materials: [
+        'Anatolian Oushak Hand-Spun Living Rugs',
         'Class B1 Fire-Safe Acoustic Wall Panels',
         'Frosted Glass Privacy Doors with Brushed Gold Trim',
-        'Custom Monolithic Reception Desks',
-        'Hygienic Anti-Microbial Wall Cladding'
+        'Freestanding Matte White Resin Stone Soaking Tubs',
+        'Custom Monolithic Carrara Reception & Vanity Slabs'
       ],
-      freightMode: 'Dedicated Flatbed Express Transit'
+      freightMode: 'Dedicated Flatbed Express Transit from Maiduguri Logistics Depot'
     },
     {
       id: 5,
-      title: 'Villa Côte d’Azur',
+      title: 'Indimi Royal Residence & Private Wing',
       category: 'Private Villas',
-      location: 'Cannes, France',
+      location: 'Damboa Road, Maiduguri, Borno State',
       year: '2025',
-      area: '1,650 m²',
+      area: '3,400 m²',
       image: '/assets/products/interior_5.jpeg',
-      description: 'A cliffside contemporary villa designed to merge interior luxury with panoramic Mediterranean vistas. Equipped with oversized thermal-break minimal frames and custom wardrobes.',
+      description: 'A monumental private villa designed to merge classical Kanem-Borno grandeur with contemporary interior architecture. Equipped with thermal-break minimal sliding systems, Qom pure mulberry silk carpets, and custom walnut dressing suites.',
       materials: [
+        'Qom Pure Mulberry Silk Masterpiece Carpets',
         'Thermal-Break Aluminum Minimalist Sliding Systems',
         'Custom Italian Walnut Walk-in Dressing Suites',
-        'Polished Carrara Marble Bath Suites',
-        'Concealed Integrated Baseboards'
+        'Polished Carrara Marble Bath Suites & Fireplaces',
+        'Concealed Integrated LED Baseboards'
       ],
-      freightMode: 'Bonded European Freight & Master Installation'
+      freightMode: 'White-Glove Enclosed Transport & Master Installation'
     },
     {
       id: 6,
-      title: 'Bel Air Heritage Estate',
-      category: 'Private Villas',
-      location: 'Los Angeles, California, USA',
+      title: 'Kanem Diplomatic Chambers & Penthouse Pavilion',
+      category: 'Penthouse Living',
+      location: 'Shehu Laminu Way, Maiduguri, Borno State',
       year: '2024',
-      area: '3,100 m²',
+      area: '2,100 m²',
       image: '/assets/products/door_1.jpeg',
-      description: 'A sprawling neo-classical estate that pairs old-world European oak craftsmanship with smart multi-point biometric locking pivot doors and bespoke coffered ceilings.',
+      description: 'An executive penthouse pavilion pairing hand-carved Imperial European oak doors with smart multi-point biometric locking pivot doors, Heriz royal palace carpets, and bespoke coffered ceilings.',
       materials: [
+        'Heriz Geometric Royal Palace Wool Carpets',
         'Hand-Carved Imperial European Oak Doors',
-        'Grande Architectural Pivot Entrance Doors',
-        'Bespoke Library Bookshelves & Millwork',
-        'Calacatta Gold Marble Fireplace Surrounds'
+        'Grande Architectural Motorized Copper Pivot Doors',
+        'Bespoke Library Bookshelves & Architectural Millwork',
+        'Book-Matched Calacatta Gold Marble Wall Slabs'
       ],
-      freightMode: 'Sealed Maritime Timber Crating'
+      freightMode: 'Crane-Lift Hoist & Certified Master Installation Team'
     }
   ];
 
@@ -125,12 +131,12 @@ export default function Projects({ setActiveTab }) {
         </div>
         <div className="projects-hero-overlay"></div>
         <div className="projects-hero-content">
-          <span className="badge-luxury">GLOBAL ARCHITECTURAL PORTFOLIO</span>
+          <span className="badge-luxury">MAIDUGURI HQ & REGIONAL ARCHITECTURAL PORTFOLIO</span>
           <h1 className="projects-hero-title">
-            Featured <span>International Projects</span>
+            Featured <span>Signature Projects</span>
           </h1>
           <p className="projects-hero-desc">
-            Explore our curated portfolio of completed private estates, luxury resorts, and high-profile commercial landmarks worldwide.
+            Explore our curated portfolio of completed private estates, presidential suites, and high-profile commercial landmarks across Maiduguri, Borno State and Nigeria.
           </p>
         </div>
       </section>

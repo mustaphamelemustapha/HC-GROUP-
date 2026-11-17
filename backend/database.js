@@ -111,6 +111,26 @@ function initializeDatabase() {
             }
           }
         });
+
+        // Ensure HC Luxury Carpets & Rugs category and products exist
+        db.get("SELECT count(*) as count FROM products WHERE category_id = 'cat_carpets'", (err, row) => {
+          if (!row || row.count < 8) {
+            console.log('Seeding HC Architectural Luxury Carpets & Rugs line...');
+            try {
+              const seedSql = fs.readFileSync(path.join(DB_DIR, 'seed.sql'), 'utf8');
+              const carpetsIdx = seedSql.indexOf('-- 1b. Luxury Architectural Carpets');
+              if (carpetsIdx !== -1) {
+                const carpetsSql = seedSql.substring(carpetsIdx);
+                db.exec(carpetsSql, (err) => {
+                  if (err) console.error('Carpet seeding error:', err);
+                  else console.log('HC Luxury Carpets portfolio loaded successfully into database.');
+                });
+              }
+            } catch (e) {
+              console.error('Failed reading seed.sql for carpets:', e.message);
+            }
+          }
+        });
       }
     });
   });

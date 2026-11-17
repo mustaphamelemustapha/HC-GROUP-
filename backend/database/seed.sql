@@ -182,3 +182,98 @@ INSERT INTO shipping_zones (id, state, city, base_rate, per_kg_rate, transport_t
 ('sz_kano_central_p', 'Kano', 'Kano Central', 40000.00, 350.00, 'parcel'),
 ('sz_kano_central_f', 'Kano', 'Kano Central', 280000.00, 700.00, 'flatbed'),
 ('sz_kano_central_c', 'Kano', 'Kano Central', 520000.00, 1200.00, 'crane_lift');
+
+
+-- 1b. Luxury Architectural Carpets & Rugs Category
+INSERT OR IGNORE INTO categories (id, name, slug, parent_id) VALUES
+('cat_carpets', 'Luxury Carpets & Rugs', 'luxury-carpets-rugs', NULL);
+
+-- 2b. Carpet Products
+INSERT OR REPLACE INTO products (id, name, description, sku_prefix, category_id, image_url, is_active) VALUES
+('prod_carpet_isfahan', 'Royal Isfahan Hand-Knotted Silk & Wool Rug', 'Masterwork Persian-style rug woven with 100% New Zealand highland wool and pure mulberry silk highlights. Features an exquisite central floral medallion surrounded by intricate vine scrolls and arabesques.', 'HC-CRPT', 'cat_carpets', '/assets/products/carpets/carpet_1.jpeg', 1),
+('prod_carpet_kashan', 'Imperial Kashan Medallion Wool Carpet', 'Grand classical medallion rug featuring rich gold, ivory, and sapphire navy pigments. Hand-spun wool with double-weft knotting for exceptional structural durability in executive residences.', 'HC-CRPT', 'cat_carpets', '/assets/products/carpets/carpet_2.jpeg', 1),
+('prod_carpet_tabriz', 'Tabriz Mahi Heritage Silk & Gold Weft Rug', 'Celebrated Tabriz fish (Mahi) motif rug woven with high-twist silk threads and metallic gold-lurex accent borders. Engineered for grand entryways, boardrooms, and presidential salons.', 'HC-CRPT', 'cat_carpets', '/assets/products/carpets/carpet_3.jpeg', 1),
+('prod_carpet_abstract', 'Aura Minimalist Abstract Architectural Carpet', 'Modernist textured low-pile carpet crafted for contemporary open-plan villas. Seamless ombre transitions of platinum grey, muted sand, and deep navy with carved high-low relief.', 'HC-CRPT', 'cat_carpets', '/assets/products/carpets/carpet_4.jpeg', 1),
+('prod_carpet_heriz', 'Heriz Geometric Royal Palace Carpet', 'Bold rectilinear medallion rug featuring monumental geometric geometry in warm terracotta, deep indigo, and burnished gold. Exceptionally robust mountain wool pile.', 'HC-CRPT', 'cat_carpets', '/assets/products/carpets/carpet_5.jpeg', 1),
+('prod_carpet_oushak', 'Anatolian Oushak Soft-Tone Living Rug', 'Subtle Turkish Oushak styling characterized by soft pastel earth tones, large-scale botanical palmettes, and an ultra-plush velvety foot feel for master bedroom suites.', 'HC-CRPT', 'cat_carpets', '/assets/products/carpets/carpet_6.jpeg', 1),
+('prod_carpet_qom', 'Qom Pure Mulberry Silk Masterpiece', 'Pinnacle of luxury weaving: 100% pure silk warp, weft, and pile boasting 1.6 million knots per square meter. Features luminous floral arabesques with museum-grade precision.', 'HC-CRPT', 'cat_carpets', '/assets/products/carpets/carpet_8.jpeg', 1),
+('prod_carpet_nain', 'Nain Habibian Arabesque Silk & Wool Rug', 'Prestigious Nain 6-La weave rug rendered in cream ivory, navy sapphire, and sky blue with pure silk outlining around every individual blossom and intertwining vine.', 'HC-CRPT', 'cat_carpets', '/assets/products/carpets/carpet_10.jpeg', 1);
+
+-- 4b. Carpet Product Variants (Naira ₦)
+INSERT OR REPLACE INTO product_variants (id, product_id, sku, price_markup, stock_quantity, weight_kg, volume_m3) VALUES
+('var_carpet_isfahan_3x2', 'prod_carpet_isfahan', 'HC-CRPT-ISF-3020', 1850000.00, 15, 22.0, 0.18),
+('var_carpet_isfahan_4x3', 'prod_carpet_isfahan', 'HC-CRPT-ISF-4030', 3400000.00, 8, 44.0, 0.35),
+('var_carpet_kashan_3x2', 'prod_carpet_kashan', 'HC-CRPT-KSH-3020', 1450000.00, 20, 25.0, 0.20),
+('var_carpet_kashan_4x3', 'prod_carpet_kashan', 'HC-CRPT-KSH-4030', 2650000.00, 10, 48.0, 0.38),
+('var_carpet_tabriz_3x2', 'prod_carpet_tabriz', 'HC-CRPT-TAB-3222', 2200000.00, 12, 20.0, 0.16),
+('var_carpet_abstract_3x2', 'prod_carpet_abstract', 'HC-CRPT-ABS-3020', 980000.00, 25, 18.0, 0.15),
+('var_carpet_abstract_4x3', 'prod_carpet_abstract', 'HC-CRPT-ABS-4030', 1850000.00, 14, 35.0, 0.30),
+('var_carpet_heriz_4x3', 'prod_carpet_heriz', 'HC-CRPT-HRZ-4030', 2650000.00, 9, 52.0, 0.42),
+('var_carpet_oushak_3x2', 'prod_carpet_oushak', 'HC-CRPT-OSH-3024', 1250000.00, 18, 26.0, 0.22),
+('var_carpet_qom_2x15', 'prod_carpet_qom', 'HC-CRPT-QOM-2516', 3850000.00, 6, 14.0, 0.12),
+('var_carpet_nain_3x2', 'prod_carpet_nain', 'HC-CRPT-NAI-3020', 2100000.00, 11, 21.0, 0.17);
+
+-- 5b. Carpet Specifications (EAV Attributes)
+INSERT OR REPLACE INTO product_attributes (variant_id, attribute_id, value) VALUES
+('var_carpet_isfahan_3x2', 'attr_material', '80% New Zealand Highland Wool & 20% Pure Mulberry Silk'),
+('var_carpet_isfahan_3x2', 'attr_dimensions', '3000mm (L) x 2000mm (W) x 12mm (Pile Depth)'),
+('var_carpet_isfahan_3x2', 'attr_load', 'Ultra-High Traffic (1,200,000 Knots/m²)'),
+('var_carpet_isfahan_3x2', 'attr_finish', 'Lustrous Silk Sheen with Hand-Bound Edge Fringe'),
+('var_carpet_isfahan_3x2', 'attr_flammability', 'Class 1 (Naturally Flame Retardant Wool Core)'),
+('var_carpet_isfahan_4x3', 'attr_material', '80% New Zealand Highland Wool & 20% Pure Mulberry Silk'),
+('var_carpet_isfahan_4x3', 'attr_dimensions', '4000mm (L) x 3000mm (W) x 12mm (Pile Depth)'),
+('var_carpet_isfahan_4x3', 'attr_load', 'Ultra-High Traffic (1,200,000 Knots/m²)'),
+('var_carpet_isfahan_4x3', 'attr_finish', 'Lustrous Silk Sheen with Hand-Bound Edge Fringe'),
+('var_carpet_isfahan_4x3', 'attr_flammability', 'Class 1 (Naturally Flame Retardant Wool Core)'),
+('var_carpet_kashan_3x2', 'attr_material', '100% Hand-Spun Ghazni Wool with Cotton Warp'),
+('var_carpet_kashan_3x2', 'attr_dimensions', '3000mm (L) x 2000mm (W) x 14mm (Pile Depth)'),
+('var_carpet_kashan_3x2', 'attr_load', 'Heavy Contract Traffic (950,000 Knots/m²)'),
+('var_carpet_kashan_3x2', 'attr_finish', 'Antique Patina Herbal Wash'),
+('var_carpet_kashan_3x2', 'attr_flammability', 'Class B1 Fire Safe'),
+('var_carpet_kashan_4x3', 'attr_material', '100% Hand-Spun Ghazni Wool with Cotton Warp'),
+('var_carpet_kashan_4x3', 'attr_dimensions', '4000mm (L) x 3000mm (W) x 14mm (Pile Depth)'),
+('var_carpet_kashan_4x3', 'attr_load', 'Heavy Contract Traffic (950,000 Knots/m²)'),
+('var_carpet_kashan_4x3', 'attr_finish', 'Antique Patina Herbal Wash'),
+('var_carpet_kashan_4x3', 'attr_flammability', 'Class B1 Fire Safe'),
+('var_carpet_tabriz_3x2', 'attr_material', 'Hand-Knotted Silk on Fine Cotton Foundation'),
+('var_carpet_tabriz_3x2', 'attr_dimensions', '3200mm (L) x 2200mm (W) x 10mm (Pile Depth)'),
+('var_carpet_tabriz_3x2', 'attr_load', '1,400,000 Knots/m² Master Knotter Quality'),
+('var_carpet_tabriz_3x2', 'attr_finish', 'Reflective Silk Glaze & Reinforced Selvedge'),
+('var_carpet_tabriz_3x2', 'attr_flammability', 'Class 1 Non-Flammable'),
+('var_carpet_abstract_3x2', 'attr_material', '70% Botanical Bamboo Silk, 30% Matte Wool'),
+('var_carpet_abstract_3x2', 'attr_dimensions', '3000mm (L) x 2000mm (W) x 11mm (Variable Relief)'),
+('var_carpet_abstract_3x2', 'attr_load', 'Medium-High Traffic Resilient'),
+('var_carpet_abstract_3x2', 'attr_finish', 'Hand-Carved Multi-Level Loop & Cut Pile'),
+('var_carpet_abstract_3x2', 'attr_flammability', 'Class B1 Commercial Fire Grade'),
+('var_carpet_abstract_4x3', 'attr_material', '70% Botanical Bamboo Silk, 30% Matte Wool'),
+('var_carpet_abstract_4x3', 'attr_dimensions', '4000mm (L) x 3000mm (W) x 11mm (Variable Relief)'),
+('var_carpet_abstract_4x3', 'attr_load', 'Medium-High Traffic Resilient'),
+('var_carpet_abstract_4x3', 'attr_finish', 'Hand-Carved Multi-Level Loop & Cut Pile'),
+('var_carpet_abstract_4x3', 'attr_flammability', 'Class B1 Commercial Fire Grade'),
+('var_carpet_heriz_4x3', 'attr_material', 'High-Lanolin Mountain Wool on Heavy Cotton Warp'),
+('var_carpet_heriz_4x3', 'attr_dimensions', '4000mm (L) x 3000mm (W) x 15mm (Pile Depth)'),
+('var_carpet_heriz_4x3', 'attr_load', 'Extreme Heavy Footfall & Furniture Load'),
+('var_carpet_heriz_4x3', 'attr_finish', 'Sun-Aged Natural Mineral Dye Luster'),
+('var_carpet_heriz_4x3', 'attr_flammability', 'Class 1 Natural Self-Extinguishing'),
+('var_carpet_oushak_3x2', 'attr_material', 'Carded Anatolian Wool with Hand-Spun Luster'),
+('var_carpet_oushak_3x2', 'attr_dimensions', '3000mm (L) x 2400mm (W) x 16mm (Plush Velvet Pile)'),
+('var_carpet_oushak_3x2', 'attr_load', 'Residential Master Suite Luxury Grade'),
+('var_carpet_oushak_3x2', 'attr_finish', 'Stonewashed Matte Velvet Finish'),
+('var_carpet_oushak_3x2', 'attr_flammability', 'Class B1'),
+('var_carpet_qom_2x15', 'attr_material', '100% Pure Mulberry Silk (Warp, Weft & Pile)'),
+('var_carpet_qom_2x15', 'attr_dimensions', '2500mm (L) x 1600mm (W) x 7mm (Ultra-Dense Fine Pile)'),
+('var_carpet_qom_2x15', 'attr_load', '1,600,000 Knots/m² Ultra-Fine Weave'),
+('var_carpet_qom_2x15', 'attr_finish', 'Dual-Direction Chromatic Silk Reflection'),
+('var_carpet_qom_2x15', 'attr_flammability', 'Class A Fire Retardant'),
+('var_carpet_nain_3x2', 'attr_material', 'Kork Wool & Fine Mulberry Silk Outlining'),
+('var_carpet_nain_3x2', 'attr_dimensions', '3000mm (L) x 2000mm (W) x 10mm (Pile Depth)'),
+('var_carpet_nain_3x2', 'attr_load', '1,100,000 Knots/m² (6-La Precision)'),
+('var_carpet_nain_3x2', 'attr_finish', 'Embossed Silk Relief with Pure White Fringe'),
+('var_carpet_nain_3x2', 'attr_flammability', 'Class 1 Natural Wool Fire Rating');
+
+-- 6b. Carpet Volume & Commercial Bulk Sourcing Rules (Naira ₦)
+INSERT OR REPLACE INTO bulk_pricing_rules (id, variant_id, min_quantity, unit_price) VALUES
+('bulk_carpet_isfahan_3', 'var_carpet_isfahan_3x2', 3, 1650000.00),
+('bulk_carpet_isfahan_5', 'var_carpet_isfahan_3x2', 5, 1500000.00),
+('bulk_carpet_kashan_3', 'var_carpet_kashan_3x2', 3, 1300000.00),
+('bulk_carpet_abstract_5', 'var_carpet_abstract_3x2', 5, 850000.00);

@@ -87,7 +87,7 @@ export default function About({ setActiveTab }) {
             </p>
             <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.8', marginBottom: '2rem' }}>
               From magnificent 3.2-meter copper-clad pivot doors and custom modular walk-in wardrobes to monolithic 
-              stone bathtubs and high-load acoustic wood cladding, every element is engineered to endure generations.
+              stone bathtubs, museum-grade hand-knotted architectural silk carpets, and acoustic wood cladding, every element is engineered to endure generations.
             </p>
 
             <div className="narrative-check-list">

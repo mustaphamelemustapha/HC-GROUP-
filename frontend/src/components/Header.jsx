@@ -110,11 +110,22 @@ export default function Header({ activeTab, setActiveTab, totalCartItems, adminU
             </span>
             <div className="dropdown-menu">
               <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('catalog'); }}>Doors & Windows</a>
+              <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('catalog'); }}>Luxury Carpets & Rugs</a>
               <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('catalog'); }}>Luxury Marble & Tiles</a>
               <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('catalog'); }}>Sanitary Ware & Baths</a>
               <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('catalog'); }}>Kitchen & Wardrobe Systems</a>
               <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('shop-look'); }}>Shop The Look (Interactive Mockup)</a>
             </div>
+          </div>
+
+          <div className="nav-item">
+            <span 
+              className={`nav-link ${activeTab === 'tracking' ? 'active' : ''}`}
+              onClick={() => handleNavClick('tracking')}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+            >
+              TRACK ORDER
+            </span>
           </div>
 
           <div className="nav-item">
@@ -264,7 +275,7 @@ export default function Header({ activeTab, setActiveTab, totalCartItems, adminU
                 className={`mobile-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
                 onClick={() => handleNavClick('projects')}
               >
-                GLOBAL PROJECTS
+                SIGNATURE PROJECTS
               </div>
 
               <div className="mobile-nav-item-dropdown">
@@ -278,9 +289,17 @@ export default function Header({ activeTab, setActiveTab, totalCartItems, adminU
                 {mobileProductsOpen && (
                   <div className="mobile-sub-menu">
                     <span onClick={() => handleNavClick('catalog')}>Full Material Catalog</span>
+                    <span onClick={() => handleNavClick('catalog')}>Luxury Carpets & Rugs</span>
                     <span onClick={() => handleNavClick('shop-look')}>Shop The Look (Room Hotspots)</span>
                   </div>
                 )}
+              </div>
+
+              <div 
+                className={`mobile-nav-item ${activeTab === 'tracking' ? 'active' : ''}`}
+                onClick={() => handleNavClick('tracking')}
+              >
+                TRACK FABRICATION TICKET
               </div>
 
               <div 

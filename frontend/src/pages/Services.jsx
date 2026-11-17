@@ -58,19 +58,19 @@ export default function Services({ setActiveTab }) {
     },
     {
       id: 4,
-      name: 'Global Freight & Logistics',
+      name: 'Dedicated Freight & Logistics',
       icon: <Truck size={26} />,
-      tagline: 'Sovereign shipping, customs clearance & specialized offloading',
+      tagline: 'Direct delivery, Borno depot staging & specialized crane offloading',
       heroImage: '/assets/products/interior_4.jpeg',
-      description: 'Moving oversized doors, solid marble bathtubs, and hundreds of square meters of glass requires bespoke logistical execution. Our freight engine coordinates ocean containerization, bonded customs clearance, and heavy-duty flatbed or crane-lift offloading direct to your job site.',
+      description: 'Moving oversized doors, solid marble bathtubs, and multi-ton consignments of luxury carpets and glass requires bespoke logistical execution. Our freight engine coordinates dedicated heavy flatbeds, customs clearance, and specialized crane-lift offloading direct to your job site in Maiduguri, Borno State, and nationwide.',
       deliverables: [
-        'Custom ISPM-15 export certified timber shock crating',
-        'End-to-end maritime and overland freight tracking',
-        'Customs broker clearance and tariff documentation',
+        'Custom ISPM-15 certified timber shock crating',
+        'Direct milestone tracking through our Project Tracker (#tracking)',
+        'Maiduguri central logistics depot staging (Sir Kashim Ibrahim Way)',
         'Coordinated hydraulic crane-lift offload at project site'
       ],
-      leadTime: 'Global air freight (3-7 days) / Ocean freight (18-35 days)',
-      bestFor: 'Heavy architectural deliveries, multi-container consignments'
+      leadTime: 'Dedicated flatbed express transit (Scheduled with contractor)',
+      bestFor: 'Heavy architectural deliveries, multi-ton marble, oversized doors & luxury carpets'
     },
     {
       id: 5,

@@ -17,17 +17,18 @@ export default function Home({ setActiveTab }) {
   ];
 
   const categories = [
-    { id: 1, name: 'Doors & Windows', image: '/assets/products/door_1.jpeg' },
-    { id: 2, name: 'Premium Marble & Tiles', image: '/assets/products/door_3.jpeg' },
-    { id: 3, name: 'Kitchen & Wardrobe', image: '/assets/products/door_7.jpeg' },
-    { id: 4, name: 'Sanitary Wares & Baths', image: '/assets/products/door_9.jpeg' },
+    { id: 1, name: 'Luxury Doors & Entries', image: '/assets/products/door_1.jpeg', catId: 'cat_doors' },
+    { id: 2, name: 'Luxury Carpets & Rugs', image: '/assets/products/carpets/carpet_1.jpeg', catId: 'cat_carpets' },
+    { id: 3, name: 'Carrara Marble & Flooring', image: '/assets/products/interior_3.jpeg', catId: 'cat_flooring' },
+    { id: 4, name: 'Kitchen & Custom Wardrobe', image: '/assets/products/interior_1.jpeg', catId: 'cat_kitchen' },
+    { id: 5, name: 'Sanitary Ware & Baths', image: '/assets/products/interior_2.jpeg', catId: 'cat_sanitary' },
   ];
 
   const projects = [
-    { id: 1, title: 'The Al-Barka Executive Estate', location: 'Maiduguri, Borno State', image: '/assets/products/interior_1.jpeg' },
-    { id: 2, title: 'Azure Hotel Resort', location: 'Maldives', image: '/assets/products/interior_2.jpeg' },
-    { id: 3, title: 'Skyline Penthouse', location: 'New York, USA', image: '/assets/products/interior_3.jpeg' },
-    { id: 4, title: 'Grand Medical Center', location: 'London, UK', image: '/assets/products/interior_4.jpeg' },
+    { id: 1, title: 'The Al-Barka Executive Estate', location: 'GRA, Maiduguri, Borno State', image: '/assets/products/interior_1.jpeg' },
+    { id: 2, title: 'Kyarimi Presidential Residence & VIP Pavilion', location: 'Old GRA, Maiduguri, Borno State', image: '/assets/products/interior_2.jpeg' },
+    { id: 3, title: 'Borno State Commercial Complex', location: 'Sir Kashim Ibrahim Way, Maiduguri', image: '/assets/products/interior_3.jpeg' },
+    { id: 4, title: 'Lake Chad Executive Lodges & Suites', location: 'Bama Road Corridor, Maiduguri', image: '/assets/products/interior_4.jpeg' },
   ];
 
   return (
@@ -160,9 +161,9 @@ export default function Home({ setActiveTab }) {
       {/* Project Showcase Section */}
       <section className="section-container">
         <div className="section-header">
-          <span className="section-eyebrow">WORLD-CLASS DEVELOPMENTS</span>
-          <h2 className="section-title">Featured International Projects</h2>
-          <p className="section-subtitle">Take a look at some of the world-class environments we've helped create.</p>
+          <span className="section-eyebrow">SIGNATURE FABRICATION PORTFOLIO</span>
+          <h2 className="section-title">Featured Developments (Maiduguri & Regional Hubs)</h2>
+          <p className="section-subtitle">Take a look at prestigious presidential estates, VIP suites, and commercial landmarks outfitted by HC Group.</p>
         </div>
         <div className="projects-grid">
           {projects.map(project => (

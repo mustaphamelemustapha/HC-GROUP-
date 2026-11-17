@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Eye, CheckCircle2, Sparkles, X, Plus, MessageCircle, ArrowRight, Layers } from 'lucide-react';
+import { ShoppingBag, CheckCircle2, Sparkles, X, Plus, MessageCircle, ArrowRight, Layers, Check } from 'lucide-react';
 
 export default function ShopTheLook({ onAddToCart }) {
-  const [selectedRoomId, setSelectedRoomId] = useState('living');
+  const [selectedRoomId, setSelectedRoomId] = useState('foyer');
   const [activeSpot, setActiveSpot] = useState(null);
+  const [packageAddedEffect, setPackageAddedEffect] = useState(false);
 
   const rooms = [
     {
-      id: 'living',
-      name: 'Aurelia Living Suite',
-      badge: 'CONTEMPORARY VILLA LOUNGE',
+      id: 'foyer',
+      name: 'Presidential Entrance Foyer',
+      badge: 'MONUMENTAL ARCHITECTURAL ARRIVAL',
       image: '/assets/products/interior_1.jpeg',
-      description: 'An executive living pavilion merging floor-to-ceiling copper pivot entrance systems, book-matched Italian Carrara marble, and acoustic natural walnut slats.',
+      description: 'An awe-inspiring arrival pavilion combining a 3.2-meter copper-clad pivot entrance system, Royal Isfahan hand-knotted silk carpet, Italian book-matched Carrara marble, and acoustic natural walnut slats.',
       hotspots: [
         {
           id: 'spot_pivot_door',
@@ -21,18 +22,29 @@ export default function ShopTheLook({ onAddToCart }) {
           variantId: 'var_door_pivot_std',
           sku: 'DR-PVT-STD',
           price: 3200000.00,
-          specs: 'Solid Walnut Core & Textured Copper Cladding • Class B1 Fire Safe',
+          specs: 'Solid Walnut Core & Textured Copper Cladding • Class B1 Fire Safe • Smart Biometric Lock',
           category: 'Luxury Doors & Entries'
         },
         {
-          id: 'spot_marble_floor',
+          id: 'spot_carpet_foyer',
           top: '78%',
           left: '52%',
+          title: 'Royal Isfahan Hand-Knotted Silk & Wool Rug',
+          variantId: 'var_carpet_isfahan_3x2',
+          sku: 'HC-CRPT-ISF-3020',
+          price: 1850000.00,
+          specs: '3000mm x 2000mm • 80% NZ Highland Wool, 20% Mulberry Silk • 1.2M Knots/m²',
+          category: 'Luxury Architectural Carpets'
+        },
+        {
+          id: 'spot_marble_floor',
+          top: '84%',
+          left: '26%',
           title: 'Book-Matched Carrara Marble Slabs',
           variantId: 'var_marble_slab_60',
           sku: 'FS-MARB-SLB60',
           price: 110000.00,
-          specs: '100% Authentic Italian Marble • Mirror Gloss Polish (per m²)',
+          specs: '100% Authentic Italian Carrara Marble • Mirror Gloss Polish (per m²)',
           category: 'Flooring & Stone'
         },
         {
@@ -49,10 +61,63 @@ export default function ShopTheLook({ onAddToCart }) {
       ]
     },
     {
+      id: 'wardrobe',
+      name: 'Executive Master Dressing Suite',
+      badge: 'WHOLE-HOUSE BESPOKE JOINERY',
+      image: '/assets/products/interior_3.jpeg',
+      description: 'A bespoke dressing suite outfitted with floor-to-ceiling modular American walnut wardrobes, Imperial Kashan medallion wool carpet, and architectural slim-profile carbon steel French doors.',
+      hotspots: [
+        {
+          id: 'spot_wardrobe_suite',
+          top: '45%',
+          left: '32%',
+          title: 'Modular Custom American Walnut Wardrobe',
+          variantId: 'var_wardrobe_walnut',
+          sku: 'WH-WARD-WLN',
+          price: 4200000.00,
+          specs: '3200mm (H) • Solid Walnut Veneer • Sensor Integrated LED Channels',
+          category: 'Whole-House Customization'
+        },
+        {
+          id: 'spot_carpet_wardrobe',
+          top: '82%',
+          left: '52%',
+          title: 'Imperial Kashan Medallion Wool Carpet',
+          variantId: 'var_carpet_kashan_3x2',
+          sku: 'HC-CRPT-KSH-3020',
+          price: 1450000.00,
+          specs: '3000mm x 2000mm • 100% Hand-Spun Ghazni Wool • Heavy Contract Footfall Grade',
+          category: 'Luxury Architectural Carpets'
+        },
+        {
+          id: 'spot_french_door',
+          top: '42%',
+          left: '78%',
+          title: 'Aurelia Carbon Steel French Double Doors',
+          variantId: 'var_door_french_std',
+          sku: 'DR-FRN-STD',
+          price: 2450000.00,
+          specs: 'Slim Carbon Steel Stile • Double Tempered Acoustic Glass • Matte Black Finish',
+          category: 'Luxury Doors & Entries'
+        },
+        {
+          id: 'spot_island_top',
+          top: '64%',
+          left: '60%',
+          title: 'Carrara Marble Dressing Island Counter',
+          variantId: 'var_marble_slab_60',
+          sku: 'FS-MARB-SLB60',
+          price: 110000.00,
+          specs: 'Precision CNC Mitred Edges • Scratch & Stain Resistant Protective Sealant',
+          category: 'Flooring & Stone'
+        }
+      ]
+    },
+    {
       id: 'bath',
-      name: 'Villa Master Sanctuary',
-      badge: 'SPA-GRADE WELLNESS SUITE',
-      image: '/assets/products/interior_4.jpeg',
+      name: 'Luxury Spa Bath & Wellness',
+      badge: 'SPA-GRADE MONOLITHIC WELLNESS',
+      image: '/assets/products/interior_2.jpeg',
       description: 'A serene master wellness sanctuary with monolithic freestanding resin composite baths, concealed aluminum-frame wall-flush doors, and non-porous marble surfaces.',
       hotspots: [
         {
@@ -78,52 +143,106 @@ export default function ShopTheLook({ onAddToCart }) {
           category: 'Luxury Doors & Entries'
         },
         {
+          id: 'spot_glass_door',
+          top: '42%',
+          left: '18%',
+          title: 'Frosted Glass Privacy Door (Brushed Gold)',
+          variantId: 'var_door_glass_std',
+          sku: 'DR-GLS-STD',
+          price: 1150000.00,
+          specs: 'Acid-Etched Tempered Glass • Brushed Gold Architectural Pivot Hardware',
+          category: 'Luxury Doors & Entries'
+        },
+        {
           id: 'spot_marble_vanity',
-          top: '52%',
-          left: '20%',
+          top: '55%',
+          left: '32%',
           title: 'Italian Carrara Stone Vanity Slab',
           variantId: 'var_marble_slab_60',
           sku: 'FS-MARB-SLB60',
           price: 110000.00,
-          specs: 'Precision CNC Basin Apertures • Water-Repellent Seal',
+          specs: 'Precision CNC Basin Apertures • Water-Repellent Seal (per m²)',
           category: 'Flooring & Stone'
         }
       ]
     },
     {
-      id: 'wardrobe',
-      name: 'Penthouse Dressing Suite',
-      badge: 'WHOLE-HOUSE BESPOKE JOINERY',
-      image: '/assets/products/interior_3.jpeg',
-      description: 'A bespoke dressing suite outfitted with floor-to-ceiling modular walnut wardrobes, architectural French glass dividers, and integrated warm-LED millwork.',
+      id: 'culinary',
+      name: 'Minimalist Culinary Studio',
+      badge: 'CONTEMPORARY GASTRONOMIC LIVING',
+      image: '/assets/products/interior_4.jpeg',
+      description: 'An open-concept minimalist culinary studio featuring soft-closing architectural sliding glass pocket doors, Aura abstract low-pile silk carpet runner, and acoustic walnut slatted ceilings.',
       hotspots: [
         {
-          id: 'spot_wardrobe_suite',
-          top: '45%',
-          left: '32%',
-          title: 'Modular Custom American Walnut Wardrobe',
-          variantId: 'var_wardrobe_walnut',
-          sku: 'WH-WARD-WLN',
-          price: 4200000.00,
-          specs: '3200mm (H) • Solid Walnut Veneer • Sensor Integrated LED Channels',
-          category: 'Whole-House Customization'
+          id: 'spot_sliding_door',
+          top: '38%',
+          left: '22%',
+          title: 'Minimalist Pocket Sliding Glass Door',
+          variantId: 'var_door_sliding_std',
+          sku: 'DR-SLD-STD',
+          price: 1800000.00,
+          specs: 'Extruded Aluminum Low-E Glass • Soft-Close Hidden Tracks • Charcoal Finish',
+          category: 'Luxury Doors & Entries'
         },
         {
-          id: 'spot_french_door',
-          top: '42%',
-          left: '78%',
-          title: 'Aurelia Carbon Steel French Double Doors',
-          variantId: 'var_door_french_std',
-          sku: 'DR-FRN-STD',
-          price: 2450000.00,
-          specs: 'Slim Carbon Steel Stile • Double Tempered Acoustic Glass',
-          category: 'Luxury Doors & Entries'
+          id: 'spot_carpet_culinary',
+          top: '78%',
+          left: '48%',
+          title: 'Aura Minimalist Abstract Silk & Wool Rug',
+          variantId: 'var_carpet_abstract_3x2',
+          sku: 'HC-CRPT-ABS-3020',
+          price: 980000.00,
+          specs: '3000mm x 2000mm • Botanical Bamboo Silk & Matte Wool • Carved High-Low Pile',
+          category: 'Luxury Architectural Carpets'
+        },
+        {
+          id: 'spot_ceiling_slats',
+          top: '25%',
+          left: '75%',
+          title: 'Acoustic Natural Walnut Ceiling Panels',
+          variantId: 'var_panel_walnut',
+          sku: 'WH-WOOD-WAL',
+          price: 65000.00,
+          specs: 'Class B1 Fire-Safe Natural American Walnut Slats & Acoustic Absorptive Backing',
+          category: 'Wall Systems'
+        },
+        {
+          id: 'spot_waterfall_marble',
+          top: '62%',
+          left: '70%',
+          title: 'Carrara Marble Waterfall Island Counter',
+          variantId: 'var_marble_slab_60',
+          sku: 'FS-MARB-SLB60',
+          price: 110000.00,
+          specs: 'Continuous Vein-Matched Waterfall Edges • Polished Mirror Gloss Finish',
+          category: 'Flooring & Stone'
         }
       ]
     }
   ];
 
   const currentRoom = rooms.find(r => r.id === selectedRoomId) || rooms[0];
+
+  const packageSubtotal = currentRoom.hotspots.reduce((sum, spot) => sum + spot.price, 0);
+  const packageDiscountRate = 0.05; // 5% Turnkey Procurement Package Discount
+  const packageDiscountAmount = packageSubtotal * packageDiscountRate;
+  const packageTotal = packageSubtotal - packageDiscountAmount;
+
+  const handleAddEntirePackage = () => {
+    if (onAddToCart) {
+      currentRoom.hotspots.forEach(spot => {
+        onAddToCart(spot.variantId, spot.title, spot.sku, spot.price);
+      });
+    }
+    setPackageAddedEffect(true);
+    setTimeout(() => setPackageAddedEffect(false), 3000);
+  };
+
+  const getWhatsAppPackageLink = () => {
+    const itemsList = currentRoom.hotspots.map(s => `• ${s.title} (${s.sku}) - ₦${s.price.toLocaleString('en-NG')}`).join('\n');
+    const msg = `Hello HC Group, I would like to procure the *Entire Room Package* for:\n*${currentRoom.name}*\n\nIncluded Architectural Elements:\n${itemsList}\n\n*Turnkey Package Total:* ₦${packageTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}\n(Includes 5% Turnkey Package Discount)\n\nPlease generate an official BoQ Quotation and advise fabrication lead time to Maiduguri / our site.`;
+    return `https://wa.me/2349068875555?text=${encodeURIComponent(msg)}`;
+  };
 
   const handleSpotClick = (spotId, e) => {
     e.stopPropagation();
@@ -420,6 +539,100 @@ export default function ShopTheLook({ onAddToCart }) {
           </a>
         </div>
 
+      </div>
+
+      {/* Turnkey Procurement Room Package Card (Pillar 1 Bundle) */}
+      <div style={{
+        backgroundColor: '#070d1e',
+        border: '1.5px solid var(--color-border-gold)',
+        borderRadius: '12px',
+        padding: '1.75rem 2rem',
+        marginTop: '1.5rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '1.5rem',
+        boxShadow: 'var(--shadow-xl)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Subtle gold glow accent in corner */}
+        <div style={{
+          position: 'absolute',
+          top: '-50px',
+          right: '-50px',
+          width: '180px',
+          height: '180px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+            <span className="badge-luxury" style={{ margin: 0, padding: '0.2rem 0.65rem', fontSize: '0.72rem' }}>
+              <Sparkles size={11} style={{ marginRight: '4px' }} /> TURNKEY PACKAGE BUNDLE
+            </span>
+            <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: '700', letterSpacing: '0.5px' }}>
+              SAVE 5% WHEN ORDERING ENTIRE ROOM TOGETHER
+            </span>
+          </div>
+          <h3 style={{ color: '#ffffff', fontFamily: 'var(--font-display)', fontSize: '1.4rem', margin: '0 0 0.35rem 0' }}>
+            Procure Entire {currentRoom.name} Package
+          </h3>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0, maxWidth: '600px', lineHeight: '1.5' }}>
+            Includes all {currentRoom.hotspots.length} architectural elements: luxury entrance systems, architectural carpets, marble surfaces & custom joinery, coordinated for zero-tolerance matching and simultaneous flatbed delivery to Maiduguri or your site.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '0.75rem', color: '#64748b', textDecoration: 'line-through' }}>
+              ₦{packageSubtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+            </div>
+            <div style={{ color: 'var(--color-gold)', fontFamily: 'var(--font-display)', fontSize: '1.65rem', fontWeight: '700' }}>
+              ₦{packageTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+            </div>
+            <span style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: '600', display: 'block' }}>
+              Includes ₦{packageDiscountAmount.toLocaleString('en-NG', { minimumFractionDigits: 0 })} Turnkey Sourcing Discount
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button
+              className="btn-gold"
+              style={{
+                padding: '0.8rem 1.4rem',
+                fontSize: '0.9rem',
+                backgroundColor: packageAddedEffect ? '#10b981' : 'var(--color-gold)',
+                color: packageAddedEffect ? '#ffffff' : 'var(--color-bg-navy)',
+                fontWeight: '700'
+              }}
+              onClick={handleAddEntirePackage}
+            >
+              {packageAddedEffect ? (
+                <>
+                  <CheckCircle2 size={18} /> Package Added to BoQ!
+                </>
+              ) : (
+                <>
+                  <ShoppingBag size={18} /> Add Entire Room ({currentRoom.hotspots.length} Items)
+                </>
+              )}
+            </button>
+
+            <a
+              href={getWhatsAppPackageLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="whatsapp-action-btn"
+              style={{ padding: '0.8rem 1.25rem', fontSize: '0.85rem' }}
+            >
+              <MessageCircle size={18} /> WhatsApp Turnkey RFQ
+            </a>
+          </div>
+        </div>
       </div>
 
       {/* Materials Schedule Grid */}
