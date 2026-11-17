@@ -93,14 +93,24 @@ function initializeDatabase() {
 
         // Execute master seed to sync all 30+ architectural products, variants and attributes
         try {
-          const seedSql = fs.readFileSync(path.join(DB_DIR, 'seed.sql'), 'utf8');
-          db.exec(seedSql, (err) => {
-            if (err) {
-              console.error('Master catalog sync error:', err.message);
-            } else {
-              console.log('Master whole-house architectural catalog synced successfully with 30+ products.');
+          const candidateDirs = [DB_DIR, path.join(__dirname, 'database'), path.join(__dirname, '../database')];
+          let seedSql = null;
+          for (const d of candidateDirs) {
+            const p = path.join(d, 'seed.sql');
+            if (fs.existsSync(p)) {
+              seedSql = fs.readFileSync(p, 'utf8');
+              break;
             }
-          });
+          }
+          if (seedSql) {
+            db.exec(seedSql, (err) => {
+              if (err) {
+                console.error('Master catalog sync error:', err.message);
+              } else {
+                console.log('Master whole-house architectural catalog synced successfully with 30+ products.');
+              }
+            });
+          }
         } catch (e) {
           console.error('Failed reading seed.sql:', e.message);
         }

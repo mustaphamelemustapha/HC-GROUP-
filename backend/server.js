@@ -268,12 +268,25 @@ app.delete('/api/admin/products/:id', async (req, res) => {
 // Admin endpoint: Sync / Re-seed master catalog with 30+ verified architectural products
 app.all('/api/admin/sync-catalog', async (req, res) => {
   try {
-    const DB_DIR = path.join(__dirname, 'database');
-    const seedSqlPath = fs.existsSync(path.join(DB_DIR, 'seed.sql'))
-      ? path.join(DB_DIR, 'seed.sql')
-      : path.join(__dirname, '../database/seed.sql');
+    const candidatePaths = [
+      path.join(__dirname, 'database/seed.sql'),
+      path.join(__dirname, '../database/seed.sql'),
+      '/app/database/seed.sql',
+      path.join(process.cwd(), 'database/seed.sql'),
+      path.join(process.cwd(), 'backend/database/seed.sql')
+    ];
 
-    const seedSql = fs.readFileSync(seedSqlPath, 'utf8');
+    let seedSql = null;
+    for (const p of candidatePaths) {
+      if (fs.existsSync(p)) {
+        seedSql = fs.readFileSync(p, 'utf8');
+        break;
+      }
+    }
+
+    if (!seedSql) {
+      return res.status(500).json({ error: 'seed.sql file could not be located on server' });
+    }
 
     db.serialize(() => {
       // Purge test / junk records
