@@ -24,44 +24,125 @@ const CATEGORIES = [
   { id: 'cat_sanitary', name: 'Sanitary Ware & Baths', prefix: 'HC-SNT' }
 ];
 
+const CATEGORY_DEFAULTS = {
+  cat_doors: {
+    prefix: 'HC-DOOR',
+    material: 'Engineered Solid Oak & Thermal Insulation Core',
+    dimensions: '2400mm x 1000mm x 65mm',
+    finish: 'Matte Hardwax Oil & Brushed Brass Accents',
+    flammability: 'Class A (60-minute fire retardant)',
+    load_capacity: '350 kg load rating',
+    weight_kg: '45',
+    volume_m3: '0.45',
+    defaultImage: '/assets/products/door_1.jpeg'
+  },
+  cat_carpets: {
+    prefix: 'HC-CRPT',
+    material: 'Hand-Knotted Pure Mulberry Silk & Highland Wool',
+    dimensions: '3000mm x 2000mm (CAD Bespoke Sizing Available)',
+    finish: 'Luminous Silk Sheen with Hand-Fringed Accent Border',
+    flammability: 'Class B1 Flame Retardant & Anti-Static',
+    load_capacity: 'High-Traffic Executive & Residential Grade',
+    weight_kg: '18',
+    volume_m3: '0.15',
+    defaultImage: '/assets/products/carpets/carpet_1.jpeg'
+  },
+  cat_whole_house: {
+    prefix: 'HC-WHC',
+    material: 'Architectural Grade Walnut Joinery & Acoustic Core',
+    dimensions: 'Modular Wall-to-Wall Custom Height',
+    finish: 'Natural Matte Polyurethane & Brass Inlays',
+    flammability: 'Class A Fire Safety Standard',
+    load_capacity: 'Structural Wall Cladding Rating',
+    weight_kg: '28',
+    volume_m3: '0.35',
+    defaultImage: '/assets/products/interior_4.jpeg'
+  },
+  cat_flooring: {
+    prefix: 'HC-MRBL',
+    material: 'Natural Italian Carrara Marble / Monolithic Resin Stone',
+    dimensions: '1200mm x 600mm x 20mm per Slab',
+    finish: 'Honed Matte or High-Gloss Diamond Polished',
+    flammability: 'Non-combustible (Class A1)',
+    load_capacity: 'Heavy Vehicular & Commercial Foot Traffic',
+    weight_kg: '32',
+    volume_m3: '0.08',
+    defaultImage: '/assets/products/interior_3.jpeg'
+  },
+  cat_kitchen: {
+    prefix: 'HC-KTC',
+    material: 'Marine Grade Moisture-Resistant Core with Quartz Countertops',
+    dimensions: 'Custom Floor Plan Architectural Run',
+    finish: 'Anti-Fingerprint Super Matte Lacquer & Soft-Close Hardware',
+    flammability: 'Heat & Steam Resistant Class A',
+    load_capacity: '80 kg per Drawer Runner Capacity',
+    weight_kg: '180',
+    volume_m3: '2.5',
+    defaultImage: '/assets/products/interior_1.jpeg'
+  },
+  cat_sanitary: {
+    prefix: 'HC-SNT',
+    material: 'Composite Solid Surface Resin Stone',
+    dimensions: '1700mm x 800mm x 580mm',
+    finish: 'Velvet Matte White Anti-Bacterial Non-Porous Finish',
+    flammability: 'Non-combustible',
+    load_capacity: '500 kg Structural Capacity',
+    weight_kg: '140',
+    volume_m3: '1.2',
+    defaultImage: '/assets/products/interior_2.jpeg'
+  }
+};
+
 const QUICK_ASSETS = [
   { label: 'Pivot Door', path: '/assets/products/door_1.jpeg' },
   { label: 'French Door', path: '/assets/products/door_2.jpeg' },
   { label: 'Sliding Door', path: '/assets/products/door_3.jpeg' },
-  { label: 'Classic Oak', path: '/assets/products/door_4.jpeg' },
+  { label: 'Classic Oak Door', path: '/assets/products/door_4.jpeg' },
   { label: 'Flush Door', path: '/assets/products/door_5.jpeg' },
   { label: 'Glass Door', path: '/assets/products/door_6.jpeg' },
   { label: 'Royal Isfahan Silk Rug', path: '/assets/products/carpets/carpet_1.jpeg' },
-  { label: 'Imperial Kashan Carpet', path: '/assets/products/carpets/carpet_2.jpeg' },
+  { label: 'Imperial Kashan Medallion', path: '/assets/products/carpets/carpet_2.jpeg' },
   { label: 'Tabriz Gold Weft Rug', path: '/assets/products/carpets/carpet_3.jpeg' },
-  { label: 'Aura Abstract Silk Rug', path: '/assets/products/carpets/carpet_4.jpeg' },
-  { label: 'Heriz Palace Carpet', path: '/assets/products/carpets/carpet_5.jpeg' },
+  { label: 'Aura Abstract Modern Rug', path: '/assets/products/carpets/carpet_4.jpeg' },
+  { label: 'Heriz Royal Palace Rug', path: '/assets/products/carpets/carpet_5.jpeg' },
   { label: 'Anatolian Oushak Rug', path: '/assets/products/carpets/carpet_6.jpeg' },
+  { label: 'Sultanabad Botanical Rug', path: '/assets/products/carpets/carpet_7.jpeg' },
   { label: 'Qom Pure Mulberry Silk', path: '/assets/products/carpets/carpet_8.jpeg' },
-  { label: 'Nain Arabesque Rug', path: '/assets/products/carpets/carpet_10.jpeg' },
+  { label: 'Kashmar Arabesque Rug', path: '/assets/products/carpets/carpet_9.jpeg' },
+  { label: 'Nain 6-La Silk Rug', path: '/assets/products/carpets/carpet_10.jpeg' },
+  { label: 'Shirvan Geometric Rug', path: '/assets/products/carpets/carpet_11.jpeg' },
+  { label: 'Bijar Iron Silk Rug', path: '/assets/products/carpets/carpet_12.jpeg' },
+  { label: 'Sarouk Floral Rug', path: '/assets/products/carpets/carpet_13.jpeg' },
+  { label: 'Bokhara Elephant Foot', path: '/assets/products/carpets/carpet_14.jpeg' },
+  { label: 'Malayer Vintage Rug', path: '/assets/products/carpets/carpet_15.jpeg' },
+  { label: 'Kerman Royal Palace', path: '/assets/products/carpets/carpet_20.jpeg' },
+  { label: 'Isfahan Sapphire Silk', path: '/assets/products/carpets/carpet_25.jpeg' },
+  { label: 'Tabriz Medallion Gold', path: '/assets/products/carpets/carpet_30.jpeg' },
   { label: 'Wardrobe System', path: '/assets/products/interior_1.jpeg' },
   { label: 'Resin Bathtub', path: '/assets/products/interior_2.jpeg' },
   { label: 'Carrara Marble', path: '/assets/products/interior_3.jpeg' },
   { label: 'Acoustic Panels', path: '/assets/products/interior_4.jpeg' }
 ];
 
-export default function AdminProductForm({ onSuccess, onCancel }) {
+export default function AdminProductForm({ initialCategory = 'cat_doors', onSuccess, onCancel }) {
+  const initialDef = CATEGORY_DEFAULTS[initialCategory] || CATEGORY_DEFAULTS.cat_doors;
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    sku_prefix: 'HC-DOOR',
-    category_id: 'cat_doors',
+    sku_prefix: initialDef.prefix,
+    category_id: initialCategory,
     price: '',
     stock: '10',
-    weight_kg: '45',
-    volume_m3: '0.45',
-    image_url: '/assets/products/door_1.jpeg',
+    weight_kg: initialDef.weight_kg,
+    volume_m3: initialDef.volume_m3,
+    image_url: initialDef.defaultImage,
     // Architectural specifications (EAV attributes)
-    material: 'Engineered Solid Oak & Thermal Insulation Core',
-    dimensions: '2400mm x 1000mm x 65mm',
-    finish: 'Matte Hardwax Oil & Brushed Brass Accents',
-    flammability: 'Class A (60-minute fire retardant)',
-    load_capacity: '350 kg load rating'
+    material: initialDef.material,
+    dimensions: initialDef.dimensions,
+    finish: initialDef.finish,
+    flammability: initialDef.flammability,
+    load_capacity: initialDef.load_capacity
   });
 
   // Image upload tab mode: 'upload' | 'url'
@@ -73,14 +154,23 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Auto-update SKU prefix when category changes
+  // Auto-update SKU prefix and default architectural specs when category changes
   const handleCategoryChange = (e) => {
     const catId = e.target.value;
-    const matched = CATEGORIES.find(c => c.id === catId);
+    const def = CATEGORY_DEFAULTS[catId] || CATEGORY_DEFAULTS.cat_doors;
     setFormData(prev => ({
       ...prev,
       category_id: catId,
-      sku_prefix: matched ? matched.prefix : prev.sku_prefix
+      sku_prefix: def.prefix,
+      material: prev.material === CATEGORY_DEFAULTS[prev.category_id]?.material ? def.material : prev.material,
+      dimensions: prev.dimensions === CATEGORY_DEFAULTS[prev.category_id]?.dimensions ? def.dimensions : prev.dimensions,
+      finish: prev.finish === CATEGORY_DEFAULTS[prev.category_id]?.finish ? def.finish : prev.finish,
+      flammability: prev.flammability === CATEGORY_DEFAULTS[prev.category_id]?.flammability ? def.flammability : prev.flammability,
+      load_capacity: prev.load_capacity === CATEGORY_DEFAULTS[prev.category_id]?.load_capacity ? def.load_capacity : prev.load_capacity,
+      weight_kg: prev.weight_kg === CATEGORY_DEFAULTS[prev.category_id]?.weight_kg ? def.weight_kg : prev.weight_kg,
+      volume_m3: prev.volume_m3 === CATEGORY_DEFAULTS[prev.category_id]?.volume_m3 ? def.volume_m3 : prev.volume_m3,
+      // If image is a preset asset, switch to new category default preset
+      image_url: prev.image_url.startsWith('/assets/') ? def.defaultImage : prev.image_url
     }));
   };
 
@@ -89,7 +179,9 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Process uploaded image file with browser canvas auto-optimization
+  // Process uploaded image file with intelligent adaptive client-side downsampling
+  // Ensures the image is sharp, ultra-fast loading, and always <= 75 KB base64 string
+  // to prevent HTTP 413 Gateway Payload Too Large errors.
   const processImageFile = (file) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
@@ -101,36 +193,86 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        // Optimize image resolution: maximum 1600px width/height for fast loading
-        const maxDim = 1600;
-        let width = img.width;
-        let height = img.height;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          setError('Browser graphics context unavailable.');
+          return;
+        }
 
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
+        // Test descending configurations until base64 length is <= 72,000 characters
+        // (~50 KB binary), ensuring 100% transfer success without gateway timeouts.
+        const targetConfigs = [
+          { maxDim: 650, quality: 0.72 },
+          { maxDim: 550, quality: 0.68 },
+          { maxDim: 500, quality: 0.62 },
+          { maxDim: 450, quality: 0.55 },
+          { maxDim: 400, quality: 0.48 }
+        ];
+
+        let finalDataUrl = '';
+        let finalW = img.width;
+        let finalH = img.height;
+
+        for (const config of targetConfigs) {
+          let w = img.width;
+          let h = img.height;
+          if (w > config.maxDim || h > config.maxDim) {
+            if (w > h) {
+              h = Math.round((h * config.maxDim) / w);
+              w = config.maxDim;
+            } else {
+              w = Math.round((w * config.maxDim) / h);
+              h = config.maxDim;
+            }
+          }
+
+          canvas.width = w;
+          canvas.height = h;
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.clearRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', config.quality);
+          if (dataUrl.length <= 72000) {
+            finalDataUrl = dataUrl;
+            finalW = w;
+            finalH = h;
+            break;
           }
         }
 
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
+        // Failsafe if image is extraordinarily dense: clamp to 360px
+        if (!finalDataUrl || finalDataUrl.length > 72000) {
+          const maxDim = 360;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          ctx.clearRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          finalDataUrl = canvas.toDataURL('image/jpeg', 0.45);
+          finalW = w;
+          finalH = h;
+        }
 
-        // Convert to high-fidelity JPEG data URL
-        const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
-        const approxSizeKb = Math.round((optimizedDataUrl.length * 0.75) / 1024);
+        const approxSizeKb = Math.round((finalDataUrl.length * 0.75) / 1024);
 
-        setFormData(prev => ({ ...prev, image_url: optimizedDataUrl }));
+        setFormData(prev => ({ ...prev, image_url: finalDataUrl }));
         setUploadedImageInfo({
           name: file.name,
           size: `${approxSizeKb} KB`,
-          dimensions: `${width} × ${height} px`
+          dimensions: `${finalW} × ${finalH} px`
         });
         setError(null);
       };
@@ -140,6 +282,10 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
       };
 
       img.src = e.target.result;
+    };
+
+    reader.onerror = () => {
+      setError('Could not read image file from disk. Please select again.');
     };
 
     reader.readAsDataURL(file);
@@ -220,13 +366,33 @@ export default function AdminProductForm({ onSuccess, onCancel }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to create product');
 
-      alert(`Specification successfully added to HC Group catalog!\nSKU: ${data.sku}`);
+      let data = {};
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        if (!res.ok) {
+          if (res.status === 413) {
+            throw new Error('Image upload payload exceeds server transfer limit. Please try re-selecting the photo to allow automatic compression.');
+          }
+          if (res.status === 502 || res.status === 504) {
+            throw new Error('The backend service is currently rebooting or unreachable. Please retry in a few moments.');
+          }
+          throw new Error(`Server returned HTTP ${res.status}. Please check network connection.`);
+        }
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || `Server returned error (${res.status})`);
+      }
+
+      alert(`Specification successfully added to HC Group catalog!\nSKU: ${data.sku || payload.sku_prefix}`);
       onSuccess();
     } catch (err) {
-      setError(err.message);
+      console.error('Admin product submit error:', err);
+      setError(err.message || 'Failed to publish architectural specification.');
     } finally {
       setLoading(false);
     }

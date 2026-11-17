@@ -534,7 +534,17 @@ export default function Catalog({ onAddToCart }) {
                   <article key={product.id} className="product-card">
                     {/* Visual Header */}
                     <div className="product-image-container">
-                      <span className="product-category-tag">{product.category_name}</span>
+                      <span className="product-category-tag">
+                        {product.category_name || (
+                          product.category_id === 'cat_carpets' ? 'Luxury Architectural Carpets' :
+                          product.category_id === 'cat_doors' ? 'Luxury Doors & Entries' :
+                          product.category_id === 'cat_flooring' ? 'Flooring & Marble' :
+                          product.category_id === 'cat_kitchen' ? 'Kitchen & Wardrobe' :
+                          product.category_id === 'cat_sanitary' ? 'Sanitary Ware' :
+                          product.category_id === 'cat_whole_house' ? 'Whole-House Custom' :
+                          'Architectural Specification'
+                        )}
+                      </span>
                       <span style={{
                         position: 'absolute',
                         top: '12px',

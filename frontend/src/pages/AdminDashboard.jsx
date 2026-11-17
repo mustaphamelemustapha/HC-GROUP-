@@ -560,6 +560,7 @@ export default function AdminDashboard({ adminUser, onLogout }) {
                 </h3>
               </div>
               <AdminProductForm
+                initialCategory={categoryFilter !== 'all' ? categoryFilter : 'cat_doors'}
                 onSuccess={() => {
                   setShowAddForm(false);
                   fetchInventory();
@@ -652,7 +653,15 @@ export default function AdminDashboard({ adminUser, onLogout }) {
                                 color: '#334155',
                                 border: '1px solid #e2e8f0'
                               }}>
-                                {p.category_name}
+                                {p.category_name || (
+                                  p.category_id === 'cat_carpets' ? 'Luxury Carpets & Rugs' :
+                                  p.category_id === 'cat_doors' ? 'Luxury Doors & Entries' :
+                                  p.category_id === 'cat_flooring' ? 'Flooring & Marble' :
+                                  p.category_id === 'cat_kitchen' ? 'Kitchen & Wardrobe' :
+                                  p.category_id === 'cat_sanitary' ? 'Sanitary Ware' :
+                                  p.category_id === 'cat_whole_house' ? 'Whole-House Custom' :
+                                  p.category_id
+                                )}
                               </span>
                             </td>
 

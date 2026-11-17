@@ -90,6 +90,9 @@ function initializeDatabase() {
         // Auto-migrate prices to full realistic luxury Naira scale if previously seeded with unscaled values
         db.run(`UPDATE product_variants SET price_markup = price_markup * 1000 WHERE price_markup < 10000 AND id IN ('var_wardrobe_walnut', 'var_wardrobe_oak', 'var_bathtub_std', 'var_marble_slab_60', 'var_panel_walnut', 'var_door_pivot_std', 'var_door_french_std', 'var_door_sliding_std', 'var_door_classic_std', 'var_door_flush_std', 'var_door_glass_std')`);
 
+        // Ensure cat_carpets is present in categories table
+        db.run(`INSERT OR IGNORE INTO categories (id, name, slug) VALUES ('cat_carpets', 'Luxury Architectural Carpets & Rugs', 'luxury-carpets-rugs')`);
+
         // Check if Maiduguri Borno zones are present
         db.get("SELECT count(*) as count FROM shipping_zones WHERE city = 'Maiduguri (GRA)'", (err, row) => {
           if (!row || row.count === 0) {

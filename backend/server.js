@@ -91,6 +91,22 @@ app.post('/api/admin/products', async (req, res) => {
   const variantId = 'var_' + Math.random().toString(36).substr(2, 9);
   const sku = `${sku_prefix.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
+  // Ensure category exists in categories table so joins never return null category_name
+  const categoryNames = {
+    cat_doors: 'Luxury Doors & Entries',
+    cat_carpets: 'Luxury Architectural Carpets & Rugs',
+    cat_whole_house: 'Whole-House Customization',
+    cat_flooring: 'Flooring & Staircase / Marble',
+    cat_kitchen: 'Kitchen & Wardrobe',
+    cat_sanitary: 'Sanitary Ware & Baths'
+  };
+  const catName = categoryNames[category_id] || category_id;
+  const catSlug = category_id.replace(/^cat_/, '').replace(/_/g, '-');
+  db.run(
+    `INSERT OR IGNORE INTO categories (id, name, slug) VALUES (?, ?, ?)`,
+    [category_id, catName, catSlug]
+  );
+
   db.serialize(() => {
     db.run("BEGIN TRANSACTION");
 
