@@ -9,5 +9,14 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:5001'
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ['three']
+        }
+      }
+    }
   }
 });

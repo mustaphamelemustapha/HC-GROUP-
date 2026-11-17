@@ -13,9 +13,10 @@ import Services from './pages/Services.jsx';
 import Projects from './pages/Projects.jsx';
 import Contact from './pages/Contact.jsx';
 import Tracker from './pages/Tracker.jsx';
+import ThreeDShowroom from './pages/ThreeDShowroom.jsx';
 import { CheckCircle2, ShoppingBag, MessageCircle, X, ArrowRight, AlertTriangle, RefreshCw } from 'lucide-react';
 
-const VALID_TABS = ['home', 'catalog', 'shop-look', 'cart', 'admin', 'about', 'services', 'projects', 'contact', 'tracking'];
+const VALID_TABS = ['home', 'catalog', 'shop-look', '3d-show', 'cart', 'admin', 'about', 'services', 'projects', 'contact', 'tracking'];
 
 // Robust Error Boundary preventing white blank screen crashes
 class ErrorBoundary extends Component {
@@ -264,6 +265,10 @@ export default function App() {
             <div style={{ maxWidth: '1400px', margin: '4rem auto', padding: '0 2rem' }}>
               <ShopTheLook onAddToCart={handleAddToCart} />
             </div>
+          )}
+
+          {activeTab === '3d-show' && (
+            <ThreeDShowroom onAddToCart={handleAddToCart} setActiveTab={setActiveTab} />
           )}
           
           {activeTab === 'cart' && (

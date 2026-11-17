@@ -303,6 +303,86 @@ export default function Home({ setActiveTab }) {
         </div>
       </section>
 
+      {/* Interactive 3D Virtual Showroom Featured Section */}
+      <section className="section-container dark" style={{ padding: '2rem 2rem 4rem' }}>
+        <div style={{
+          backgroundColor: '#0c1630',
+          border: '1px solid var(--color-border-gold)',
+          borderRadius: '16px',
+          padding: '3rem 2.5rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gap: '2.5rem',
+          alignItems: 'center',
+          boxShadow: '0 20px 45px rgba(0, 0, 0, 0.5)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+              <span className="badge-luxury">IMMERSIVE SPATIAL STUDIO</span>
+              <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: '700' }}>• WEBGL 3D</span>
+            </div>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', color: '#ffffff', marginBottom: '1rem', lineHeight: '1.2' }}>
+              Inspect Whole-House Materials in <span style={{ color: 'var(--color-gold)' }}>Interactive 3D</span>
+            </h2>
+            <p style={{ color: '#94a3b8', fontSize: '0.98rem', lineHeight: '1.7', marginBottom: '2rem' }}>
+              Experience millimeter-precision CAD models of our oversized copper pivot doors, hand-knotted silk carpets, and bookmatched Carrara marble slabs. Orbit 360°, test real-world architectural daylighting, and customize luxury finishes before fabrication.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <button 
+                className="btn-gold" 
+                style={{ padding: '0.9rem 2rem', fontSize: '0.95rem' }}
+                onClick={() => setActiveTab('3d-show')}
+              >
+                Launch 3D Virtual Showroom <ArrowRight size={16} />
+              </button>
+              <button 
+                className="btn-outline" 
+                style={{ padding: '0.9rem 1.75rem', color: '#ffffff', borderColor: 'rgba(212, 175, 55, 0.4)' }}
+                onClick={() => setActiveTab('shop-look')}
+              >
+                Shop The Look (Room Hotspots)
+              </button>
+            </div>
+          </div>
+
+          <div style={{ position: 'relative', textAlign: 'center' }}>
+            <div style={{
+              borderRadius: '12px',
+              overflow: 'hidden',
+              border: '1px solid rgba(212, 175, 55, 0.3)',
+              boxShadow: '0 15px 35px rgba(0, 0, 0, 0.6)'
+            }}>
+              <img 
+                src="/assets/products/door_1.jpeg" 
+                alt="3D Architectural Material Preview" 
+                style={{ width: '100%', height: '340px', objectFit: 'cover', display: 'block' }}
+              />
+            </div>
+            <div style={{
+              position: 'absolute',
+              bottom: '1rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: 'rgba(12, 22, 48, 0.92)',
+              border: '1px solid var(--color-gold)',
+              borderRadius: '9999px',
+              padding: '0.45rem 1.4rem',
+              color: 'var(--color-gold)',
+              fontSize: '0.78rem',
+              fontWeight: '700',
+              letterSpacing: '1px',
+              whiteSpace: 'nowrap',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
+            }}>
+              360° ORBITAL VIEWER • REAL-TIME DAYLIGHTING
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Direct VIP Consultation Callout Banner */}
       <section className="section-container" style={{ padding: '0 2rem' }}>
         <div className="vip-consultation-banner">

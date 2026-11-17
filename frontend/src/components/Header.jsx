@@ -115,7 +115,29 @@ export default function Header({ activeTab, setActiveTab, totalCartItems, adminU
               <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('catalog'); }}>Sanitary Ware & Baths</a>
               <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('catalog'); }}>Kitchen & Wardrobe Systems</a>
               <a href="#" className="dropdown-item" onClick={(e) => { e.preventDefault(); handleNavClick('shop-look'); }}>Shop The Look (Interactive Mockup)</a>
+              <a href="#" className="dropdown-item" style={{ color: 'var(--color-gold)', fontWeight: '600' }} onClick={(e) => { e.preventDefault(); handleNavClick('3d-show'); }}>3D Virtual Showroom (Configurator)</a>
             </div>
+          </div>
+
+          <div className="nav-item">
+            <span 
+              className={`nav-link ${activeTab === '3d-show' ? 'active' : ''}`}
+              onClick={() => handleNavClick('3d-show')}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              3D SHOWROOM
+              <span style={{ 
+                fontSize: '0.65rem', 
+                backgroundColor: 'rgba(212, 175, 55, 0.25)', 
+                color: 'var(--color-gold)', 
+                padding: '0.1rem 0.45rem', 
+                borderRadius: '4px', 
+                border: '1px solid rgba(212, 175, 55, 0.5)',
+                fontWeight: '700'
+              }}>
+                3D
+              </span>
+            </span>
           </div>
 
           <div className="nav-item">
@@ -291,8 +313,18 @@ export default function Header({ activeTab, setActiveTab, totalCartItems, adminU
                     <span onClick={() => handleNavClick('catalog')}>Full Material Catalog</span>
                     <span onClick={() => handleNavClick('catalog')}>Luxury Carpets & Rugs</span>
                     <span onClick={() => handleNavClick('shop-look')}>Shop The Look (Room Hotspots)</span>
+                    <span onClick={() => handleNavClick('3d-show')} style={{ color: 'var(--color-gold)', fontWeight: '700' }}>3D Virtual Showroom</span>
                   </div>
                 )}
+              </div>
+
+              <div 
+                className={`mobile-nav-item ${activeTab === '3d-show' ? 'active' : ''}`}
+                onClick={() => handleNavClick('3d-show')}
+                style={{ color: 'var(--color-gold)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <span>3D VIRTUAL SHOWROOM</span>
+                <span style={{ fontSize: '0.65rem', backgroundColor: 'rgba(212, 175, 55, 0.25)', padding: '0.1rem 0.4rem', borderRadius: '4px', border: '1px solid var(--color-gold)' }}>3D</span>
               </div>
 
               <div 

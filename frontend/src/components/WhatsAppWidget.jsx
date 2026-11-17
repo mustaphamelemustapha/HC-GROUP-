@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
-import { MessageCircle, Phone, X } from 'lucide-react';
+import { MessageCircle, Phone, X, Sparkles, Ruler, Truck, FileText } from 'lucide-react';
 
 export default function WhatsAppWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const phoneNumber = '2349068875555';
   const displayPhone = '+234 9068875555';
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-    'Hello HC Group, I am interested in your luxury building materials and turnkey interior solutions.'
-  )}`;
+
+  const defaultMsg = 'Hello HC Group, I am interested in your luxury building materials and turnkey interior solutions.';
+  
+  const QUICK_PROMPTS = [
+    {
+      label: 'Luxury Carpets & Rugs',
+      icon: <Sparkles size={13} />,
+      text: 'Hello HC Group, I would like to inquire about your Luxury Hand-Knotted Silk & Wool Carpets collection.'
+    },
+    {
+      label: '3D Virtual Studio / Doors',
+      icon: <FileText size={13} />,
+      text: 'Hello HC Group, I am reviewing your 3D Architectural Showroom for custom oversized pivot doors.'
+    },
+    {
+      label: 'Book 3D LiDAR Survey',
+      icon: <Ruler size={13} />,
+      text: 'Hello HC Group, I would like to book a zero-tolerance 3D LiDAR laser spatial audit for my project site.'
+    },
+    {
+      label: 'Track Order / BoQ Quote',
+      icon: <Truck size={13} />,
+      text: 'Hello HC Group, I would like to track my fabrication schedule or request an official BoQ quotation.'
+    }
+  ];
 
   return (
     <div className="whatsapp-floating-widget">
@@ -17,8 +39,8 @@ export default function WhatsAppWidget() {
             <div className="whatsapp-header-info">
               <div className="online-indicator"></div>
               <div>
-                <strong>HC Group Concierge</strong>
-                <span>Typically replies instantly</span>
+                <strong>HC Group VIP Concierge</strong>
+                <span>Headquarters: Maiduguri, Borno State</span>
               </div>
             </div>
             <button 
@@ -31,20 +53,58 @@ export default function WhatsAppWidget() {
           </div>
 
           <div className="whatsapp-popup-body">
-            <p>
-              Good day! Looking for architectural doors, bespoke joinery, marble slabs, or turnkey luxury fit-out for your project?
+            <p style={{ margin: '0 0 0.85rem 0', fontSize: '0.9rem', color: '#334155', lineHeight: '1.5' }}>
+              Good day! Connect directly with our Senior Project Directors for immediate quotation and CAD review:
             </p>
+
+            {/* Quick-Prompt Inquiry Chips */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '1rem' }}>
+              {QUICK_PROMPTS.map((prompt, idx) => (
+                <a
+                  key={idx}
+                  href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent(prompt.text)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    backgroundColor: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    padding: '0.45rem 0.75rem',
+                    color: 'var(--color-bg-navy)',
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
+                    textDecoration: 'none',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-gold)';
+                    e.currentTarget.style.backgroundColor = '#ffffff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = '#e2e8f0';
+                    e.currentTarget.style.backgroundColor = '#f8fafc';
+                  }}
+                >
+                  <span style={{ color: 'var(--color-gold)' }}>{prompt.icon}</span>
+                  <span>{prompt.label}</span>
+                </a>
+              ))}
+            </div>
+
             <div className="whatsapp-direct-number">
               <Phone size={14} color="#10b981" />
-              <span>Direct Line: <strong>{displayPhone}</strong></span>
+              <span>Direct Hotline: <strong>{displayPhone}</strong></span>
             </div>
           </div>
 
           <div className="whatsapp-popup-footer">
             <a 
-              href={whatsappUrl}
+              href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent(defaultMsg)}`}
               target="_blank" 
-              rel="noopener noreferrer"
+              rel="noopener noreferrer" 
               className="whatsapp-action-btn"
             >
               <MessageCircle size={18} />
