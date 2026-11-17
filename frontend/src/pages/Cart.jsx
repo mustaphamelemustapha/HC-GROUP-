@@ -33,9 +33,18 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   // Default to Direct Material Order view so users always see their cart items or empty state
   const [viewMode, setViewMode] = useState('cart');
 
+  // Default Nigerian logistics zones so UI is instant and never crashes if API is unreachable
+  const DEFAULT_ZONES = [
+    { state: 'Borno', city: 'Maiduguri Central (Sir Kashim Ibrahim Way)' },
+    { state: 'Borno', city: 'Maiduguri (GRA)' },
+    { state: 'FCT Abuja', city: 'Maitama / Asokoro' },
+    { state: 'Lagos', city: 'Victoria Island / Lekki' },
+    { state: 'Kano', city: 'Nassarawa Commercial District' }
+  ];
+
   // Project Boards State
   const [projectBoards, setProjectBoards] = useState([]);
-  const [zones, setZones] = useState([]);
+  const [zones, setZones] = useState(DEFAULT_ZONES);
   const [selectedZone, setSelectedZone] = useState({ state: 'Borno', city: 'Maiduguri Central (Sir Kashim Ibrahim Way)' });
   const [activeBoardId, setActiveBoardId] = useState(null);
 
@@ -76,33 +85,37 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
       const res = await fetch('/api/v1/projects');
       if (res.ok) {
         const data = await res.json();
-        setProjectBoards(data || []);
+        setProjectBoards(Array.isArray(data) ? data : []);
         if (Array.isArray(data) && data.length > 0 && !activeBoardId) {
-          setActiveBoardId(data[0].id);
+          setActiveBoardId(data[0]?.id);
         }
       }
     } catch (e) {
-      console.error('Projects fetch error:', e);
+      console.warn('Projects fetch error:', e);
+      setProjectBoards([]);
     }
   };
 
   useEffect(() => {
     fetchProjectData();
     fetch('/api/v1/shipping/zones')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('Status ' + res.status);
+        return res.json();
+      })
       .then((data) => {
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setZones(data);
-          if (data.length > 0) {
-            const bornoZone = data.find(z => z?.state && String(z.state).toLowerCase() === 'borno') || data[0];
-            if (bornoZone) {
-              setSelectedZone(bornoZone);
-              setQuoteSiteAddress(`${bornoZone.city || 'Maiduguri'}, ${bornoZone.state || 'Borno'}, Nigeria`);
-            }
+          const bornoZone = data.find(z => z?.state && String(z.state).toLowerCase() === 'borno') || data[0];
+          if (bornoZone) {
+            setSelectedZone(bornoZone);
+            setQuoteSiteAddress(`${bornoZone.city || 'Maiduguri'}, ${bornoZone.state || 'Borno'}, Nigeria`);
           }
         }
       })
-      .catch((err) => console.error('Zones fetch error:', err));
+      .catch((err) => {
+        console.warn('Using default Nigerian zones:', err.message);
+      });
   }, []);
 
   // Recalculate freight for Direct Cart
@@ -197,7 +210,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   // Calculations for Direct Cart
   const cartSubtotal = useMemo(() => {
     if (!Array.isArray(cartItems)) return 0;
-    return cartItems.reduce((acc, item) => acc + ((item.price || 0) * (item.quantity || 1)), 0);
+    return cartItems.reduce((acc, item) => acc + (((item && item.price) || 0) * ((item && item.quantity) || 1)), 0);
   }, [cartItems]);
 
   const cartShippingFee = cartShipping?.calculation?.totalFee || 0;
@@ -206,27 +219,27 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
   // Calculations for Active Project Board
   const activeBoard = projectBoards.find(b => b.id === activeBoardId);
   const activeBoardShipping = activeBoardId ? boardShippingResults[activeBoardId] : null;
-  const boardItemsSubtotal = activeBoard?.items?.reduce((acc, item) => acc + ((item.price || 0) * (item.quantity || 1)), 0) || 0;
+  const boardItemsSubtotal = activeBoard?.items?.reduce((acc, item) => acc + (((item && item.price) || 0) * ((item && item.quantity) || 1)), 0) || 0;
   const boardShippingFee = activeBoardShipping?.calculation?.totalFee || 0;
   const boardFinalTotal = boardItemsSubtotal + boardShippingFee;
 
   // Active items for quotation export
   const activeItemsForQuote = useMemo(() => {
     if (viewMode === 'cart') {
-      return (cartItems || []).map(i => ({
-        name: i.name,
-        sku: i.sku,
-        quantity: i.quantity || 1,
-        price: i.price || 0,
-        subtotal: (i.price || 0) * (i.quantity || 1)
+      return (cartItems || []).filter(Boolean).map(i => ({
+        name: i?.name || 'Architectural Specification',
+        sku: i?.sku || 'HC-SPEC',
+        quantity: i?.quantity || 1,
+        price: i?.price || 0,
+        subtotal: (i?.price || 0) * (i?.quantity || 1)
       }));
     }
-    return (activeBoard?.items || []).map(i => ({
-      name: i.name,
-      sku: i.sku,
-      quantity: i.quantity || 1,
-      price: i.price || 0,
-      subtotal: (i.price || 0) * (i.quantity || 1)
+    return (activeBoard?.items || []).filter(Boolean).map(i => ({
+      name: i?.name || 'Architectural Specification',
+      sku: i?.sku || 'HC-SPEC',
+      quantity: i?.quantity || 1,
+      price: i?.price || 0,
+      subtotal: (i?.price || 0) * (i?.quantity || 1)
     }));
   }, [viewMode, cartItems, activeBoard]);
 
@@ -373,7 +386,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
             }}
           >
             <ShoppingBag size={18} />
-            Direct Order ({cartItems.reduce((sum, i) => sum + (i.quantity || 1), 0)})
+            Direct Order ({(Array.isArray(cartItems) ? cartItems : []).reduce((sum, i) => sum + ((i && i.quantity) || 1), 0)})
           </button>
           
           <button
@@ -435,7 +448,7 @@ export default function Cart({ cartItems = [], onUpdateQty, onRemove, onClearCar
               <div className="cart-items-section">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border-light)', paddingBottom: '1rem', marginBottom: '1.25rem' }}>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', color: 'var(--color-bg-navy)' }}>
-                    Selected Architectural Items ({cartItems.reduce((sum, i) => sum + (i.quantity || 1), 0)})
+                    Selected Architectural Items ({(Array.isArray(cartItems) ? cartItems : []).reduce((sum, i) => sum + ((i && i.quantity) || 1), 0)})
                   </h3>
                   <button 
                     onClick={onClearCart} 

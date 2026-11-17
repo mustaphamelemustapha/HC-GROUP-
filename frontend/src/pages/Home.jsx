@@ -1,11 +1,114 @@
-import React from 'react';
-import { PenTool, Ruler, Factory, Truck, Wrench, ShieldCheck, ArrowRight, Phone, MessageCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  PenTool, 
+  Ruler, 
+  Factory, 
+  Truck, 
+  Wrench, 
+  ShieldCheck, 
+  ArrowRight, 
+  Phone, 
+  MessageCircle, 
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Pause
+} from 'lucide-react';
+
+const HERO_SLIDES = [
+  {
+    id: 1,
+    type: 'video',
+    src: '/assets/products/carpets/carpet_showcase.mp4',
+    badge: '4K ARCHITECTURAL REEL: LUXURY CARPET WEAVING',
+    eyebrow: 'WHOLE-HOUSE BESPOKE ARCHITECTURE',
+    title: 'Premium Building Materials & Hand-Knotted Textiles',
+    subtitle: 'One-stop luxury sourcing for private villas, five-star resorts, and elite estates. Factory-direct manufacturing with certified zero-tolerance site installation.'
+  },
+  {
+    id: 2,
+    type: 'image',
+    src: '/assets/products/interior_1.jpeg',
+    badge: 'PRESIDENTIAL FOYER & COPPER PIVOT DOOR',
+    eyebrow: 'ZERO-TOLERANCE JOINERY',
+    title: 'Architectural Entries & Executive Millwork',
+    subtitle: 'From oversized pivot entrances to continuous bookmatched stone panels, tailored for luxury living in Maiduguri and across Nigeria.'
+  },
+  {
+    id: 3,
+    type: 'image',
+    src: '/assets/products/carpets/carpet_1.jpeg',
+    badge: 'ROYAL ISFAHAN EMBOSSED SILK & WOOL',
+    eyebrow: 'HERITAGE ARCHITECTURAL FLOORINGS',
+    title: 'Museum-Grade Architectural Carpets & Rugs',
+    subtitle: 'Hand-knotted silk and New Zealand virgin wool crafted with organic botanical motifs for presidential suites and private estates.'
+  },
+  {
+    id: 4,
+    type: 'image',
+    src: '/assets/products/interior_3.jpeg',
+    badge: 'EXECUTIVE MASTER DRESSING SUITE & MARBLE',
+    eyebrow: 'ITALIAN CARRARA & BESPOKE WARDROBES',
+    title: 'Whole-Villa Interior Craftsmanship',
+    subtitle: 'Integrated acoustic fluted timber, back-lit translucent quartz, and flush-mounted architectural millwork manufactured to millimeter precision.'
+  },
+  {
+    id: 5,
+    type: 'image',
+    src: '/assets/products/interior_4.jpeg',
+    badge: 'MINIMALIST CULINARY STUDIO & ACOUSTIC TIMBER',
+    eyebrow: 'PRECISION GERMAN & ITALIAN KITCHENS',
+    title: 'Executive Kitchen & Living Suites',
+    subtitle: 'Monolithic quartz waterfall islands with hidden Blum hardware, built-in ambient lighting, and bespoke architectural finishes.'
+  },
+  {
+    id: 6,
+    type: 'image',
+    src: '/assets/products/door_1.jpeg',
+    badge: 'HIGH-SECURITY OVERSIZED COPPER PIVOT DOOR',
+    eyebrow: 'ARCHITECTURAL EXTERIOR ENTRANCES',
+    title: 'Engineered Pivot Entries & Hardware',
+    subtitle: 'Thermally broken German steel frames with biometric multi-point locking and hand-hammered patinated architectural copper.'
+  }
+];
 
 export default function Home({ setActiveTab }) {
   const directPhone = '+234 9068875555';
   const whatsappUrl = `https://wa.me/2349068875555?text=${encodeURIComponent(
     'Hello HC Group, I am interested in your luxury architectural materials and turnkey interior solutions.'
   )}`;
+
+  // Hero Background Reel State
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const slideTimerRef = useRef(null);
+
+  // Auto-advance slides every 6.5s unless hovered or manually paused
+  useEffect(() => {
+    if (isPaused) {
+      if (slideTimerRef.current) clearInterval(slideTimerRef.current);
+      return;
+    }
+
+    slideTimerRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 6500);
+
+    return () => {
+      if (slideTimerRef.current) clearInterval(slideTimerRef.current);
+    };
+  }, [isPaused]);
+
+  const handlePrevSlide = (e) => {
+    if (e) e.stopPropagation();
+    setCurrentSlide((prev) => (prev === 0 ? HERO_SLIDES.length - 1 : prev - 1));
+  };
+
+  const handleNextSlide = (e) => {
+    if (e) e.stopPropagation();
+    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+  };
 
   const services = [
     { id: 1, title: 'Design & CAD', icon: <PenTool />, desc: 'Bespoke architectural drawings and 4K spatial rendering.' },
@@ -31,21 +134,88 @@ export default function Home({ setActiveTab }) {
     { id: 4, title: 'Lake Chad Executive Lodges & Suites', location: 'Bama Road Corridor, Maiduguri', image: '/assets/products/interior_4.jpeg' },
   ];
 
+  const activeMedia = HERO_SLIDES[currentSlide];
+
   return (
     <div className="home-page">
-      {/* Hero Section */}
-      <section className="hero-section">
+      {/* Dynamic Cinematic Hero Section (Changing Photos & Videos) */}
+      <section 
+        className="hero-section"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        aria-label="HC Group Architectural Showcase"
+      >
+        {/* Layered Changing Media Reel */}
         <div className="hero-background">
-          <img src="/assets/products/interior_1.jpeg" alt="Luxury Interior" />
+          {HERO_SLIDES.map((slide, idx) => {
+            const isActive = idx === currentSlide;
+            return (
+              <div 
+                key={slide.id} 
+                className={`hero-slide ${isActive ? 'active' : ''}`}
+                aria-hidden={!isActive}
+              >
+                {slide.type === 'video' ? (
+                  <video
+                    src={slide.src}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                    className="hero-media hero-video"
+                  />
+                ) : (
+                  <img 
+                    src={slide.src} 
+                    alt={slide.badge} 
+                    className="hero-media hero-image"
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
+
+        {/* Ambient Luxury Dark Radial Overlay */}
         <div className="hero-overlay"></div>
+
+        {/* Previous / Next Arrow Controls */}
+        <button 
+          className="hero-arrow hero-arrow-prev"
+          onClick={handlePrevSlide}
+          aria-label="Previous showcase media"
+          title="Previous slide"
+        >
+          <ChevronLeft size={24} />
+        </button>
+
+        <button 
+          className="hero-arrow hero-arrow-next"
+          onClick={handleNextSlide}
+          aria-label="Next showcase media"
+          title="Next slide"
+        >
+          <ChevronRight size={24} />
+        </button>
+
+        {/* Hero Content Overlay */}
         <div className="hero-content">
-          <span className="badge-luxury" style={{ marginBottom: '1.25rem' }}>WHOLE-HOUSE BESPOKE ARCHITECTURE</span>
-          <h1 className="hero-title">Premium Building <span>Materials</span></h1>
+          {/* Live Media Tag Badge */}
+          <div className="hero-badge-reel">
+            <span className="hero-badge-pulse"></span>
+            <span>{activeMedia.badge}</span>
+          </div>
+
+          <h1 className="hero-title">
+            Premium Building <span>Materials</span>
+          </h1>
+
           <p className="hero-subtitle">
-            One-stop luxury sourcing for private villas, five-star resorts, and elite estates. 
-            Factory-direct manufacturing with certified zero-tolerance site installation.
+            {activeMedia.subtitle}
           </p>
+
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '2rem' }}>
             <a href="#" className="hero-cta" onClick={(e) => { e.preventDefault(); setActiveTab('catalog'); }}>
               Explore Materials
@@ -60,6 +230,30 @@ export default function Home({ setActiveTab }) {
               WhatsApp: {directPhone}
             </a>
           </div>
+        </div>
+
+        {/* Bottom Slide Indicator Pills & Pause Indicator */}
+        <div className="hero-controls-bar">
+          <div className="hero-indicators">
+            {HERO_SLIDES.map((slide, idx) => (
+              <button
+                key={slide.id}
+                className={`hero-indicator-dot ${idx === currentSlide ? 'active' : ''}`}
+                onClick={() => setCurrentSlide(idx)}
+                aria-label={`Jump to slide ${idx + 1}: ${slide.badge}`}
+                title={slide.badge}
+              />
+            ))}
+          </div>
+          <button 
+            className="hero-pause-toggle"
+            onClick={() => setIsPaused(!isPaused)}
+            aria-label={isPaused ? 'Resume auto-play' : 'Pause auto-play'}
+            title={isPaused ? 'Resume slideshow' : 'Pause slideshow'}
+          >
+            {isPaused ? <Play size={12} /> : <Pause size={12} />}
+            <span>{isPaused ? 'Paused' : 'Auto-Reel'}</span>
+          </button>
         </div>
       </section>
 
