@@ -70,7 +70,7 @@ function initializeDatabase() {
           console.error('Failed to read SQL init files:', e.message);
         }
       } else {
-        console.log('Database tables already exist. Ensuring schema & shipping zones are current...');
+        console.log('Database tables already exist. Running schema, catalog synchronization & shipping updates...');
         // Ensure inquiries table exists
         db.run(`CREATE TABLE IF NOT EXISTS inquiries (
           id TEXT PRIMARY KEY,
@@ -87,53 +87,23 @@ function initializeDatabase() {
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )`);
 
-        // Auto-migrate prices to full realistic luxury Naira scale if previously seeded with unscaled values
-        db.run(`UPDATE product_variants SET price_markup = price_markup * 1000 WHERE price_markup < 10000 AND id IN ('var_wardrobe_walnut', 'var_wardrobe_oak', 'var_bathtub_std', 'var_marble_slab_60', 'var_panel_walnut', 'var_door_pivot_std', 'var_door_french_std', 'var_door_sliding_std', 'var_door_classic_std', 'var_door_flush_std', 'var_door_glass_std')`);
+        // Clean up test and empty items
+        db.run("DELETE FROM products WHERE name LIKE 'Test%' OR name LIKE 'Size %'");
+        db.run("DELETE FROM product_variants WHERE product_id NOT IN (SELECT id FROM products)");
 
-        // Ensure cat_carpets is present in categories table
-        db.run(`INSERT OR IGNORE INTO categories (id, name, slug) VALUES ('cat_carpets', 'Luxury Architectural Carpets & Rugs', 'luxury-carpets-rugs')`);
-
-        // Check if Maiduguri Borno zones are present
-        db.get("SELECT count(*) as count FROM shipping_zones WHERE city = 'Maiduguri (GRA)'", (err, row) => {
-          if (!row || row.count === 0) {
-            console.log('Seeding Maiduguri, Borno and Nigerian shipping zones...');
-            try {
-              const seedSql = fs.readFileSync(path.join(DB_DIR, 'seed.sql'), 'utf8');
-              const zonesInsertIdx = seedSql.indexOf('INSERT INTO shipping_zones');
-              if (zonesInsertIdx !== -1) {
-                const zonesSql = seedSql.substring(zonesInsertIdx);
-                db.run("DELETE FROM shipping_zones", () => {
-                  db.exec(zonesSql, (err) => {
-                    if (err) console.error('Zone update error:', err);
-                    else console.log('Maiduguri & Nigerian shipping zones loaded successfully.');
-                  });
-                });
-              }
-            } catch (e) {
-              console.error('Failed reading seed.sql for zone update:', e.message);
+        // Execute master seed to sync all 30+ architectural products, variants and attributes
+        try {
+          const seedSql = fs.readFileSync(path.join(DB_DIR, 'seed.sql'), 'utf8');
+          db.exec(seedSql, (err) => {
+            if (err) {
+              console.error('Master catalog sync error:', err.message);
+            } else {
+              console.log('Master whole-house architectural catalog synced successfully with 30+ products.');
             }
-          }
-        });
-
-        // Ensure HC Luxury Carpets & Rugs category and products exist
-        db.get("SELECT count(*) as count FROM products WHERE category_id = 'cat_carpets'", (err, row) => {
-          if (!row || row.count < 8) {
-            console.log('Seeding HC Architectural Luxury Carpets & Rugs line...');
-            try {
-              const seedSql = fs.readFileSync(path.join(DB_DIR, 'seed.sql'), 'utf8');
-              const carpetsIdx = seedSql.indexOf('-- 1b. Luxury Architectural Carpets');
-              if (carpetsIdx !== -1) {
-                const carpetsSql = seedSql.substring(carpetsIdx);
-                db.exec(carpetsSql, (err) => {
-                  if (err) console.error('Carpet seeding error:', err);
-                  else console.log('HC Luxury Carpets portfolio loaded successfully into database.');
-                });
-              }
-            } catch (e) {
-              console.error('Failed reading seed.sql for carpets:', e.message);
-            }
-          }
-        });
+          });
+        } catch (e) {
+          console.error('Failed reading seed.sql:', e.message);
+        }
       }
     });
   });

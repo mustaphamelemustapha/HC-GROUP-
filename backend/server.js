@@ -265,6 +265,42 @@ app.delete('/api/admin/products/:id', async (req, res) => {
   }
 });
 
+// Admin endpoint: Sync / Re-seed master catalog with 30+ verified architectural products
+app.all('/api/admin/sync-catalog', async (req, res) => {
+  try {
+    const DB_DIR = path.join(__dirname, 'database');
+    const seedSqlPath = fs.existsSync(path.join(DB_DIR, 'seed.sql'))
+      ? path.join(DB_DIR, 'seed.sql')
+      : path.join(__dirname, '../database/seed.sql');
+
+    const seedSql = fs.readFileSync(seedSqlPath, 'utf8');
+
+    db.serialize(() => {
+      // Purge test / junk records
+      db.run("DELETE FROM products WHERE name LIKE 'Test%' OR name LIKE 'Size %'");
+      db.run("DELETE FROM product_variants WHERE product_id NOT IN (SELECT id FROM products)");
+
+      // Run full seed
+      db.exec(seedSql, async (err) => {
+        if (err) {
+          console.error('Manual catalog sync failed:', err);
+          return res.status(500).json({ error: err.message });
+        }
+
+        const counts = await query('SELECT count(*) as count FROM products WHERE is_active = 1');
+        res.json({
+          success: true,
+          message: 'Master whole-house architectural catalog synchronized successfully',
+          active_products: counts[0]?.count || 0
+        });
+      });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to synchronize master catalog: ' + err.message });
+  }
+});
+
 // GET all products with details (Categories, Variants, Attributes, and Bulk Pricing Rules)
 app.get('/api/v1/products', async (req, res) => {
   try {

@@ -47,6 +47,26 @@ export default function AdminDashboard({ adminUser, onLogout }) {
   const [editingVariantId, setEditingVariantId] = useState(null);
   const [editPriceValue, setEditPriceValue] = useState('');
   const [updatingVariantId, setUpdatingVariantId] = useState(null);
+  const [syncingCatalog, setSyncingCatalog] = useState(false);
+  const [syncMsg, setSyncMsg] = useState(null);
+
+  const handleSyncMasterCatalog = async () => {
+    if (!window.confirm('Sync master architectural catalog with 30+ verified products, realistic Naira pricing, and clean categories?')) return;
+    setSyncingCatalog(true);
+    setSyncMsg(null);
+    try {
+      const res = await fetch('/api/admin/sync-catalog', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to sync catalog');
+      setSyncMsg(`Successfully synchronized ${data.active_products} architectural products!`);
+      fetchInventory();
+      setTimeout(() => setSyncMsg(null), 5000);
+    } catch (err) {
+      alert('Sync error: ' + err.message);
+    } finally {
+      setSyncingCatalog(false);
+    }
+  };
 
   const fetchInventory = async () => {
     setLoading(true);
@@ -534,14 +554,35 @@ export default function AdminDashboard({ adminUser, onLogout }) {
               </select>
             </div>
 
-            <button
-              className="btn-gold"
-              onClick={() => setShowAddForm(!showAddForm)}
-              style={{ padding: '0.65rem 1.25rem', fontSize: '0.875rem' }}
-            >
-              <Plus size={16} /> {showAddForm ? 'Close Specification Editor' : 'New Architectural Specification'}
-            </button>
+            <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className="btn-outline"
+                onClick={handleSyncMasterCatalog}
+                disabled={syncingCatalog}
+                style={{ padding: '0.65rem 1.15rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                title="Synchronize and re-seed 30+ verified architectural products"
+              >
+                <RefreshCw size={15} style={{ animation: syncingCatalog ? 'spin 1s linear infinite' : 'none' }} />
+                {syncingCatalog ? 'Syncing...' : 'Sync Master Catalog (30+)'}
+              </button>
+
+              <button
+                className="btn-gold"
+                onClick={() => setShowAddForm(!showAddForm)}
+                style={{ padding: '0.65rem 1.25rem', fontSize: '0.875rem' }}
+              >
+                <Plus size={16} /> {showAddForm ? 'Close Specification Editor' : 'New Architectural Specification'}
+              </button>
+            </div>
           </div>
+
+          {syncMsg && (
+            <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#065f46', padding: '0.75rem 1.25rem', borderRadius: '8px', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+              <CheckCircle2 size={18} color="#10b981" />
+              <span>{syncMsg}</span>
+            </div>
+          )}
 
           {/* New Product Form Accordion */}
           {showAddForm && (
