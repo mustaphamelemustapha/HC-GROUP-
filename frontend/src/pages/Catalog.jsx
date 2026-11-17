@@ -50,12 +50,52 @@ export default function Catalog({ onAddToCart, initialCategory = '' }) {
       const prodRes = await fetch('/api/v1/products');
       if (!prodRes.ok) throw new Error('Failed to load products');
       const prodData = await prodRes.json();
-      setProducts(prodData);
+      
+      // Clean up test records and normalize categories and pricing
+      const cleanData = prodData
+        .filter(p => p.name && !p.name.startsWith('Test') && !p.name.startsWith('Size '))
+        .map(p => {
+          const isCarpet = p.name.toLowerCase().includes('carpet') || p.name.toLowerCase().includes('rug');
+          const isDoor = p.name.toLowerCase().includes('door') || p.sku_prefix === 'DR' || p.id.includes('door');
+          
+          let normalizedCat = p.category_id;
+          let normalizedCatName = p.category_name;
+
+          if (!normalizedCat || normalizedCat === 'General Specification') {
+            if (isCarpet) {
+              normalizedCat = 'cat_carpets';
+              normalizedCatName = 'Luxury Architectural Carpets & Rugs';
+            } else if (isDoor) {
+              normalizedCat = 'cat_doors';
+              normalizedCatName = 'Luxury Doors & Entries';
+            }
+          }
+
+          const normalizedVariants = (p.variants || []).map(v => {
+            const rawPrice = Number(v.price_markup || 0);
+            const scaledPrice = (rawPrice > 0 && rawPrice < 10000 && !p.id.includes('marble') && !p.id.includes('panel')) 
+              ? rawPrice * 1000 
+              : rawPrice;
+            return {
+              ...v,
+              price_markup: scaledPrice
+            };
+          });
+
+          return {
+            ...p,
+            category_id: normalizedCat,
+            category_name: normalizedCatName,
+            variants: normalizedVariants
+          };
+        });
+
+      setProducts(cleanData);
 
       // Default selected variant & active tab
       const initialVariants = {};
       const initialTabs = {};
-      prodData.forEach(p => {
+      cleanData.forEach(p => {
         if (p.variants && p.variants.length > 0) {
           initialVariants[p.id] = p.variants[0];
         }
@@ -72,7 +112,7 @@ export default function Catalog({ onAddToCart, initialCategory = '' }) {
         
         // Setup initial default board selection per product
         const initialBoardSelect = {};
-        prodData.forEach(p => {
+        cleanData.forEach(p => {
           if (projData.length > 0) {
             initialBoardSelect[p.id] = projData[0].id;
           }
@@ -313,8 +353,8 @@ export default function Catalog({ onAddToCart, initialCategory = '' }) {
 
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || 
-                          p.description.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = category === '' || p.category_id === category;
+                          (p.description && p.description.toLowerCase().includes(search.toLowerCase()));
+    const matchesCategory = category === '' || category === 'all' || p.category_id === category;
     return matchesSearch && matchesCategory;
   });
 
