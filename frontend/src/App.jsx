@@ -14,7 +14,7 @@ import Projects from './pages/Projects.jsx';
 import Contact from './pages/Contact.jsx';
 import Tracker from './pages/Tracker.jsx';
 import ThreeDShowroom from './pages/ThreeDShowroom.jsx';
-import { CheckCircle2, ShoppingBag, MessageCircle, X, ArrowRight, AlertTriangle, RefreshCw } from 'lucide-react';
+import { CheckCircle2, ShoppingBag, MessageCircle, X, ArrowRight, AlertTriangle, RefreshCw, ArrowUp } from 'lucide-react';
 
 const VALID_TABS = ['home', 'catalog', 'shop-look', '3d-show', 'cart', 'admin', 'about', 'services', 'projects', 'contact', 'tracking'];
 
@@ -98,6 +98,8 @@ export default function App() {
   const [activeTab, setActiveTabState] = useState(getInitialTab);
   const [cart, setCart] = useState([]);
   const [cartToast, setCartToast] = useState(null);
+  const [scrollPercent, setScrollPercent] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   // Executive Admin authentication session
   const [adminUser, setAdminUser] = useState(() => {
@@ -133,6 +135,20 @@ export default function App() {
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Track global scroll progression for luxury reading bar & Back to Top
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setScrollPercent(Math.min(100, Math.max(0, progress)));
+      setShowBackToTop(scrollTop > 450);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Admin login handler
@@ -207,6 +223,13 @@ export default function App() {
         totalCartItems={totalCartItems}
         adminUser={adminUser}
         onLogout={handleAdminLogout}
+      />
+
+      {/* Luxury Golden Scroll Progression Line */}
+      <div 
+        className="global-scroll-progress-bar"
+        style={{ width: `${scrollPercent}%` }}
+        aria-hidden="true"
       />
 
       {/* Sharp & Smooth Order Toast Notification */}
@@ -322,6 +345,18 @@ export default function App() {
 
       {/* Floating WhatsApp Concierge Widget */}
       <WhatsAppWidget />
+
+      {/* Luxury Floating Back to Top Button */}
+      {showBackToTop && (
+        <button 
+          className="back-to-top-btn"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Scroll to top of page"
+          title="Back to Top"
+        >
+          <ArrowUp size={18} />
+        </button>
+      )}
     </div>
   );
 }

@@ -42,6 +42,7 @@ export default function Footer({ setActiveTab }) {
             <li><a href="#" onClick={(e) => handleNav('about', e)}>About HC Group</a></li>
             <li><a href="#" onClick={(e) => handleNav('services', e)}>One-Stop Turnkey Service</a></li>
             <li><a href="#" onClick={(e) => handleNav('projects', e)}>Signature Projects (Maiduguri & Regional)</a></li>
+            <li><a href="#" onClick={(e) => handleNav('3d-show', e)} style={{ color: 'var(--color-gold)', fontWeight: '600' }}>3D Virtual Showroom (Configurator)</a></li>
             <li><a href="#" onClick={(e) => handleNav('shop-look', e)}>Shop The Look (Room Hotspots)</a></li>
             <li><a href="#" onClick={(e) => handleNav('tracking', e)}>Client Project Tracker (#tracking)</a></li>
             <li><a href="#" onClick={(e) => handleNav('contact', e)}>Request Formal Quote (RFQ)</a></li>
