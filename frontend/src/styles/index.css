@@ -5468,3 +5468,201 @@ html {
     height: 230px !important;
   }
 }
+
+/* ==========================================================================
+   PHASE 4: ARCHITECTURAL BLUEPRINT & CAD DRAWING RFQ SYSTEM
+   ========================================================================== */
+.cad-uploader-zone {
+  border: 2px dashed rgba(197, 160, 89, 0.45);
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%);
+  border-radius: 12px;
+  padding: 2.25rem 1.75rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.cad-uploader-zone:hover,
+.cad-uploader-zone.cad-drag-active {
+  border-color: var(--color-gold);
+  background: rgba(197, 160, 89, 0.06);
+  box-shadow: 0 8px 24px -6px rgba(197, 160, 89, 0.2);
+  transform: translateY(-1px);
+}
+
+.cad-uploader-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--color-bg-navy);
+  color: var(--color-gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 6px 16px rgba(11, 19, 41, 0.2);
+}
+
+.cad-files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.cad-file-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  gap: 0.75rem;
+}
+
+.cad-file-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--color-bg-navy);
+  color: var(--color-gold);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.cad-stage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.cad-stage-card {
+  padding: 1rem 1.15rem;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.cad-stage-card:hover {
+  border-color: var(--color-gold);
+  background: #ffffff;
+}
+
+.cad-stage-card.active {
+  border-color: var(--color-gold);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.35);
+}
+
+.cad-stage-card.active .cad-stage-title {
+  color: var(--color-bg-navy);
+  font-weight: 700;
+}
+
+.cad-stage-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cad-stage-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.cad-calc-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(197, 160, 89, 0.12);
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  color: #8c6a23;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1.25rem;
+}
+
+.cad-calc-trigger:hover {
+  background: rgba(197, 160, 89, 0.2);
+  border-color: var(--color-gold);
+}
+
+.cad-calc-drawer {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid var(--color-gold);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.cad-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.rfq-action-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.rfq-whatsapp-dispatch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: #25d366;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+.rfq-whatsapp-dispatch-btn:hover {
+  background: #20ba59;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+@media (max-width: 768px) {
+  .cad-stage-grid {
+    grid-template-columns: 1fr;
+  }
+  .cad-calc-grid {
+    grid-template-columns: 1fr;
+  }
+  .rfq-action-container {
+    grid-template-columns: 1fr;
+  }
+}
+

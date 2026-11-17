@@ -209,6 +209,27 @@ const SHOWROOM_ITEMS = [
       'Integrated hidden chrome/gold pop-up waste drain',
       'Non-porous anti-bacterial velvet tactile finish'
     ]
+  },
+  {
+    id: 'wardrobe-minimalist-3d',
+    name: 'Italian Modular Walk-In Wardrobe & Joinery System',
+    category: 'Whole-House Modular Joinery',
+    sku: 'HC-WARDROBE-ITALIAN-3D',
+    price: 5200000,
+    dimensions: '3,200mm (W) × 2,600mm (H) × 600mm (D)',
+    leadTime: '30 – 45 Business Days',
+    desc: 'Bespoke floor-to-ceiling modular wardrobe featuring Italian smoked timber veneers, integrated concealed 3000K warm LED illumination, fluted bronze pull profiles, and soft-close Blum hardware.',
+    finishes: [
+      { id: 'smoked-eucalyptus', name: 'Smoked Eucalyptus & Bronze', color: '#2b231c', metalness: 0.25, roughness: 0.65 },
+      { id: 'sahara-noir', name: 'Sahara Noir Timber & Dark Brass', color: '#18181b', metalness: 0.45, roughness: 0.5 },
+      { id: 'champagne-oak', name: 'Bleached Nordic Oak & Champagne', color: '#c4ad8e', metalness: 0.2, roughness: 0.7 }
+    ],
+    features: [
+      'Concealed vertical micro-recessed 3000K LED channels',
+      'Aircraft-grade extruded aluminum support stiles',
+      'Full-extension velvet-lined jewelry and watch drawers',
+      'Sub-millimeter CNC ceiling scribing for zero gap'
+    ]
   }
 ];
 
@@ -666,6 +687,113 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
       modelGroup.add(tapSpout);
     }
 
+    // =========================================================================
+    // MODEL 5: WHOLE-HOUSE MODULAR WARDROBE & JOINERY
+    // =========================================================================
+    else if (activeItemId === 'wardrobe-minimalist-3d') {
+      const wardrobeWidth = 2.4;
+      const wardrobeHeight = 2.1;
+      const wardrobeDepth = 0.55;
+
+      const carcassMat = new THREE.MeshStandardMaterial({
+        color: finishColor,
+        roughness: roughness,
+        metalness: metalness
+      });
+
+      // Back Panel
+      const backGeo = new THREE.BoxGeometry(wardrobeWidth, wardrobeHeight, 0.02);
+      const back = new THREE.Mesh(backGeo, carcassMat);
+      back.position.set(0, wardrobeHeight / 2 + 0.08, -wardrobeDepth / 2);
+      back.receiveShadow = true;
+      modelGroup.add(back);
+
+      // Outer Frame (Top, Bottom, Left, Right)
+      const topGeo = new THREE.BoxGeometry(wardrobeWidth, 0.04, wardrobeDepth);
+      const top = new THREE.Mesh(topGeo, carcassMat);
+      top.position.set(0, wardrobeHeight + 0.08, 0);
+      top.castShadow = true;
+      modelGroup.add(top);
+
+      const bottom = new THREE.Mesh(topGeo, carcassMat);
+      bottom.position.set(0, 0.1, 0);
+      bottom.receiveShadow = true;
+      modelGroup.add(bottom);
+
+      const sideGeo = new THREE.BoxGeometry(0.04, wardrobeHeight, wardrobeDepth);
+      const sideLeft = new THREE.Mesh(sideGeo, carcassMat);
+      sideLeft.position.set(-wardrobeWidth / 2 + 0.02, wardrobeHeight / 2 + 0.08, 0);
+      sideLeft.castShadow = true;
+      modelGroup.add(sideLeft);
+
+      const sideRight = new THREE.Mesh(sideGeo, carcassMat);
+      sideRight.position.set(wardrobeWidth / 2 - 0.02, wardrobeHeight / 2 + 0.08, 0);
+      sideRight.castShadow = true;
+      modelGroup.add(sideRight);
+
+      // Two Internal Divider Partitions (3 equal vertical bays)
+      const divider1 = new THREE.Mesh(sideGeo, carcassMat);
+      divider1.position.set(-wardrobeWidth / 6, wardrobeHeight / 2 + 0.08, 0);
+      divider1.castShadow = true;
+      modelGroup.add(divider1);
+
+      const divider2 = new THREE.Mesh(sideGeo, carcassMat);
+      divider2.position.set(wardrobeWidth / 6, wardrobeHeight / 2 + 0.08, 0);
+      divider2.castShadow = true;
+      modelGroup.add(divider2);
+
+      // Horizontal Shelves
+      const shelfGeo = new THREE.BoxGeometry(wardrobeWidth / 3 - 0.04, 0.025, wardrobeDepth - 0.04);
+      
+      const shelf1 = new THREE.Mesh(shelfGeo, carcassMat);
+      shelf1.position.set(-wardrobeWidth / 3, wardrobeHeight * 0.65, 0);
+      modelGroup.add(shelf1);
+
+      const shelf2 = new THREE.Mesh(shelfGeo, carcassMat);
+      shelf2.position.set(0, wardrobeHeight * 0.75, 0);
+      modelGroup.add(shelf2);
+
+      const shelf3 = new THREE.Mesh(shelfGeo, carcassMat);
+      shelf3.position.set(wardrobeWidth / 3, wardrobeHeight * 0.5, 0);
+      modelGroup.add(shelf3);
+
+      // Inset Bronze Clothes Hanging Rods
+      const rodMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.95, roughness: 0.2 });
+      const rodGeo = new THREE.CylinderGeometry(0.012, 0.012, wardrobeWidth / 3 - 0.05, 16);
+      
+      const rod1 = new THREE.Mesh(rodGeo, rodMat);
+      rod1.rotation.z = Math.PI / 2;
+      rod1.position.set(-wardrobeWidth / 3, wardrobeHeight * 0.6, 0);
+      modelGroup.add(rod1);
+
+      const rod2 = new THREE.Mesh(rodGeo, rodMat);
+      rod2.rotation.z = Math.PI / 2;
+      rod2.position.set(0, wardrobeHeight * 0.7, 0);
+      modelGroup.add(rod2);
+
+      // Integrated Warm LED Strip Lighting Channels
+      const ledMat = new THREE.MeshBasicMaterial({ color: 0xffe8a3 });
+      const ledGeo = new THREE.BoxGeometry(0.01, wardrobeHeight * 0.95, 0.01);
+      
+      const led1 = new THREE.Mesh(ledGeo, ledMat);
+      led1.position.set(-wardrobeWidth / 2 + 0.04, wardrobeHeight / 2 + 0.08, wardrobeDepth / 2 - 0.03);
+      modelGroup.add(led1);
+
+      const led2 = new THREE.Mesh(ledGeo, ledMat);
+      led2.position.set(wardrobeWidth / 2 - 0.04, wardrobeHeight / 2 + 0.08, wardrobeDepth / 2 - 0.03);
+      modelGroup.add(led2);
+
+      // Sleek Vertical Bronze Full-Height Edge Trim
+      const trimGeo = new THREE.BoxGeometry(0.015, wardrobeHeight, 0.02);
+      const trimLeft = new THREE.Mesh(trimGeo, rodMat);
+      trimLeft.position.set(-wardrobeWidth / 6, wardrobeHeight / 2 + 0.08, wardrobeDepth / 2);
+      modelGroup.add(trimLeft);
+
+      const trimRight = new THREE.Mesh(trimGeo, rodMat);
+      trimRight.position.set(wardrobeWidth / 6, wardrobeHeight / 2 + 0.08, wardrobeDepth / 2);
+      modelGroup.add(trimRight);
+    }
+
   }, [activeItemId, selectedFinish]);
 
   // Capture High-Res 3D Snapshot
@@ -817,7 +945,7 @@ export default function ThreeDShowroom({ onAddToCart, setActiveTab }) {
                   onClick={() => setActiveItemId(item.id)}
                 >
                   <Box size={14} />
-                  <span>{['I.', 'II.', 'III.', 'IV.'][idx]} {item.name.split('(')[0].trim()}</span>
+                  <span>{['I.', 'II.', 'III.', 'IV.', 'V.'][idx]} {item.name.split('(')[0].trim()}</span>
                 </button>
               ))}
             </div>
