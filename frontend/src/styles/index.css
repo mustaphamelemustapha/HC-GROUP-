@@ -2624,11 +2624,114 @@ nav.main-nav {
   color: var(--color-bg-navy);
 }
 
-.cat-tab-btn.active {
-  background-color: var(--color-bg-navy);
+/* Project Metrics Strip (George Build Standard) */
+.projects-metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: -40px;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 2.5rem;
+}
+
+.project-metric-card {
+  background: #ffffff;
+  padding: 1.5rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+  box-shadow: 0 10px 25px rgba(7, 13, 30, 0.08);
+  text-align: center;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.project-metric-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-gold);
+}
+
+.project-metric-number {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-bg-navy);
+  margin-bottom: 0.25rem;
+}
+
+.project-metric-label {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Dual-Axis Project Filters */
+.projects-dual-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.project-category-tabs {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.project-region-filters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.region-filter-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 0.25rem;
+}
+
+.region-filter-pill {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.region-filter-pill:hover {
+  border-color: var(--color-gold);
+  color: var(--color-bg-navy);
+}
+
+.region-filter-pill.active {
+  background: var(--color-bg-navy);
   border-color: var(--color-gold);
   color: var(--color-gold);
-  box-shadow: var(--shadow-sm);
+}
+
+/* Portfolio Card Enhancements */
+.portfolio-style-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--color-gold-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.35rem;
 }
 
 .projects-portfolio-grid {
@@ -2875,6 +2978,89 @@ nav.main-nav {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.modal-gallery-thumbs {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+  background: rgba(7, 13, 30, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  max-width: calc(100% - 32px);
+  overflow-x: auto;
+}
+
+.modal-gallery-thumb-btn {
+  width: 52px;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.modal-gallery-thumb-btn.active {
+  border-color: var(--color-gold);
+  transform: scale(1.06);
+}
+
+.modal-gallery-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-architect-quote {
+  background: #fdfcf7;
+  border-left: 3px solid var(--color-gold);
+  padding: 1rem 1.25rem;
+  border-radius: 0 6px 6px 0;
+  margin: 1.5rem 0;
+}
+
+.modal-quote-text {
+  font-style: italic;
+  color: #334155;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.modal-quote-author {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-bg-navy);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+@media (max-width: 900px) {
+  .projects-metrics-strip {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: -20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .projects-metrics-strip {
+    grid-template-columns: 1fr;
+  }
+  .project-region-filters {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
 }
 
 .modal-image-info {
